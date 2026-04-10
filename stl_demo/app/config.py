@@ -7,7 +7,7 @@ class Settings:
         self.project_root = Path(__file__).resolve().parents[1]
         self.data_dir = self.project_root / "data"
         self.metadata_path = Path(
-            os.getenv("STL_METADATA_PATH", str(self.data_dir / "metadata" / "metadata.json"))
+            os.getenv("STL_METADATA_PATH", str(self.data_dir / "metadata" / "semantic_labels.json"))
         )
         self.stl_dir = Path(os.getenv("STL_PARTS_DIR", str(self.data_dir / "stl_parts")))
         self.output_dir = Path(os.getenv("STL_OUTPUT_DIR", str(self.project_root / "output")))
@@ -16,9 +16,9 @@ class Settings:
         self.logs_dir = self.output_dir / "logs"
         self.reports_dir = self.output_dir / "reports"
 
-        self.llm_mode = os.getenv("LLM_MODE", "mock")
-        self.model_name = os.getenv("LLM_MODEL_NAME", "Qwen3-Next-80B")
-        self.base_url = os.getenv("OPENAI_BASE_URL", "")
+        self.llm_mode = os.getenv("LLM_MODE", "openai")
+        self.model_name = os.getenv("LLM_MODEL_NAME", "qwen3-next-80b-a3b-instruct")
+        self.base_url = os.getenv("OPENAI_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
         self.api_key = os.getenv("OPENAI_API_KEY", "")
 
 

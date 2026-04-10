@@ -1,0 +1,11 @@
+2026-04-09 16:46:54,829 INFO [app.graph.nodes] Loaded metadata and 50 STL files
+2026-04-09 16:47:00,413 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-09 16:47:00,424 INFO [main] Workflow finished.
+2026-04-09 23:50:03,066 INFO [app.graph.nodes] Loaded metadata and 50 STL files
+2026-04-09 23:50:07,777 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-09 23:50:07,783 WARNING [app.services.intent_generator] LLM generation failed, fallback to empty intent: 1 validation error for ChangeIntent
+changes.5.target_part
+  Field required [type=missing, input_value={'op': 'add', 'source_par...set': [0.05, 0.03, 0.0]}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+2026-04-09 23:50:07,790 INFO [main] Workflow finished.
+2026-04-09 23:50:07,790 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md'}

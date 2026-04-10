@@ -15,7 +15,7 @@ def main() -> None:
     logger = logging.getLogger("main")
 
     app = build_workflow()
-    final_state = app.invoke(DemoState())
+    final_state = DemoState.model_validate(app.invoke(DemoState()))
 
     logger.info("Workflow finished.")
     logger.info("Report paths: %s", final_state.report_paths)
