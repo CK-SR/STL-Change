@@ -9,21 +9,174 @@
 ## 变更意图
 ```json
 {
-  "changes": []
+  "changes": [
+    {
+      "target_part": "geometry_0__part_01.stl",
+      "op": "scale",
+      "params": {
+        "x": 1.08,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "reason": "机身主段有限延展以增加内部空间"
+    },
+    {
+      "target_part": "geometry_0__part_43.stl",
+      "op": "scale",
+      "params": {
+        "x": 1.05,
+        "y": 1.02,
+        "z": 1.02
+      },
+      "reason": "翼尖区域温和修订以改善展向气动特征"
+    },
+    {
+      "target_part": "geometry_0__part_16.stl",
+      "op": "add",
+      "params": {
+        "source_part": "geometry_0__part_16.stl",
+        "offset": {
+          "x": 0.0,
+          "y": 0.03,
+          "z": 0.0
+        }
+      },
+      "reason": "在机身背部中前段增加设备整流结构"
+    },
+    {
+      "target_part": "geometry_0__part_10.stl",
+      "op": "scale",
+      "params": {
+        "x": 1.06,
+        "y": 1.03,
+        "z": 1.03
+      },
+      "reason": "发动机短舱适度增量式放大以反映动力升级"
+    }
+  ]
 }
 ```
 
 ## 校验结果
 ```json
-[]
+[
+  {
+    "index": 0,
+    "valid": true,
+    "errors": [],
+    "change": {
+      "target_part": "geometry_0__part_01.stl",
+      "op": "scale",
+      "params": {
+        "x": 1.08,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "reason": "机身主段有限延展以增加内部空间"
+    }
+  },
+  {
+    "index": 1,
+    "valid": true,
+    "errors": [],
+    "change": {
+      "target_part": "geometry_0__part_43.stl",
+      "op": "scale",
+      "params": {
+        "x": 1.05,
+        "y": 1.02,
+        "z": 1.02
+      },
+      "reason": "翼尖区域温和修订以改善展向气动特征"
+    }
+  },
+  {
+    "index": 2,
+    "valid": true,
+    "errors": [],
+    "change": {
+      "target_part": "geometry_0__part_16.stl",
+      "op": "add",
+      "params": {
+        "source_part": "geometry_0__part_16.stl",
+        "offset": {
+          "x": 0.0,
+          "y": 0.03,
+          "z": 0.0
+        }
+      },
+      "reason": "在机身背部中前段增加设备整流结构"
+    }
+  },
+  {
+    "index": 3,
+    "valid": true,
+    "errors": [],
+    "change": {
+      "target_part": "geometry_0__part_10.stl",
+      "op": "scale",
+      "params": {
+        "x": 1.06,
+        "y": 1.03,
+        "z": 1.03
+      },
+      "reason": "发动机短舱适度增量式放大以反映动力升级"
+    }
+  }
+]
 ```
 
 ## 执行结果
 ```json
-[]
+[
+  {
+    "success": true,
+    "output_files": [
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_01_scaled.stl"
+    ],
+    "warnings": [],
+    "message": "scale success",
+    "target_part": "geometry_0__part_01.stl",
+    "op": "scale"
+  },
+  {
+    "success": true,
+    "output_files": [
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_43_scaled.stl"
+    ],
+    "warnings": [],
+    "message": "scale success",
+    "target_part": "geometry_0__part_43.stl",
+    "op": "scale"
+  },
+  {
+    "success": true,
+    "output_files": [
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_16_added_001.stl"
+    ],
+    "warnings": [],
+    "message": "add(copy) success",
+    "target_part": "geometry_0__part_16.stl",
+    "op": "add"
+  },
+  {
+    "success": true,
+    "output_files": [
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_10_scaled.stl"
+    ],
+    "warnings": [],
+    "message": "scale success",
+    "target_part": "geometry_0__part_10.stl",
+    "op": "scale"
+  }
+]
 ```
 
-## 成功项 (0)
+## 成功项 (4)
+- scale geometry_0__part_01.stl: scale success
+- scale geometry_0__part_43.stl: scale success
+- add geometry_0__part_16.stl: add(copy) success
+- scale geometry_0__part_10.stl: scale success
 
 ## 失败项 (0)
 

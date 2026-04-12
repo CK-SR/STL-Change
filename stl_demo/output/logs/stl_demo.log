@@ -9,3 +9,22 @@ changes.5.target_part
     For further information visit https://errors.pydantic.dev/2.12/v/missing
 2026-04-09 23:50:07,790 INFO [main] Workflow finished.
 2026-04-09 23:50:07,790 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md'}
+2026-04-10 09:01:30,230 INFO [app.graph.nodes] Loaded metadata and 50 STL files
+2026-04-10 09:01:34,850 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-10 09:01:34,869 INFO [main] Workflow finished.
+2026-04-10 09:01:34,869 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md'}
+2026-04-10 09:29:14,593 INFO [app.graph.nodes] Loaded metadata and 50 STL files
+2026-04-10 09:29:20,367 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-10 09:29:20,390 INFO [main] Workflow finished.
+2026-04-10 09:29:20,391 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md'}
+2026-04-10 10:02:28,522 INFO [app.graph.nodes] Loaded metadata and 50 STL files
+2026-04-10 10:02:33,097 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-10 10:02:33,117 INFO [main] Workflow finished.
+2026-04-10 10:02:33,117 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md'}
+2026-04-10 10:05:20,868 INFO [app.graph.nodes] Loaded metadata and 50 STL files
+2026-04-10 10:05:25,274 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-10 10:05:25,298 INFO [main] Workflow finished.
+2026-04-10 10:05:25,299 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md'}
+2026-04-13 06:30:46,702 INFO [app.graph.nodes] Loaded excel and 50 STL files
+2026-04-13 06:30:50,700 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 06:30:50,762 INFO [app.graph.nodes] Prepared final STL bundle, copied 50 files

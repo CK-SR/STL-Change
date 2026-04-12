@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "success": true,
+    "output_files": [
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_01_scaled.stl"
+    ],
+    "warnings": [],
+    "message": "scale success",
+    "target_part": "geometry_0__part_01.stl",
+    "op": "scale"
+  },
+  {
+    "success": true,
+    "output_files": [
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_43_scaled.stl"
+    ],
+    "warnings": [],
+    "message": "scale success",
+    "target_part": "geometry_0__part_43.stl",
+    "op": "scale"
+  },
+  {
+    "success": true,
+    "output_files": [
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_16_added_001.stl"
+    ],
+    "warnings": [],
+    "message": "add(copy) success",
+    "target_part": "geometry_0__part_16.stl",
+    "op": "add"
+  },
+  {
+    "success": true,
+    "output_files": [
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_10_scaled.stl"
+    ],
+    "warnings": [],
+    "message": "scale success",
+    "target_part": "geometry_0__part_10.stl",
+    "op": "scale"
+  }
+]

@@ -9,7 +9,8 @@ class BaseSkill:
         raise NotImplementedError
 
 
-def out_file_path(output_dir: Path, part_name: str, suffix: str = "") -> Path:
-    stem = Path(part_name).stem
-    name = f"{stem}{suffix}.stl"
+def resolve_output_part_path(output_dir: Path, part_name: str) -> Path:
+    name = Path(part_name).name
+    if not name.endswith(".stl"):
+        name = f"{name}.stl"
     return output_dir / name

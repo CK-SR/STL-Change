@@ -10,7 +10,13 @@ from app.utils.logger import setup_logging
 
 
 def main() -> None:
-    ensure_dirs(settings.output_dir, settings.modified_stl_dir, settings.logs_dir, settings.reports_dir)
+    ensure_dirs(
+        settings.output_dir,
+        settings.final_stl_dir,
+        settings.logs_dir,
+        settings.reports_dir,
+        settings.excels_dir,
+    )
     setup_logging(settings.logs_dir / "stl_demo.log")
     logger = logging.getLogger("main")
 

@@ -57,13 +57,22 @@ class SkillExecutionResult(BaseModel):
 
 
 class DemoState(BaseModel):
-    metadata: MetadataDocument | None = None
     discovered_stl_files: List[str] = Field(default_factory=list)
+    # Excel / 文本输入
+    df: Any | None = None
+    schema: Dict[str, Any] = Field(default_factory=dict)
     part_summary: List[Dict[str, Any]] = Field(default_factory=list)
     intelligence_texts: List[str] = Field(default_factory=list)
+
+    # 主流程结果
     change_intent: ChangeIntent = Field(default_factory=ChangeIntent)
     validated_changes: List[ValidationResult] = Field(default_factory=list)
     execution_results: List[SkillExecutionResult] = Field(default_factory=list)
+
+    # Excel 输出
+    change_table_path: str = ""
+    updated_excel_path: str = ""
+
     warnings: List[str] = Field(default_factory=list)
     report_paths: Dict[str, str] = Field(default_factory=dict)
 
