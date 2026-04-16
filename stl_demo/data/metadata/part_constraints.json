@@ -1,0 +1,1456 @@
+[
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0001",
+    "part_name": "车身",
+    "parent_part_id": "BJ0024",
+    "parent_part_name": "车",
+    "edit_type": "structural_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "center",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0002",
+      "BJ0003",
+      "BJ0004",
+      "BJ0005",
+      "BJ0006",
+      "BJ0007",
+      "BJ0008",
+      "BJ0009",
+      "BJ0010",
+      "BJ0011",
+      "BJ0012",
+      "BJ0013",
+      "BJ0014",
+      "BJ0015",
+      "BJ0016",
+      "BJ0017",
+      "BJ0018",
+      "BJ0019",
+      "BJ0020"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete",
+      "modify_geometry",
+      "stretch"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        61.27,
+        23.4,
+        2272.547
+      ],
+      "center_mass": [
+        -356.733281,
+        803.770781,
+        3769.882016
+      ],
+      "aabb_extents": [
+        7763.04,
+        3327.72,
+        3884.806
+      ]
+    },
+    "function_names": [],
+    "semantic_note": "Main hull of AAV7A1 amphibious assault vehicle, serves as structural base for tracks and turret."
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0002",
+    "part_name": "车身后装甲",
+    "parent_part_id": "BJ0021",
+    "parent_part_name": "车身装甲类",
+    "edit_type": "structural_part",
+    "primary_axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "anchor_mode": "base_face_fixed",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0004",
+      "BJ0005",
+      "BJ0006",
+      "BJ0007",
+      "BJ0020"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "stretch"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete_core",
+      "delete",
+      "modify_geometry"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -3604.27165,
+        36.7251,
+        1223.21935
+      ],
+      "center_mass": [
+        -3613.973102,
+        55.576547,
+        1248.919162
+      ],
+      "aabb_extents": [
+        369.0125,
+        3048.7098,
+        1238.6419
+      ]
+    },
+    "function_names": [
+      "后装甲"
+    ],
+    "semantic_note": "AAV7A1 车身后部主装甲结构，包含实体 STL 几何，作为车身装甲类父节点承载子部件"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0003",
+    "part_name": "车身前装甲",
+    "parent_part_id": "BJ0021",
+    "parent_part_name": "车身装甲类",
+    "edit_type": "structural_part",
+    "primary_axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "anchor_mode": "center",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0004",
+      "BJ0005",
+      "BJ0006",
+      "BJ0007",
+      "BJ0016",
+      "BJ0017",
+      "BJ0019",
+      "BJ0020"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "stretch",
+      "delete"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete_core",
+      "modify_geometry",
+      "no_direct_edit"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        3208.9992,
+        34.045,
+        1400.23835
+      ],
+      "center_mass": [
+        2758.722759,
+        -218.528386,
+        1092.791274
+      ],
+      "aabb_extents": [
+        1467.5816,
+        3074.19,
+        1485.2367
+      ]
+    },
+    "function_names": [
+      "前装甲"
+    ],
+    "semantic_note": "Front armor structural component of AAV7A1 amphibious assault vehicle."
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0004",
+    "part_name": "车身上装甲",
+    "parent_part_id": "BJ0021",
+    "parent_part_name": "车身装甲类",
+    "edit_type": "structural_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "base_face_fixed",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0002",
+      "BJ0003",
+      "BJ0006",
+      "BJ0007",
+      "BJ0008",
+      "BJ0009",
+      "BJ0012",
+      "BJ0013",
+      "BJ0016",
+      "BJ0018",
+      "BJ0019",
+      "BJ0020"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "stretch"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete_core"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -4.04,
+        4.34315,
+        3021.10035
+      ],
+      "center_mass": [
+        -495.960795,
+        110.208263,
+        8465.935743
+      ],
+      "aabb_extents": [
+        7632.42,
+        3276.5263,
+        2387.6993
+      ]
+    },
+    "function_names": [
+      "上装甲"
+    ],
+    "semantic_note": "AAV7A1 车身上部装甲结构件，包含多个子装甲板，具备实体几何，采用底面固定锚点模式以确保整车定位准确，支持平移旋转及拉伸调整，禁止整体缩放与核心删除。"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0005",
+    "part_name": "车身下装甲",
+    "parent_part_id": "BJ0021",
+    "parent_part_name": "车身装甲类",
+    "edit_type": "structural_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "base_face_fixed",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0002",
+      "BJ0003",
+      "BJ0006",
+      "BJ0007",
+      "BJ0010",
+      "BJ0014",
+      "BJ0015"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "stretch"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete_core",
+      "delete"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -489.42365,
+        -66.4145,
+        494.28405
+      ],
+      "center_mass": [
+        2.12031,
+        428.79961,
+        454.665069
+      ],
+      "aabb_extents": [
+        6112.9251,
+        2122.971,
+        328.2801
+      ]
+    },
+    "function_names": [
+      "下装甲"
+    ],
+    "semantic_note": "车身下装甲结构件，底座固定"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0006",
+    "part_name": "车身右装甲",
+    "parent_part_id": "BJ0021",
+    "parent_part_name": "车身装甲类",
+    "edit_type": "structural_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "base_face_fixed",
+    "symmetry_group": "车身{LR}装甲",
+    "neighbors": [
+      "BJ0001",
+      "BJ0002",
+      "BJ0003",
+      "BJ0004",
+      "BJ0005",
+      "BJ0010",
+      "BJ0013",
+      "BJ0019"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "stretch"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete_core"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -362.3228,
+        -1320.02045,
+        1346.344
+      ],
+      "center_mass": [
+        -549.304764,
+        -3949.70835,
+        1967.168057
+      ],
+      "aabb_extents": [
+        6118.4456,
+        886.0991,
+        1482.6732
+      ]
+    },
+    "function_names": [
+      "右侧装甲"
+    ],
+    "semantic_note": "Right side armor plate, structural component requiring fixed base alignment and proportional scaling protection."
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0007",
+    "part_name": "车身左装甲",
+    "parent_part_id": "BJ0021",
+    "parent_part_name": "车身装甲类",
+    "edit_type": "structural_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "base_face_fixed",
+    "symmetry_group": "车身{LR}装甲",
+    "neighbors": [
+      "BJ0001",
+      "BJ0002",
+      "BJ0003",
+      "BJ0004",
+      "BJ0005",
+      "BJ0009",
+      "BJ0011",
+      "BJ0018",
+      "BJ0020"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "stretch"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete_core"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -330.455,
+        1350.58695,
+        1507.7697
+      ],
+      "center_mass": [
+        -257.190612,
+        5164.096836,
+        1222.735559
+      ],
+      "aabb_extents": [
+        6699.99,
+        805.8061,
+        1805.6206
+      ]
+    },
+    "function_names": [
+      "左侧装甲"
+    ],
+    "semantic_note": "左侧车体装甲结构件，具备实际STL几何，用于防护与结构支撑"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0008",
+    "part_name": "机枪",
+    "parent_part_id": "BJ0024",
+    "parent_part_name": "车",
+    "edit_type": "mechanical_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "parent_attach",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0004",
+      "BJ0013"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "stretch",
+      "modify_geometry"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        2135.745,
+        -1056.613,
+        2877.645
+      ],
+      "center_mass": [
+        972.448863,
+        -57.974448,
+        744.38952
+      ],
+      "aabb_extents": [
+        1127.97,
+        376.914,
+        408.23
+      ]
+    },
+    "function_names": [
+      "机枪"
+    ],
+    "semantic_note": "AAV7A1 两栖装甲车车载机枪组件，具备实际 STL 几何数据。作为机械部件挂载于车体，需保持父子层级关系，禁止非均匀缩放及直接几何编辑以确保装配完整性。"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0009",
+    "part_name": "驾驶舱盖",
+    "parent_part_id": "BJ0024",
+    "parent_part_name": "车",
+    "edit_type": "panel_part",
+    "primary_axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "anchor_mode": "center",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0004",
+      "BJ0007",
+      "BJ0020"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "modify_geometry"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete_core"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        2292.955,
+        1102.6405,
+        2533.1
+      ],
+      "center_mass": [
+        1412.924649,
+        237.547213,
+        7403.356203
+      ],
+      "aabb_extents": [
+        674.57,
+        785.999,
+        326.38
+      ]
+    },
+    "function_names": [
+      "驾驶舱盖"
+    ],
+    "semantic_note": "AAV7A1 两栖装甲突击车驾驶舱盖，属于外部防护面板组件，需保持与车体结构配合间隙，禁止非均匀缩放以维持密封性与装配关系"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0010",
+    "part_name": "履带右",
+    "parent_part_id": "BJ0022",
+    "parent_part_name": "行动系统类",
+    "edit_type": "mechanical_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "base_face_fixed",
+    "symmetry_group": "履带{LR}",
+    "neighbors": [
+      "BJ0001",
+      "BJ0005",
+      "BJ0006",
+      "BJ0019"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate"
+    ],
+    "forbidden_ops": [
+      "stretch",
+      "uniform_scale",
+      "delete_core",
+      "modify_geometry"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -407.775,
+        -1163.2745,
+        510.29115
+      ],
+      "center_mass": [
+        -495.635848,
+        -1161.370763,
+        429.096657
+      ],
+      "aabb_extents": [
+        5625.55,
+        449.631,
+        985.2177
+      ]
+    },
+    "function_names": [
+      "履带系统右"
+    ],
+    "semantic_note": "AAV7A1右侧履带组件，机械传动部件，需保持几何完整性与装配位置"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0011",
+    "part_name": "履带左",
+    "parent_part_id": "BJ0022",
+    "parent_part_name": "行动系统类",
+    "edit_type": "mechanical_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "base_face_fixed",
+    "symmetry_group": "履带{LR}",
+    "neighbors": [
+      "BJ0001",
+      "BJ0007",
+      "BJ0020"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate"
+    ],
+    "forbidden_ops": [
+      "stretch",
+      "uniform_scale",
+      "delete_core"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -395.13,
+        1225.68,
+        511.19355
+      ],
+      "center_mass": [
+        -484.279231,
+        1208.878993,
+        428.874862
+      ],
+      "aabb_extents": [
+        5697.74,
+        434.1,
+        1001.3729
+      ]
+    },
+    "function_names": [
+      "履带系统左"
+    ],
+    "semantic_note": "履带为关键机械传动部件，具备实体几何，需固定基准面，禁止形变操作以维持装配关系。"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0012",
+    "part_name": "瞄准镜",
+    "parent_part_id": "BJ0024",
+    "parent_part_name": "车",
+    "edit_type": "device_part",
+    "primary_axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "anchor_mode": "axis_fixed",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0004",
+      "BJ0013"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "add_attach"
+    ],
+    "forbidden_ops": [
+      "stretch",
+      "uniform_scale",
+      "delete_core"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        1312.37,
+        -790.5165,
+        3081.92
+      ],
+      "center_mass": [
+        494.505101,
+        215.531193,
+        -104170.227015
+      ],
+      "aabb_extents": [
+        97.22,
+        162.567,
+        73.6
+      ]
+    },
+    "function_names": [
+      "瞄准镜"
+    ],
+    "semantic_note": "该部件为AAV7A1装甲车的光学瞄准设备，拥有独立STL几何模型。作为关键功能组件，支持位置与角度调整以模拟瞄准操作，但禁止几何形变以保持装备精度。"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0013",
+    "part_name": "炮塔",
+    "parent_part_id": "BJ0024",
+    "parent_part_name": "车",
+    "edit_type": "device_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "axis_fixed",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0004",
+      "BJ0006",
+      "BJ0008",
+      "BJ0012",
+      "BJ0019"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "add_attach"
+    ],
+    "forbidden_ops": [
+      "stretch",
+      "uniform_scale",
+      "delete_core",
+      "modify_geometry"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -820.88,
+        -793.2195,
+        2545.42
+      ],
+      "center_mass": [
+        1567.133777,
+        -1648.788886,
+        15661.488767
+      ],
+      "aabb_extents": [
+        5892.88,
+        1264.261,
+        1082.04
+      ]
+    },
+    "function_names": [
+      "炮塔"
+    ],
+    "semantic_note": "Turret component with STL geometry, supports rotation around axis, prohibits deformation and scaling."
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0014",
+    "part_name": "喷水推进器右",
+    "parent_part_id": "BJ0022",
+    "parent_part_name": "行动系统类",
+    "edit_type": "mechanical_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "center",
+    "symmetry_group": "喷水推进器{LR}",
+    "neighbors": [
+      "BJ0001",
+      "BJ0005"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "modify_geometry"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -2602.91,
+        -524.2305,
+        541.0845
+      ],
+      "center_mass": [
+        -2495.262725,
+        -524.725156,
+        490.901631
+      ],
+      "aabb_extents": [
+        857.1,
+        377.659,
+        341.247
+      ]
+    },
+    "function_names": [
+      "水上推进系统右"
+    ],
+    "semantic_note": "Right water jet propulsion unit for amphibious vehicle mobility"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0015",
+    "part_name": "喷水推进器左",
+    "parent_part_id": "BJ0022",
+    "parent_part_name": "行动系统类",
+    "edit_type": "mechanical_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "center",
+    "symmetry_group": "喷水推进器{LR}",
+    "neighbors": [
+      "BJ0001",
+      "BJ0005"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "modify_geometry",
+      "stretch",
+      "delete_core"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -2661.885,
+        610.9065,
+        543.622
+      ],
+      "center_mass": [
+        -2554.235681,
+        610.410993,
+        493.437945
+      ],
+      "aabb_extents": [
+        857.09,
+        377.661,
+        341.25
+      ]
+    },
+    "function_names": [
+      "水上推进系统左"
+    ],
+    "semantic_note": "左侧喷水推进器，属于行动系统机械部件，需保持几何完整性与比例。"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0016",
+    "part_name": "引擎",
+    "parent_part_id": "BJ0023",
+    "parent_part_name": "动力系统类",
+    "edit_type": "mechanical_part",
+    "primary_axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "anchor_mode": "center",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0003",
+      "BJ0004"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "delete"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "stretch",
+      "modify_geometry",
+      "add_attach"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        2642.57,
+        26.3695,
+        2127.98
+      ],
+      "center_mass": [
+        2643.953479,
+        19.429393,
+        2115.182664
+      ],
+      "aabb_extents": [
+        780.36,
+        910.957,
+        418.36
+      ]
+    },
+    "function_names": [
+      "引擎"
+    ],
+    "semantic_note": "AAV7A1 核心引擎组件，具有复杂 STL 几何结构，需保持形状完整，仅允许位姿调整与视图管理"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0017",
+    "part_name": "油箱",
+    "parent_part_id": "BJ0023",
+    "parent_part_name": "动力系统类",
+    "edit_type": "device_part",
+    "primary_axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "anchor_mode": "center",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0003"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "modify_geometry",
+      "stretch",
+      "delete"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        3100.59,
+        105.5305,
+        1534.195
+      ],
+      "center_mass": [
+        3101.030628,
+        105.556348,
+        1496.470342
+      ],
+      "aabb_extents": [
+        637.18,
+        1006.291,
+        566.01
+      ]
+    },
+    "function_names": [
+      "油箱"
+    ],
+    "semantic_note": "AAV7A1 两栖装甲车动力系统燃油箱，需保持尺寸精度，禁止缩放与几何修改。"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0018",
+    "part_name": "指挥舱盖",
+    "parent_part_id": "BJ0024",
+    "parent_part_name": "车",
+    "edit_type": "panel_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "center",
+    "symmetry_group": "",
+    "neighbors": [
+      "BJ0001",
+      "BJ0004",
+      "BJ0007",
+      "BJ0020"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "modify_geometry"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete_core"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        1169.206,
+        1203.1575,
+        2581.29
+      ],
+      "center_mass": [
+        1091.583558,
+        1290.524471,
+        3060.233776
+      ],
+      "aabb_extents": [
+        895.128,
+        736.165,
+        453.44
+      ]
+    },
+    "function_names": [
+      "指挥舱盖"
+    ],
+    "semantic_note": "AAV7A1 指挥舱盖，装甲防护部件，支持开合与几何微调"
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0019",
+    "part_name": "装甲右",
+    "parent_part_id": "BJ0021",
+    "parent_part_name": "车身装甲类",
+    "edit_type": "structural_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "base_face_fixed",
+    "symmetry_group": "装甲{LR}",
+    "neighbors": [
+      "BJ0001",
+      "BJ0003",
+      "BJ0004",
+      "BJ0006",
+      "BJ0010",
+      "BJ0013"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "stretch"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete_core"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -167.975,
+        -1439.88,
+        1490.511
+      ],
+      "center_mass": [
+        -938.512499,
+        -45323.881085,
+        -1063.063488
+      ],
+      "aabb_extents": [
+        5729.75,
+        646.38,
+        1148.818
+      ]
+    },
+    "function_names": [
+      "右侧外挂装甲"
+    ],
+    "semantic_note": "Right armor panel for AAV7A1 amphibious assault vehicle, structural component with fixed base alignment."
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0020",
+    "part_name": "装甲左",
+    "parent_part_id": "BJ0021",
+    "parent_part_name": "车身装甲类",
+    "edit_type": "structural_part",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "base_face_fixed",
+    "symmetry_group": "装甲{LR}",
+    "neighbors": [
+      "BJ0001",
+      "BJ0002",
+      "BJ0003",
+      "BJ0004",
+      "BJ0007",
+      "BJ0009",
+      "BJ0011",
+      "BJ0018"
+    ],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide",
+      "measure",
+      "translate",
+      "rotate",
+      "stretch"
+    ],
+    "forbidden_ops": [
+      "uniform_scale",
+      "delete_core"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": true,
+    "is_virtual_part": false,
+    "geometry_valid": true,
+    "geometry": {
+      "bbox_center": [
+        -330.455,
+        1526.895,
+        1663.2575
+      ],
+      "center_mass": [
+        -1151.331206,
+        10804.381451,
+        6213.813
+      ],
+      "aabb_extents": [
+        6699.99,
+        453.19,
+        1494.645
+      ]
+    },
+    "function_names": [
+      "左侧外挂装甲"
+    ],
+    "semantic_note": "Left side external armor plate for AAV7A1 amphibious assault vehicle, primary structural protection component."
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0021",
+    "part_name": "车身装甲类",
+    "parent_part_id": "BJ0024",
+    "parent_part_name": "车",
+    "edit_type": "virtual_assembly",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "none",
+    "symmetry_group": "",
+    "neighbors": [],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide"
+    ],
+    "forbidden_ops": [
+      "translate",
+      "rotate",
+      "stretch",
+      "add_attach",
+      "delete",
+      "modify_geometry",
+      "uniform_scale",
+      "delete_core",
+      "no_direct_edit"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": false,
+    "is_virtual_part": true,
+    "geometry_valid": false,
+    "geometry": {
+      "bbox_center": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "center_mass": [
+        null,
+        null,
+        null
+      ],
+      "aabb_extents": [
+        NaN,
+        NaN,
+        NaN
+      ]
+    },
+    "function_names": [],
+    "semantic_note": ""
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0022",
+    "part_name": "行动系统类",
+    "parent_part_id": "BJ0024",
+    "parent_part_name": "车",
+    "edit_type": "virtual_assembly",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "none",
+    "symmetry_group": "",
+    "neighbors": [],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide"
+    ],
+    "forbidden_ops": [
+      "translate",
+      "rotate",
+      "stretch",
+      "add_attach",
+      "delete",
+      "modify_geometry",
+      "uniform_scale",
+      "delete_core",
+      "no_direct_edit"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": false,
+    "is_virtual_part": true,
+    "geometry_valid": false,
+    "geometry": {
+      "bbox_center": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "center_mass": [
+        null,
+        null,
+        null
+      ],
+      "aabb_extents": [
+        NaN,
+        NaN,
+        NaN
+      ]
+    },
+    "function_names": [],
+    "semantic_note": ""
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0023",
+    "part_name": "动力系统类",
+    "parent_part_id": "BJ0024",
+    "parent_part_name": "车",
+    "edit_type": "virtual_assembly",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "none",
+    "symmetry_group": "",
+    "neighbors": [],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide"
+    ],
+    "forbidden_ops": [
+      "translate",
+      "rotate",
+      "stretch",
+      "add_attach",
+      "delete",
+      "modify_geometry",
+      "uniform_scale",
+      "delete_core",
+      "no_direct_edit"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": false,
+    "is_virtual_part": true,
+    "geometry_valid": false,
+    "geometry": {
+      "bbox_center": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "center_mass": [
+        null,
+        null,
+        null
+      ],
+      "aabb_extents": [
+        NaN,
+        NaN,
+        NaN
+      ]
+    },
+    "function_names": [],
+    "semantic_note": ""
+  },
+  {
+    "target_id": "MB576055",
+    "part_id": "BJ0024",
+    "part_name": "车",
+    "parent_part_id": "",
+    "parent_part_name": "",
+    "edit_type": "virtual_assembly",
+    "primary_axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "anchor_mode": "none",
+    "symmetry_group": "",
+    "neighbors": [],
+    "allowed_ops": [
+      "view",
+      "select",
+      "hide"
+    ],
+    "forbidden_ops": [
+      "translate",
+      "rotate",
+      "stretch",
+      "add_attach",
+      "delete",
+      "modify_geometry",
+      "uniform_scale",
+      "delete_core",
+      "no_direct_edit"
+    ],
+    "clearance_min_mm": 2.0,
+    "has_stl_file": false,
+    "is_virtual_part": true,
+    "geometry_valid": false,
+    "geometry": {
+      "bbox_center": [
+        NaN,
+        NaN,
+        NaN
+      ],
+      "center_mass": [
+        null,
+        null,
+        null
+      ],
+      "aabb_extents": [
+        NaN,
+        NaN,
+        NaN
+      ]
+    },
+    "function_names": [],
+    "semantic_note": ""
+  }
+]
