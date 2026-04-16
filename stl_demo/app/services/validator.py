@@ -25,11 +25,25 @@ def _validate_xyz_dict(errors: List[str], params: Dict[str, object], prefix: str
             errors.append(f"参数 {key} 不是数值")
 
 
+def _constraint_map(part_constraints: List[dict]) -> Dict[str, dict]:
+    mapping: Dict[str, dict] = {}
+    for item in part_constraints:
+        pid = str(item.get("part_id", "")).strip()
+        pname = str(item.get("part_name", "")).strip()
+        if pid:
+            mapping[pid] = item
+        if pname:
+            mapping[pname] = item
+    return mapping
+
+
 def validate_change_intent(
     intent: ChangeIntent,
     existing_parts: set[str],
+    part_constraints: List[dict] | None = None,
 ) -> List[ValidationResult]:
     results: List[ValidationResult] = []
+    constraints_map = _constraint_map(part_constraints or [])
 
     for i, change in enumerate(intent.changes):
         errors: List[str] = []
@@ -62,16 +76,12 @@ def validate_change_intent(
                 errors.append("rotate.degrees 必须是数值")
 
         elif change.op == "scale":
-            # 兼容旧版 uniform scale，也兼容新版 stretch 入口
             has_uniform_scale = all(k in p for k in ["x", "y", "z"])
             has_stretch = _coerce_float(p.get("delta_mm"))
-
             if not has_uniform_scale and not has_stretch:
-                errors.append("scale 需提供 x/y/z，或提供 delta_mm 走受约束 stretch")
-
+                errors.append("scale 需提供 x/y/z，或提供 delta_mm")
             if has_uniform_scale:
                 _validate_xyz_dict(errors, p)
-
             if "delta_mm" in p and not _coerce_float(p.get("delta_mm")):
                 errors.append("scale.delta_mm 必须是数值")
 
@@ -89,14 +99,32 @@ def validate_change_intent(
 
         elif change.op == "add":
             source_part = p.get("source_part")
-            if source_part not in existing_parts:
+            if source_part and source_part not in existing_parts:
                 errors.append("add.source_part 不存在")
-
-            offset = p.get("offset")
+            offset = p.get("offset", {"x": 0, "y": 0, "z": 0})
             if not isinstance(offset, dict):
                 errors.append("add.offset 必须是 dict")
             else:
                 _validate_xyz_dict(errors, offset, prefix="offset.")
+
+        constraint = constraints_map.get(change.target_part)
+        if constraint is not None:
+            allowed_ops = set(constraint.get("allowed_ops", []) or [])
+            forbidden_ops = set(constraint.get("forbidden_ops", []) or [])
+
+            if constraint.get("is_virtual_part", False) and change.op != "add":
+                errors.append("虚拟部件不允许直接编辑")
+
+            if change.op == "stretch" and "stretch" not in allowed_ops:
+                errors.append("该部件不允许 stretch")
+            if change.op == "rotate" and "rotate" not in allowed_ops:
+                errors.append("该部件不允许 rotate")
+            if change.op == "translate" and "translate" not in allowed_ops:
+                errors.append("该部件不允许 translate")
+            if change.op == "scale" and "uniform_scale" in forbidden_ops and "delta_mm" not in p:
+                errors.append("该部件禁止 uniform scale")
+            if change.op == "delete" and "delete_core" in forbidden_ops:
+                errors.append("该部件禁止 delete")
 
         results.append(
             ValidationResult(

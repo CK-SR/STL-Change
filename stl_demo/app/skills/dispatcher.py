@@ -66,7 +66,7 @@ def dispatch_change(
             part_to_file[source_part],
             output_dir,
             source_part,
-            change.params["offset"],
+            change.params.get("offset", {"x": 0, "y": 0, "z": 0}),
         )
 
     elif op in {"translate", "rotate", "stretch", "scale"} and constraint_service is not None and target in part_to_file:

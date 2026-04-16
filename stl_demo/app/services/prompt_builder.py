@@ -1,79 +1,49 @@
-def build_intent_prompt() -> str:
-    return """
-    你是一个设备结构变更规划助手。
+from __future__ import annotations
 
-    任务：
-    给定情报文本和部件摘要，输出可执行 JSON。
-    给定的部件摘要来自 Excel，每个部件都包含 part_name、类别、文件名以及补充描述信息。
-    只能输出一个 JSON 对象，不要输出解释，不要输出 markdown。
+import json
+from typing import List, Dict
 
-    输出格式必须严格为：
-    {
-      "changes": [
-        {
-          "target_part": "给定 part_name 之一",
-          "op": "scale|translate|rotate|delete|add",
-          "params": {...},
-          "reason": "简短说明"
-        }
-      ]
-    }
 
-    参数要求：
-    1. 如果 op = "scale"，
-       params 必须为：
-       {"x": float, "y": float, "z": float}
-       且不得为空。
-       如果情报只说“略微增大/加宽/延展”，默认使用保守参数，例如 1.05~1.20。
+def build_change_intent_prompt(
+    intelligence_texts: List[str],
+    part_summary: List[Dict],
+) -> str:
+    intelligence_block = "\n".join([f"- {x}" for x in intelligence_texts if str(x).strip()])
+    part_summary_json = json.dumps(part_summary, ensure_ascii=False, indent=2)
 
-    2. 如果 op = "translate"，
-       params 必须为：
-       {"x": float, "y": float, "z": float}
-       且不得为空。
-       如果情报只说“略微移动”，可使用小幅默认位移，例如 0.01~0.05。
+    return f"""
+你是一名面向 STL 装备模型编辑的规划助手。
+你的任务是：根据情报文本和结构化部件摘要，生成 STL 变更意图。
 
-    3. 如果 op = "rotate"，
-       params 必须为：
-       {"axis": "x"|"y"|"z", "degrees": float}
-       且不得为空。
-       如果情报只说“上翘/偏转”，可使用小角度默认值，例如 3~10 度。
+你必须遵守以下规则：
+1. 只能输出 JSON。
+2. 输出格式：
+{{
+  "changes": [
+    {{
+      "target_part": "部件ID或部件名称",
+      "op": "scale|translate|rotate|delete|add|stretch",
+      "params": {{}},
+      "reason": "简短原因"
+    }}
+  ]
+}}
+3. 优先依据部件摘要中的 allowed_ops / forbidden_ops 决定操作。
+4. 若部件是 structural_part，且需求是“加长/伸长/延长”，优先输出 stretch，而不是 uniform scale。
+5. 若部件 forbidden_ops 包含 uniform_scale，则不要输出传统整体缩放。
+6. rotate 可使用：
+   - {{"axis":"x|y|z","degrees":15}}
+   - 或 {{"axis_vector":[0,0,1],"degrees":15}}
+7. stretch 使用：
+   - {{"delta_mm": 30}}
+8. translate 使用：
+   - {{"x":10,"y":0,"z":0}}
+9. 对虚拟部件、无直接编辑权限的部件，不要生成直接编辑操作。
+10. 若信息不足，不要臆造复杂操作，可返回空 changes。
 
-    4. 如果 op = "delete"，
-       params 必须为 {}
+情报文本：
+{intelligence_block}
 
-    5. 如果 op = "add"，
-       params 必须为：
-       {
-         "source_part": "给定 part_name 之一",
-         "offset": {"x": float, "y": float, "z": float}
-       }
-       不得为空。
-       如果无法确定 source_part，选择最接近类别的现有 part 复制。
-
-    重要规则：
-    - 除 delete 外，params 绝对不能是空对象 {}
-    - target_part 必须从给定 part_name 中选择
-    - add 的 source_part 也必须从给定 part_name 中选择
-    - 选择 target_part 时，应优先结合类别、位置、尺寸、结构分区、部件作用等描述进行匹配
-    - 如果情报描述的是抽象区域（如机身主段、翼尖、背部设备区），也必须映射为一个或多个具体 part_name
-    - 如果不完全确定具体数值，也必须给一个可执行的默认值
-    - 不要求工程合理，只要求结果结构正确、参数完整、可以执行
-
-    示例：
-    {
-      "changes": [
-        {
-          "target_part": "geometry_0__part_01.stl",
-          "op": "scale",
-          "params": {"x": 1.1, "y": 1.0, "z": 1.0},
-          "reason": "左侧翼段略有增大"
-        },
-        {
-          "target_part": "geometry_0__part_20.stl",
-          "op": "translate",
-          "params": {"x": 0.0, "y": -0.02, "z": 0.0},
-          "reason": "起落架略微下移"
-        }
-      ]
-    }
-    """
+结构化部件摘要：
+{part_summary_json}
+""".strip()

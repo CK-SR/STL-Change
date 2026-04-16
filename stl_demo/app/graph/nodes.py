@@ -9,17 +9,13 @@ from app.llm.openai_compatible import OpenAICompatibleLLMClient
 from app.models import DemoState
 from app.services.intent_generator import generate_change_intent
 from app.services.intelligence_generator import generate_mock_intelligence
-from app.services.excel_loader import load_excel, scan_stl_files
-from app.services.schema_analyzer import analyze_excel_schema
-from app.services.part_summary_builder import build_part_summary_from_excel
-from app.services.excel_indexer import (
-    build_existing_parts_set_from_excel,
-    build_part_to_file_map_from_excel,
+from app.services.part_constraints_loader import (
+    build_existing_parts_set_from_constraints,
+    build_part_to_file_map_from_constraints,
+    load_part_constraints,
 )
-from app.services.excel_change_writer import (
-    build_change_table_from_intent,
-    apply_change_intent_to_excel,
-)
+from app.services.excel_loader import scan_stl_files
+from app.services.part_summary_builder import build_part_summary_from_constraints
 from app.services.stl_bundle_preparer import prepare_full_stl_bundle
 from app.services.report_writer import write_demo_report, write_json
 from app.services.validator import validate_change_intent
@@ -29,18 +25,20 @@ logger = logging.getLogger(__name__)
 
 
 def load_inputs(state: DemoState) -> DemoState:
-    df = load_excel(settings.excel_path, sheet_name="部件数据")
-    schema = analyze_excel_schema(df)
+    part_constraints = load_part_constraints(settings.part_constraints_path)
     stl_files = scan_stl_files(settings.stl_dir)
 
-    state.df = df
-    state.schema = schema
+    state.part_constraints = part_constraints
     state.discovered_stl_files = [str(p) for p in stl_files]
 
     if not stl_files:
         state.warnings.append(f"No STL files found under {settings.stl_dir}")
 
-    logger.info("Loaded excel and %d STL files", len(stl_files))
+    logger.info(
+        "Loaded part_constraints=%d and stl_files=%d",
+        len(part_constraints),
+        len(stl_files),
+    )
     return state
 
 
@@ -58,8 +56,7 @@ def generate_intelligence(state: DemoState) -> DemoState:
 
 
 def build_part_summary_node(state: DemoState) -> DemoState:
-    assert state.df is not None
-    state.part_summary = build_part_summary_from_excel(state.df, state.schema)
+    state.part_summary = build_part_summary_from_constraints(state.part_constraints)
     return state
 
 
@@ -82,11 +79,14 @@ def generate_change_intent_node(state: DemoState) -> DemoState:
 
 
 def validate_change_intent_node(state: DemoState) -> DemoState:
-    assert state.df is not None
-    existing_parts = build_existing_parts_set_from_excel(state.df, state.schema)
+    existing_parts = build_existing_parts_set_from_constraints(state.part_constraints)
     existing_parts.update(Path(s).name for s in state.discovered_stl_files)
 
-    state.validated_changes = validate_change_intent(state.change_intent, existing_parts)
+    state.validated_changes = validate_change_intent(
+        state.change_intent,
+        existing_parts,
+        state.part_constraints,
+    )
 
     for item in state.validated_changes:
         if not item.valid:
@@ -102,14 +102,11 @@ def prepare_stl_bundle_node(state: DemoState) -> DemoState:
 
 
 def apply_skills(state: DemoState) -> DemoState:
-    assert state.df is not None
-    part_to_file = build_part_to_file_map_from_excel(
-        state.df,
-        state.schema,
+    part_to_file = build_part_to_file_map_from_constraints(
+        state.part_constraints,
         settings.final_stl_dir,
     )
 
-    # 保险：把输出目录中已有 STL 也补进去
     for p in settings.final_stl_dir.glob("*.stl"):
         part_to_file[p.name] = p
 
@@ -126,12 +123,10 @@ def apply_skills(state: DemoState) -> DemoState:
         result = dispatch_change(vr.change, part_to_file, settings.final_stl_dir)
         state.execution_results.append(result)
 
-        # add 之后把新文件补进 map，方便后续链式操作
         if vr.change.op == "add" and result.success and result.output_files:
             new_file = Path(result.output_files[0])
             part_to_file[new_file.name] = new_file
 
-        # 受约束变换生成的新文件同样补进 map，便于后续继续引用
         if vr.change.op in {"translate", "rotate", "stretch", "scale"} and result.success and result.output_files:
             new_file = Path(result.output_files[0])
             part_to_file[vr.change.target_part] = new_file
@@ -139,20 +134,6 @@ def apply_skills(state: DemoState) -> DemoState:
         if result.warnings:
             state.warnings.extend(result.warnings)
 
-    return state
-
-
-def write_excel_outputs_node(state: DemoState) -> DemoState:
-    assert state.df is not None
-    change_table = build_change_table_from_intent(state.change_intent, state.df, state.schema)
-    updated_df = apply_change_intent_to_excel(state.change_intent, state.df, state.schema)
-
-    settings.change_table_path.parent.mkdir(parents=True, exist_ok=True)
-    change_table.to_excel(settings.change_table_path, index=False)
-    updated_df.to_excel(settings.updated_excel_path, index=False)
-
-    state.change_table_path = str(settings.change_table_path)
-    state.updated_excel_path = str(settings.updated_excel_path)
     return state
 
 
@@ -169,15 +150,15 @@ def export_report(state: DemoState) -> DemoState:
     write_demo_report(
         report_path=md_path,
         intelligence_texts=state.intelligence_texts,
-        schema=state.schema,
+        schema={"source": "part_constraints.json"},
         discovered_stl_files=state.discovered_stl_files,
         change_intent=state.change_intent,
         validated_changes=state.validated_changes,
         execution_results=state.execution_results,
         warnings=state.warnings,
-        excel_path=str(settings.excel_path),
-        updated_excel_path=state.updated_excel_path,
-        change_table_path=state.change_table_path,
+        excel_path="N/A (minimal flow without excel)",
+        updated_excel_path="N/A",
+        change_table_path="N/A",
         final_stl_dir=str(settings.final_stl_dir),
     )
 
@@ -186,8 +167,6 @@ def export_report(state: DemoState) -> DemoState:
         "validated_changes": str(vc_path),
         "execution_results": str(er_path),
         "demo_report": str(md_path),
-        "change_table": state.change_table_path,
-        "updated_excel": state.updated_excel_path,
         "final_stl_dir": str(settings.final_stl_dir),
     }
     return state
