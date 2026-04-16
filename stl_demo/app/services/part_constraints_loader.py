@@ -41,10 +41,16 @@ def build_part_to_file_map_from_constraints(
         part_name = str(item.get("part_name", "")).strip()
 
         candidate = None
-        if part_name and part_name in filename_map:
-            candidate = filename_map[part_name]
-        elif part_id and part_id in filename_map:
-            candidate = filename_map[part_id]
+        candidates: List[str] = []
+        if part_name:
+            candidates.extend([part_name, f"{part_name}.stl"])
+        if part_id:
+            candidates.extend([part_id, f"{part_id}.stl"])
+
+        for key in candidates:
+            if key in filename_map:
+                candidate = filename_map[key]
+                break
 
         if candidate is not None:
             if part_id:

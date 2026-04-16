@@ -1,47 +1,13 @@
 {
   "changes": [
     {
-      "target_part": "geometry_0__part_01.stl",
-      "op": "scale",
+      "target_part": "BJ0002",
+      "op": "rotate",
       "params": {
-        "x": 1.15,
-        "y": 1.0,
-        "z": 1.0
+        "axis": "y",
+        "degrees": 15
       },
-      "reason": "机身主段明显延展，增强纵向比例"
-    },
-    {
-      "target_part": "geometry_0__part_14.stl",
-      "op": "scale",
-      "params": {
-        "x": 1.2,
-        "y": 1.1,
-        "z": 1.0
-      },
-      "reason": "翼尖外缘明显外扩，增强俯视可见性"
-    },
-    {
-      "target_part": "geometry_0__part_16.stl",
-      "op": "add",
-      "params": {
-        "source_part": "geometry_0__part_16.stl",
-        "offset": {
-          "x": 0.0,
-          "y": 0.08,
-          "z": 0.0
-        }
-      },
-      "reason": "在机背中前段新增醒目整流结构"
-    },
-    {
-      "target_part": "geometry_0__part_33.stl",
-      "op": "scale",
-      "params": {
-        "x": 1.25,
-        "y": 1.25,
-        "z": 1.25
-      },
-      "reason": "发动机短舱明显放大，增强体积感和存在感"
+      "reason": "围绕安装轴旋转 15 度"
     }
   ]
 }

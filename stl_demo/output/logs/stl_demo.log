@@ -43,3 +43,11 @@ changes.5.target_part
 2026-04-13 06:59:07,923 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md', 'change_table': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\excels\\change_table.xlsx', 'updated_excel': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\excels\\updated_parts.xlsx', 'final_stl_dir': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl'}
 2026-04-16 15:04:52,353 INFO [app.graph.nodes] Loaded part_constraints=24 and stl_files=20
 2026-04-16 15:05:22,115 INFO [app.graph.nodes] Loaded part_constraints=24 and stl_files=20
+2026-04-16 15:15:03,578 INFO [app.graph.nodes] Loaded part_constraints=24 and stl_files=20
+2026-04-16 15:15:58,268 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-16 15:15:58,431 INFO [app.graph.nodes] Prepared final STL bundle, copied 20 files
+2026-04-16 15:32:11,609 INFO [app.graph.nodes] Loaded part_constraints=24 and stl_files=20
+2026-04-16 15:33:10,694 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-16 15:33:10,877 INFO [app.graph.nodes] Prepared final STL bundle, copied 20 files
+2026-04-16 15:33:10,965 INFO [main] Workflow finished.
+2026-04-16 15:33:10,965 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md', 'final_stl_dir': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl'}
