@@ -15,6 +15,14 @@ def build_change_intent_prompt(
 你是一名面向 STL 装备模型编辑的规划助手。
 你的任务是：根据情报文本和结构化部件摘要，生成 STL 变更意图。
 
+【最重要要求】
+1. 逐条识别情报文本中的每一个“明确编辑请求”。
+2. 对于每一个“可执行且目标明确”的请求，都必须输出一条对应的 change。
+3. 不要因为只对其中一条更有把握，就忽略另一条同样明确、同样可执行的请求。
+4. 若文本中出现部件ID（如 BJ0001），优先直接使用该 part_id 作为 target_part。
+5. 若部件摘要中 allowed_ops 包含 stretch，且文本语义是“加长/伸长/延长”，必须优先输出 stretch。
+6. 若 forbidden_ops 包含 uniform_scale，则禁止输出传统整体 scale(x,y,z)。
+
 你必须遵守以下规则：
 1. 只能输出 JSON。
 2. 输出格式：
@@ -28,18 +36,16 @@ def build_change_intent_prompt(
     }}
   ]
 }}
-3. 优先依据部件摘要中的 allowed_ops / forbidden_ops 决定操作。
-4. 若部件是 structural_part，且需求是“加长/伸长/延长”，优先输出 stretch，而不是 uniform scale。
-5. 若部件 forbidden_ops 包含 uniform_scale，则不要输出传统整体缩放。
-6. rotate 可使用：
+3. rotate 可使用：
    - {{"axis":"x|y|z","degrees":15}}
    - 或 {{"axis_vector":[0,0,1],"degrees":15}}
-7. stretch 使用：
+4. stretch 使用：
    - {{"delta_mm": 30}}
-8. translate 使用：
+   - 若文本中已明确“沿主轴”，无需重复输出 direction_hint，系统会从约束摘要中读取 primary_axis / anchor_mode。
+5. translate 使用：
    - {{"x":10,"y":0,"z":0}}
-9. 对虚拟部件、无直接编辑权限的部件，不要生成直接编辑操作。
-10. 若信息不足，不要臆造复杂操作，可返回空 changes。
+6. 对虚拟部件、无直接编辑权限的部件，不要生成直接编辑操作。
+7. 只有在目标不明确、操作与约束冲突、或信息确实不足时，才能不输出该条变更。
 
 情报文本：
 {intelligence_block}

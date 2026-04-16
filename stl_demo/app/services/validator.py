@@ -75,14 +75,15 @@ def validate_change_intent(
             if not _coerce_float(p.get("degrees")):
                 errors.append("rotate.degrees 必须是数值")
 
+
         elif change.op == "scale":
-            has_uniform_scale = all(k in p for k in ["x", "y", "z"])
-            has_stretch = _coerce_float(p.get("delta_mm"))
-            if not has_uniform_scale and not has_stretch:
-                errors.append("scale 需提供 x/y/z，或提供 delta_mm")
-            if has_uniform_scale:
-                _validate_xyz_dict(errors, p)
-            if "delta_mm" in p and not _coerce_float(p.get("delta_mm")):
+
+            if "delta_mm" not in p:
+
+                errors.append("uniform scale 已关闭，请改用 stretch 或 scale.delta_mm")
+
+            elif not _coerce_float(p.get("delta_mm")):
+
                 errors.append("scale.delta_mm 必须是数值")
 
         elif change.op == "stretch":
