@@ -57,3 +57,8 @@ changes.5.target_part
 2026-04-16 16:40:05,570 INFO [app.graph.nodes] Prepared final STL bundle, copied 20 files
 2026-04-16 16:40:05,655 INFO [main] Workflow finished.
 2026-04-16 16:40:05,655 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md', 'final_stl_dir': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl'}
+2026-04-16 18:00:17,070 INFO [app.graph.nodes] Loaded part_constraints=24 and stl_files=20
+2026-04-16 18:01:34,635 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-16 18:01:34,814 INFO [app.graph.nodes] Prepared final STL bundle, copied 20 files
+2026-04-16 18:01:34,929 INFO [main] Workflow finished.
+2026-04-16 18:01:34,929 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'mesh_repair_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\mesh_repair_report.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md', 'final_stl_dir': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl'}

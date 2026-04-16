@@ -27,14 +27,10 @@
       "target_part": "BJ0002",
       "op": "rotate",
       "params": {
-        "axis_vector": [
-          0.0,
-          1.0,
-          0.0
-        ],
+        "axis": "y",
         "degrees": 15
       },
-      "reason": "用户指令要求围绕安装轴旋转 15 度，该部件允许 rotate 操作"
+      "reason": "用户要求围绕安装轴旋转 15 度，部件允许 rotate 操作"
     }
   ]
 }
@@ -51,14 +47,10 @@
       "target_part": "BJ0002",
       "op": "rotate",
       "params": {
-        "axis_vector": [
-          0.0,
-          1.0,
-          0.0
-        ],
+        "axis": "y",
         "degrees": 15
       },
-      "reason": "用户指令要求围绕安装轴旋转 15 度，该部件允许 rotate 操作"
+      "reason": "用户要求围绕安装轴旋转 15 度，部件允许 rotate 操作"
     }
   }
 ]
@@ -74,7 +66,9 @@
     ],
     "warnings": [
       "anchor_point=[-3613.973102, -1487.6298, 1248.919162]",
-      "axis_used=[0.0, 1.0, 0.0]"
+      "axis_used=[0.0, 1.0, 0.0]",
+      "mesh_repair_actions=fix_normals,fix_winding,remove_unreferenced_vertices",
+      "mesh_repair_warning=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'"
     ],
     "message": "Rotated by 15.0 deg; use min projection end along axis; center=preferred center hint",
     "target_part": "BJ0002",
@@ -91,3 +85,5 @@
 ## Warnings
 - anchor_point=[-3613.973102, -1487.6298, 1248.919162]
 - axis_used=[0.0, 1.0, 0.0]
+- mesh_repair_actions=fix_normals,fix_winding,remove_unreferenced_vertices
+- mesh_repair_warning=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'

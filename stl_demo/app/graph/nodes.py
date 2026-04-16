@@ -21,6 +21,8 @@ from app.services.report_writer import write_demo_report, write_json
 from app.services.validator import validate_change_intent
 from app.skills.dispatcher import dispatch_change
 
+from app.services.mesh_repair_service import repair_mesh_file, record_to_dict
+
 logger = logging.getLogger(__name__)
 
 
@@ -121,6 +123,30 @@ def apply_skills(state: DemoState) -> DemoState:
             continue
 
         result = dispatch_change(vr.change, part_to_file, settings.final_stl_dir)
+
+        # Day3: 统一执行后 mesh repair
+        if result.success and result.output_files:
+            repaired_files = []
+            for output_file in result.output_files:
+                try:
+                    repair_record = repair_mesh_file(output_file, overwrite=True, enable_light_remesh=False)
+                    state.mesh_repair_reports.append(record_to_dict(repair_record))
+                    repaired_files.append(repair_record.output_path)
+
+                    if repair_record.actions:
+                        result.warnings.append(
+                            f"mesh_repair_actions={','.join(repair_record.actions)}"
+                        )
+                    if repair_record.warnings:
+                        result.warnings.extend(
+                            [f"mesh_repair_warning={w}" for w in repair_record.warnings]
+                        )
+                except Exception as exc:
+                    result.warnings.append(f"mesh_repair_failed={exc}")
+                    repaired_files.append(output_file)
+
+            result.output_files = repaired_files
+
         state.execution_results.append(result)
 
         if vr.change.op == "add" and result.success and result.output_files:
@@ -141,11 +167,13 @@ def export_report(state: DemoState) -> DemoState:
     ci_path = settings.reports_dir / "change_intent.json"
     vc_path = settings.reports_dir / "validated_changes.json"
     er_path = settings.reports_dir / "execution_results.json"
+    mr_path = settings.reports_dir / "mesh_repair_report.json"
     md_path = settings.reports_dir / "demo_report.md"
 
     write_json(ci_path, state.change_intent.model_dump())
     write_json(vc_path, [x.model_dump() for x in state.validated_changes])
     write_json(er_path, [x.model_dump() for x in state.execution_results])
+    write_json(mr_path, state.mesh_repair_reports)
 
     write_demo_report(
         report_path=md_path,
@@ -166,6 +194,7 @@ def export_report(state: DemoState) -> DemoState:
         "change_intent": str(ci_path),
         "validated_changes": str(vc_path),
         "execution_results": str(er_path),
+        "mesh_repair_report": str(mr_path),
         "demo_report": str(md_path),
         "final_stl_dir": str(settings.final_stl_dir),
     }
