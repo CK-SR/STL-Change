@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Literal
+
 from pydantic import BaseModel, Field
 
 
-AllowedOp = Literal["scale", "translate", "rotate", "delete", "add"]
+AllowedOp = Literal["scale", "translate", "rotate", "delete", "add", "stretch"]
 
 
 class PartMeta(BaseModel):
@@ -58,6 +59,7 @@ class SkillExecutionResult(BaseModel):
 
 class DemoState(BaseModel):
     discovered_stl_files: List[str] = Field(default_factory=list)
+
     # Excel / 文本输入
     df: Any | None = None
     schema: Dict[str, Any] = Field(default_factory=dict)
@@ -72,7 +74,6 @@ class DemoState(BaseModel):
     # Excel 输出
     change_table_path: str = ""
     updated_excel_path: str = ""
-
     warnings: List[str] = Field(default_factory=list)
     report_paths: Dict[str, str] = Field(default_factory=dict)
 

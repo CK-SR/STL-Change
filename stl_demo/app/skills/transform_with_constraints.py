@@ -3,11 +3,13 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional
+from typing import List, Literal, Optional
 
 import numpy as np
 import trimesh
 
+from app.models import SkillExecutionResult
+from app.services.geometry_anchor_service import GeometryAnchorService
 from app.services.part_constraint_service import PartConstraintService
 
 
@@ -33,88 +35,20 @@ class TransformWithConstraints:
     - anchored_rotate
     - constrained_stretch
 
-    说明：
-    1. 这版优先服务 demo，不追求 CAD 级精确。
-    2. stretch 当前采用“沿主轴单轴缩放 + 锚点固定”的方式。
-    3. 后续可以在此基础上继续接 mesh_repair_service / reasonableness_checker。
+    本版修订重点：
+    1. 对齐你现在的 part_constraints.json 生成脚本；
+    2. 锚点计算统一交给 GeometryAnchorService；
+    3. 优先使用 geometry.center_mass / geometry.bbox_center；
+    4. 仍保持 demo 级最小实现，不引入复杂局部重构。
     """
 
-    def __init__(self, constraint_service: PartConstraintService) -> None:
+    def __init__(
+        self,
+        constraint_service: PartConstraintService,
+        anchor_service: Optional[GeometryAnchorService] = None,
+    ) -> None:
         self.constraint_service = constraint_service
-
-    # =========================
-    # 公共工具
-    # =========================
-    def _load_mesh(self, stl_path: str | Path) -> trimesh.Trimesh:
-        mesh = trimesh.load_mesh(stl_path, process=False)
-
-        if isinstance(mesh, trimesh.Scene):
-            if len(mesh.geometry) == 0:
-                raise ValueError(f"No geometry in scene: {stl_path}")
-            mesh = trimesh.util.concatenate(tuple(mesh.geometry.values()))
-
-        if not isinstance(mesh, trimesh.Trimesh):
-            raise TypeError(f"Loaded object is not a mesh: {type(mesh)}")
-
-        if len(mesh.vertices) == 0:
-            raise ValueError(f"Mesh has no vertices: {stl_path}")
-
-        return mesh.copy()
-
-    def _save_mesh(self, mesh: trimesh.Trimesh, output_path: str | Path) -> str:
-        output_path = str(output_path)
-        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-        mesh.export(output_path)
-        return output_path
-
-    def _normalize_axis(self, axis: List[float] | np.ndarray) -> np.ndarray:
-        arr = np.asarray(axis, dtype=float).reshape(3)
-        norm = np.linalg.norm(arr)
-        if norm < 1e-9:
-            raise ValueError(f"Invalid axis: {axis}")
-        return arr / norm
-
-    def _get_anchor_point(self, mesh: trimesh.Trimesh, part_id: str) -> np.ndarray:
-        """
-        根据 anchor_mode 选一个最小可用锚点。
-        当前支持：
-        - center
-        - base_face_fixed
-        - axis_fixed
-        - none -> fallback center
-        """
-        anchor_mode = self.constraint_service.get_anchor_mode(part_id)
-        bbox = mesh.bounds
-        min_bound = bbox[0]
-        max_bound = bbox[1]
-        center = (min_bound + max_bound) / 2.0
-
-        if anchor_mode == "center":
-            return center
-
-        if anchor_mode == "none":
-            return center
-
-        if anchor_mode == "axis_fixed":
-            # 当前最小版先退化为中心点
-            return center
-
-        if anchor_mode == "base_face_fixed":
-            axis = self._normalize_axis(self.constraint_service.get_primary_axis(part_id))
-            dots_min = np.dot(min_bound, axis)
-            dots_max = np.dot(max_bound, axis)
-
-            # 选择沿主轴较小一端作为“基座侧”
-            base_proj = min(dots_min, dots_max)
-            base_point = center.copy()
-
-            # 用 center 投影回 base 端附近
-            current_proj = np.dot(center, axis)
-            delta = base_proj - current_proj
-            base_point = center + delta * axis
-            return base_point
-
-        return center
+        self.anchor_service = anchor_service or GeometryAnchorService()
 
     def _make_translation_matrix(self, offset: np.ndarray) -> np.ndarray:
         mat = np.eye(4, dtype=float)
@@ -141,17 +75,10 @@ class TransformWithConstraints:
         axis: np.ndarray,
         anchor_point: np.ndarray,
     ) -> np.ndarray:
-        """
-        沿指定轴单轴缩放，并保持 anchor_point 不动。
-        公式：
-        M = T(anchor) * S_axis * T(-anchor)
-        """
-        axis = self._normalize_axis(axis)
+        axis = self.anchor_service.normalize_axis(axis)
         if scale_factor <= 0:
             raise ValueError(f"scale_factor must be > 0, got {scale_factor}")
 
-        # 单轴缩放矩阵：
-        # S = I + (s - 1) * (u u^T)
         u = axis.reshape(3, 1)
         linear = np.eye(3) + (scale_factor - 1.0) * (u @ u.T)
 
@@ -166,14 +93,24 @@ class TransformWithConstraints:
 
         return t2 @ mat @ t1
 
-    def _mesh_extent_along_axis(self, mesh: trimesh.Trimesh, axis: np.ndarray) -> float:
-        axis = self._normalize_axis(axis)
-        projections = np.dot(mesh.vertices, axis)
-        return float(projections.max() - projections.min())
+    def _resolve_anchor(self, mesh: trimesh.Trimesh, part_id: str) -> tuple[np.ndarray, np.ndarray, str]:
+        axis = self.constraint_service.get_primary_axis(part_id)
+        anchor_mode = self.constraint_service.get_anchor_mode(part_id)
+        geometry_hint = self.constraint_service.get_geometry_hint(part_id)
 
-    # =========================
-    # 对外方法
-    # =========================
+        anchor_info = self.anchor_service.get_anchor_point(
+            mesh=mesh,
+            anchor_mode=anchor_mode,
+            primary_axis=axis,
+            center_mass_hint=geometry_hint.center_mass or None,
+            bbox_center_hint=geometry_hint.bbox_center or None,
+        )
+        return (
+            np.asarray(anchor_info.anchor_point, dtype=float),
+            np.asarray(anchor_info.axis_used, dtype=float),
+            anchor_info.detail,
+        )
+
     def constrained_translate(
         self,
         part_id: str,
@@ -183,12 +120,11 @@ class TransformWithConstraints:
     ) -> TransformResult:
         self.constraint_service.assert_operation_allowed(part_id, "translate")
 
-        mesh = self._load_mesh(stl_path)
+        mesh = self.anchor_service.load_mesh(stl_path)
         offset = np.asarray(offset_xyz_mm, dtype=float).reshape(3)
         transform = self._make_translation_matrix(offset)
-
         mesh.apply_transform(transform)
-        saved = self._save_mesh(mesh, output_path)
+        saved = self.anchor_service.save_mesh(mesh, output_path)
 
         return TransformResult(
             success=True,
@@ -209,25 +145,23 @@ class TransformWithConstraints:
     ) -> TransformResult:
         self.constraint_service.assert_operation_allowed(part_id, "rotate")
 
-        mesh = self._load_mesh(stl_path)
-        axis_used = self._normalize_axis(axis or self.constraint_service.get_primary_axis(part_id))
-        anchor_point = self._get_anchor_point(mesh, part_id)
-
+        mesh = self.anchor_service.load_mesh(stl_path)
+        anchor_point, default_axis, anchor_detail = self._resolve_anchor(mesh, part_id)
+        axis_used = self.anchor_service.normalize_axis(axis or default_axis)
         transform = self._make_rotation_matrix(
             angle_deg=angle_deg,
             axis=axis_used,
             anchor_point=anchor_point,
         )
-
         mesh.apply_transform(transform)
-        saved = self._save_mesh(mesh, output_path)
+        saved = self.anchor_service.save_mesh(mesh, output_path)
 
         return TransformResult(
             success=True,
             operation="rotate",
             part_id=part_id,
             output_path=saved,
-            detail=f"Rotated by {angle_deg} deg around anchor={anchor_point.tolist()}",
+            detail=f"Rotated by {angle_deg} deg; {anchor_detail}",
             anchor_point=anchor_point.tolist(),
             axis_used=axis_used.tolist(),
             transform_matrix=transform.tolist(),
@@ -241,27 +175,19 @@ class TransformWithConstraints:
         delta_mm: float,
         axis: Optional[List[float]] = None,
     ) -> TransformResult:
-        """
-        将“整体 scale”改成“沿主轴单轴伸缩”。
-        计算方式：
-        - 先测量 mesh 在该轴方向上的当前长度 old_len
-        - new_len = old_len + delta_mm
-        - scale_factor = new_len / old_len
-        - 保持 anchor_point 固定，沿主轴方向做单轴缩放
-        """
         self.constraint_service.assert_operation_allowed(part_id, "stretch")
 
-        mesh = self._load_mesh(stl_path)
-        axis_used = self._normalize_axis(axis or self.constraint_service.get_primary_axis(part_id))
-        anchor_point = self._get_anchor_point(mesh, part_id)
+        mesh = self.anchor_service.load_mesh(stl_path)
+        anchor_point, default_axis, anchor_detail = self._resolve_anchor(mesh, part_id)
+        axis_used = self.anchor_service.normalize_axis(axis or default_axis)
 
-        old_len = self._mesh_extent_along_axis(mesh, axis_used)
+        old_len = self.anchor_service.mesh_extent_along_axis(mesh, axis_used)
         if old_len <= 1e-6:
             raise ValueError(f"Mesh extent along axis too small: {old_len}")
 
         new_len = old_len + float(delta_mm)
         if new_len <= 1e-6:
-            raise ValueError(f"Invalid new length: {new_len}")
+            raise ValueError(f"Stretch result length too small: new_len={new_len}")
 
         scale_factor = new_len / old_len
         transform = self._make_stretch_matrix_with_anchor(
@@ -269,9 +195,8 @@ class TransformWithConstraints:
             axis=axis_used,
             anchor_point=anchor_point,
         )
-
         mesh.apply_transform(transform)
-        saved = self._save_mesh(mesh, output_path)
+        saved = self.anchor_service.save_mesh(mesh, output_path)
 
         return TransformResult(
             success=True,
@@ -280,45 +205,26 @@ class TransformWithConstraints:
             output_path=saved,
             detail=(
                 f"Stretched along axis by delta_mm={delta_mm}, "
-                f"old_len={old_len:.4f}, new_len={new_len:.4f}, scale_factor={scale_factor:.6f}"
+                f"old_len={old_len:.3f}, new_len={new_len:.3f}; {anchor_detail}"
             ),
             anchor_point=anchor_point.tolist(),
             axis_used=axis_used.tolist(),
             transform_matrix=transform.tolist(),
         )
 
-    def run(
-        self,
-        operation: OperationName,
-        part_id: str,
-        stl_path: str | Path,
-        output_path: str | Path,
-        **kwargs: Any,
-    ) -> TransformResult:
-        if operation == "translate":
-            return self.constrained_translate(
-                part_id=part_id,
-                stl_path=stl_path,
-                output_path=output_path,
-                offset_xyz_mm=kwargs["offset_xyz_mm"],
-            )
 
-        if operation == "rotate":
-            return self.anchored_rotate(
-                part_id=part_id,
-                stl_path=stl_path,
-                output_path=output_path,
-                angle_deg=kwargs["angle_deg"],
-                axis=kwargs.get("axis"),
-            )
+def transform_result_to_skill_execution(result: TransformResult) -> SkillExecutionResult:
+    warnings: List[str] = []
+    if result.anchor_point is not None:
+        warnings.append(f"anchor_point={result.anchor_point}")
+    if result.axis_used is not None:
+        warnings.append(f"axis_used={result.axis_used}")
 
-        if operation == "stretch":
-            return self.constrained_stretch(
-                part_id=part_id,
-                stl_path=stl_path,
-                output_path=output_path,
-                delta_mm=kwargs["delta_mm"],
-                axis=kwargs.get("axis"),
-            )
-
-        raise ValueError(f"Unsupported operation: {operation}")
+    return SkillExecutionResult(
+        success=result.success,
+        output_files=[result.output_path] if result.output_path else [],
+        warnings=warnings,
+        message=result.detail,
+        target_part=result.part_id,
+        op=result.operation,
+    )

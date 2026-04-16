@@ -12,8 +12,14 @@ from app.services.intelligence_generator import generate_mock_intelligence
 from app.services.excel_loader import load_excel, scan_stl_files
 from app.services.schema_analyzer import analyze_excel_schema
 from app.services.part_summary_builder import build_part_summary_from_excel
-from app.services.excel_indexer import build_existing_parts_set_from_excel, build_part_to_file_map_from_excel
-from app.services.excel_change_writer import build_change_table_from_intent, apply_change_intent_to_excel
+from app.services.excel_indexer import (
+    build_existing_parts_set_from_excel,
+    build_part_to_file_map_from_excel,
+)
+from app.services.excel_change_writer import (
+    build_change_table_from_intent,
+    apply_change_intent_to_excel,
+)
 from app.services.stl_bundle_preparer import prepare_full_stl_bundle
 from app.services.report_writer import write_demo_report, write_json
 from app.services.validator import validate_change_intent
@@ -59,17 +65,24 @@ def build_part_summary_node(state: DemoState) -> DemoState:
 
 def generate_change_intent_node(state: DemoState) -> DemoState:
     if settings.llm_mode == "openai":
-        llm = OpenAICompatibleLLMClient(settings.base_url, settings.api_key, settings.model_name)
+        llm = OpenAICompatibleLLMClient(
+            settings.base_url,
+            settings.api_key,
+            settings.model_name,
+        )
     else:
         llm = MockLLMClient()
 
-    state.change_intent = generate_change_intent(llm, state.intelligence_texts, state.part_summary)
+    state.change_intent = generate_change_intent(
+        llm,
+        state.intelligence_texts,
+        state.part_summary,
+    )
     return state
 
 
 def validate_change_intent_node(state: DemoState) -> DemoState:
     assert state.df is not None
-
     existing_parts = build_existing_parts_set_from_excel(state.df, state.schema)
     existing_parts.update(Path(s).name for s in state.discovered_stl_files)
 
@@ -90,8 +103,11 @@ def prepare_stl_bundle_node(state: DemoState) -> DemoState:
 
 def apply_skills(state: DemoState) -> DemoState:
     assert state.df is not None
-
-    part_to_file = build_part_to_file_map_from_excel(state.df, state.schema, settings.final_stl_dir)
+    part_to_file = build_part_to_file_map_from_excel(
+        state.df,
+        state.schema,
+        settings.final_stl_dir,
+    )
 
     # 保险：把输出目录中已有 STL 也补进去
     for p in settings.final_stl_dir.glob("*.stl"):
@@ -115,6 +131,11 @@ def apply_skills(state: DemoState) -> DemoState:
             new_file = Path(result.output_files[0])
             part_to_file[new_file.name] = new_file
 
+        # 受约束变换生成的新文件同样补进 map，便于后续继续引用
+        if vr.change.op in {"translate", "rotate", "stretch", "scale"} and result.success and result.output_files:
+            new_file = Path(result.output_files[0])
+            part_to_file[vr.change.target_part] = new_file
+
         if result.warnings:
             state.warnings.extend(result.warnings)
 
@@ -123,7 +144,6 @@ def apply_skills(state: DemoState) -> DemoState:
 
 def write_excel_outputs_node(state: DemoState) -> DemoState:
     assert state.df is not None
-
     change_table = build_change_table_from_intent(state.change_intent, state.df, state.schema)
     updated_df = apply_change_intent_to_excel(state.change_intent, state.df, state.schema)
 
@@ -133,7 +153,6 @@ def write_excel_outputs_node(state: DemoState) -> DemoState:
 
     state.change_table_path = str(settings.change_table_path)
     state.updated_excel_path = str(settings.updated_excel_path)
-
     return state
 
 
