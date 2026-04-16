@@ -28,3 +28,16 @@ changes.5.target_part
 2026-04-13 06:30:46,702 INFO [app.graph.nodes] Loaded excel and 50 STL files
 2026-04-13 06:30:50,700 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
 2026-04-13 06:30:50,762 INFO [app.graph.nodes] Prepared final STL bundle, copied 50 files
+2026-04-13 06:50:23,706 INFO [app.graph.nodes] Loaded excel and 50 STL files
+2026-04-13 06:50:28,418 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 06:50:28,458 INFO [app.graph.nodes] Prepared final STL bundle, copied 50 files
+2026-04-13 06:50:28,544 INFO [main] Workflow finished.
+2026-04-13 06:50:28,544 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md', 'change_table': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\excels\\change_table.xlsx', 'updated_excel': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\excels\\updated_parts.xlsx', 'final_stl_dir': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl'}
+2026-04-13 06:57:45,524 INFO [app.graph.nodes] Loaded excel and 50 STL files
+2026-04-13 06:57:49,603 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 06:57:49,646 INFO [app.graph.nodes] Prepared final STL bundle, copied 50 files
+2026-04-13 06:59:03,368 INFO [app.graph.nodes] Loaded excel and 50 STL files
+2026-04-13 06:59:07,783 INFO [httpx] HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 06:59:07,831 INFO [app.graph.nodes] Prepared final STL bundle, copied 50 files
+2026-04-13 06:59:07,923 INFO [main] Workflow finished.
+2026-04-13 06:59:07,923 INFO [main] Report paths: {'change_intent': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\change_intent.json', 'validated_changes': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\validated_changes.json', 'execution_results': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\execution_results.json', 'demo_report': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\demo_report.md', 'change_table': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\excels\\change_table.xlsx', 'updated_excel': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\excels\\updated_parts.xlsx', 'final_stl_dir': 'D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl'}

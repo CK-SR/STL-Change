@@ -9,14 +9,16 @@ from app.models import ChangeIntent
 
 def _ensure_audit_cols(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
-    if "被修改参数" not in out.columns:
-        out["被修改参数"] = ""
-    if "参数原始值->新值" not in out.columns:
-        out["参数原始值->新值"] = ""
-    if "变更状态" not in out.columns:
-        out["变更状态"] = ""
-    if "备注" not in out.columns:
-        out["备注"] = ""
+
+    audit_cols = ["被修改参数", "参数原始值->新值", "变更状态", "备注"]
+
+    for col in audit_cols:
+        if col not in out.columns:
+            out[col] = ""
+        # 关键：无论原来是什么 dtype，都统一转成 object，并清理 NaN
+        out[col] = out[col].astype("object")
+        out[col] = out[col].where(out[col].notna(), "")
+
     return out
 
 
@@ -150,8 +152,9 @@ def apply_change_intent_to_excel(change_intent: ChangeIntent, df: pd.DataFrame, 
             for idx in indices:
                 out.at[idx, "变更状态"] = "已修改"
                 note = f"scale {ch.params}"
-                out.at[idx, "备注"] = f'{out.at[idx, "备注"]};{note}' if str(out.at[idx, "备注"]).strip() else note
-
+                existing_note = out.at[idx, "备注"]
+                existing_note = "" if pd.isna(existing_note) else str(existing_note).strip()
+                out.at[idx, "备注"] = f"{existing_note};{note}" if existing_note else note
         elif ch.op == "translate":
             axis_to_delta = {
                 "x": float(ch.params.get("x", 0.0)),
@@ -172,20 +175,23 @@ def apply_change_intent_to_excel(change_intent: ChangeIntent, df: pd.DataFrame, 
             for idx in indices:
                 out.at[idx, "变更状态"] = "已修改"
                 note = f"translate {ch.params}"
-                out.at[idx, "备注"] = f'{out.at[idx, "备注"]};{note}' if str(out.at[idx, "备注"]).strip() else note
-
+                existing_note = out.at[idx, "备注"]
+                existing_note = "" if pd.isna(existing_note) else str(existing_note).strip()
+                out.at[idx, "备注"] = f"{existing_note};{note}" if existing_note else note
         elif ch.op == "rotate":
             for idx in indices:
                 out.at[idx, "变更状态"] = "已修改"
                 note = f"rotate {ch.params}"
-                out.at[idx, "备注"] = f'{out.at[idx, "备注"]};{note}' if str(out.at[idx, "备注"]).strip() else note
-
+                existing_note = out.at[idx, "备注"]
+                existing_note = "" if pd.isna(existing_note) else str(existing_note).strip()
+                out.at[idx, "备注"] = f"{existing_note};{note}" if existing_note else note
         elif ch.op == "delete":
             for idx in indices:
                 out.at[idx, "变更状态"] = "删除"
                 note = "该部件对应 STL 已删除"
-                out.at[idx, "备注"] = f'{out.at[idx, "备注"]};{note}' if str(out.at[idx, "备注"]).strip() else note
-
+                existing_note = out.at[idx, "备注"]
+                existing_note = "" if pd.isna(existing_note) else str(existing_note).strip()
+                out.at[idx, "备注"] = f"{existing_note};{note}" if existing_note else note
         elif ch.op == "add":
             source_part = str(ch.params.get("source_part", "")).strip()
             source_indices = _find_row_indices_by_part(out, schema, source_part)

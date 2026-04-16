@@ -1,10 +1,70 @@
 # STL 文本驱动变更 Demo 报告
 
-- 输入模型名称: airbus-a320neo
-- 输入源文件: airbus-a320neo.glb
+## 输入概况
+- 输入 Excel: D:\bica\k-8\STL-Change\stl_demo\data\metadata\airbus-a320neo_original.xlsx
+- 扫描到的 STL 数量: 50
+- 最终 STL 输出目录: D:\bica\k-8\STL-Change\stl_demo\output\final_stl
+- 修改后 Excel: D:\bica\k-8\STL-Change\stl_demo\output\excels\updated_parts.xlsx
+- 变更表 Excel: D:\bica\k-8\STL-Change\stl_demo\output\excels\change_table.xlsx
+
+## Excel Schema 识别结果
+```json
+{
+  "model_col": "模型名称",
+  "object_type_col": "对象类型",
+  "category_col": "部件类别",
+  "name_col": "模型名称",
+  "file_col": "部件文件",
+  "node_col": "节点名称",
+  "dim_cols": [
+    "长度",
+    "宽度",
+    "高度"
+  ],
+  "dim_axis_map": {
+    "x": [
+      "长度"
+    ],
+    "y": [
+      "宽度"
+    ],
+    "z": [
+      "高度"
+    ]
+  },
+  "pos_cols": [
+    "位置X",
+    "位置Y",
+    "位置Z"
+  ],
+  "pos_axis_map": {
+    "x": [
+      "位置X"
+    ],
+    "y": [
+      "位置Y"
+    ],
+    "z": [
+      "位置Z"
+    ]
+  }
+}
+```
 
 ## 情报文本
-- 关于某型窄体客机外形修订的一些推测.从现有公开三维外形看，这一窄体客机平台的基本气动布局并没有发生根本变化，仍然延续了典型的双发单通道民航客机构型。机翼位置、尾翼布局以及起落架总体收放关系都保持在一个相对稳定的范围内，因此，如果存在改型，其重点多半不在于推翻原有平台，而是在若干局部外形上做有节制的修订。如果进一步观察机体中段与翼根附近的过渡关系，可以发现该区域仍然承担着容积、升力与结构连续性的多重要求。由此推测，这类改型最有可能首先作用于机身主段，而不是尾翼或起落架等受既有布局强约束的部分。换句话说，较为合理的一种方向，是在不明显破坏总体比例的前提下，对机体中段做有限度的延展处理，以换取更大的内部空间或更灵活的设备布置余量。与此相对应，翼面外缘也可能出现温和变化。值得注意的是，这种变化未必体现为整片机翼的大幅重构，更可能只是翼尖附近的局部修订。原因在于，对民航平台而言，过大的机翼尺度变化会迅速传导到结构重量、起降性能和机场适配性等多个方面，因此更现实的做法，通常是对翼尖区域、翼梢附属面或外段翼面做小幅调整，以改善展向特征或细化外形气动表现，而不是彻底改写机翼主平面。此外，机身背部局部区域似乎也为附加设备留出了某种可能性。按照同类平台的演化经验，如果任务设备、通信单元或特定航电模块有所扩充，较常见的处理方式并不是大范围改动机身主壳体，而是在机背中前段增加一处尺度受控的整流结构。这样的做法有两个明显优点：其一，是对原有主承力框架的扰动相对较小；其二，是便于把新增设备与原有机体平台区分开来。从这个角度看，在背部加入一个不算夸张的设备整流罩，是一种相当符合工程直觉的方案。动力系统方面，同样可以看到一种“保守升级”的思路。若该平台确有动力或任务性能上的增强需求，那么发动机短舱及其周边外形很可能会出现轻微放大，而不是完全替换成另一种尺度级别的动力单元。这样既能在视觉上反映升级后的区别，也不至于让整机重心、挂架关系和翼下净空立刻失去协调。换言之，若要为这一平台构造一版可信的外形改型样本，那么对发动机短舱做适度增量式修订，比起激进地重构动力布局，要现实得多。综合来看，这类改型更像是一种“主段有限延展 + 外缘温和修订 + 局部新增整流结构 + 动力外形小幅放大”的组合路径。它并不追求制造一个完全陌生的新平台，而是试图在原有成熟机体上叠加若干可以被观察、被解释、也能被结构化记录的差异点。若将其作为一组训练或验证样本，那么其价值恰恰在于变化幅度适中、逻辑链条清楚，既足以形成前后对照，又不至于脱离原型平台的基本构型约束。
+- 关于某型窄体客机外形改型方案的综合判断。结合现有平台构型特征与改型需求分析，可以明确认为，本次改型不是局部微调，而是在保持基本布局不变的前提下，对若干关键外形区域进行可明显识别的强化式修订。改型目标不是仅形成细微差异，而是要在三维外形上形成清晰、直观、可对比展示的改型特征，使观察者能够在渲染结果中直接识别出机体主段、翼面外缘、背部附加结构以及动力外形等区域的明显变化。
+
+首先，机身主段应作为本次改型的核心变化区域。现有平台中段承担客舱容积、设备布置与结构过渡等多重作用，也是最适合形成显著外观差异的位置。因此，改型应优先考虑对机身主段进行较明显的延展处理，使机体中部纵向比例发生可见变化，而不是仅做难以察觉的小幅拉伸。处理后的效果应能够在侧视和俯视角度下表现出更长、更饱满的中段外形特征，从而形成整机轮廓上的第一视觉差异点。
+
+其次，翼面外缘应进行比原方案更积极的修订。此次改型不应停留在“轻微翼尖优化”的层面，而应在保持主翼总体位置不变的基础上，对外段翼面和翼尖区域做肉眼可识别的尺度增强或形态外扩。其目标是让左右翼的外缘轮廓在渲染结果中明显区别于原始构型，尤其在俯视视角下，应能体现出更舒展、更外扩的翼尖特征，使机翼成为第二个显著改型区域。
+
+再次，机身背部中前段应新增一处存在感更强的附加整流结构。与原始平台相比，该新增结构不应过于克制，而应在尺寸和体量上达到能够清楚辨识的程度，使观察者能够一眼区分“原始机背轮廓”和“改型后机背轮廓”。这一新增部件应被理解为任务设备舱、通信整流罩或附加航电背脊等外部结构，其位置应尽量位于机背中前部相对醒目的区域，从而在侧视和斜视角度中都能形成稳定的视觉特征。
+
+动力系统外形也应同步增强。若本次平台改型强调任务能力提升，则发动机短舱及其邻近区域不宜仅做轻微放大，而应进行更明确的增量式外形强化，使动力单元在机翼下方的体积感和存在感明显提升。改型后的短舱外轮廓应比原始状态更饱满、更粗壮，使其在近距离渲染图中形成清晰可见的差异，而不是需要反复比对后才能发现的细节变化。
+
+此外，为了增强整机改型样本的展示效果，尾部局部翼面或尾翼邻近结构也可以进行适度配合性调整，但其作用主要是服务整体协调，不必作为唯一主改区域。整机改型应始终围绕“机身主段明显延展、翼尖外缘明显增强、背部新增醒目整流结构、发动机短舱明显放大”这四个核心变化点展开，确保改型结果在整体轮廓、局部体量和附加结构三个层面同时形成足够强的可视差异。
+
+综合判断，本次改型样本应被理解为一种面向展示与对比验证的强化型外形修订方案。它不追求高度保守的工程收敛状态，而是强调改型结果在视觉上必须清楚、明确、稳定可辨。最终效果应使原始模型与改型模型并列展示时，观察者无需借助标注说明，也能够直接识别出机身中段被拉长、翼尖外缘被放大、机背新增附加结构、发动机外形更为饱满这几项主要变化。
 
 ## 变更意图
 ```json
@@ -14,21 +74,21 @@
       "target_part": "geometry_0__part_01.stl",
       "op": "scale",
       "params": {
-        "x": 1.08,
+        "x": 1.15,
         "y": 1.0,
         "z": 1.0
       },
-      "reason": "机身主段有限延展以增加内部空间"
+      "reason": "机身主段明显延展，增强纵向比例"
     },
     {
-      "target_part": "geometry_0__part_43.stl",
+      "target_part": "geometry_0__part_14.stl",
       "op": "scale",
       "params": {
-        "x": 1.05,
-        "y": 1.02,
-        "z": 1.02
+        "x": 1.2,
+        "y": 1.1,
+        "z": 1.0
       },
-      "reason": "翼尖区域温和修订以改善展向气动特征"
+      "reason": "翼尖外缘明显外扩，增强俯视可见性"
     },
     {
       "target_part": "geometry_0__part_16.stl",
@@ -37,21 +97,21 @@
         "source_part": "geometry_0__part_16.stl",
         "offset": {
           "x": 0.0,
-          "y": 0.03,
+          "y": 0.08,
           "z": 0.0
         }
       },
-      "reason": "在机身背部中前段增加设备整流结构"
+      "reason": "在机背中前段新增醒目整流结构"
     },
     {
-      "target_part": "geometry_0__part_10.stl",
+      "target_part": "geometry_0__part_33.stl",
       "op": "scale",
       "params": {
-        "x": 1.06,
-        "y": 1.03,
-        "z": 1.03
+        "x": 1.25,
+        "y": 1.25,
+        "z": 1.25
       },
-      "reason": "发动机短舱适度增量式放大以反映动力升级"
+      "reason": "发动机短舱明显放大，增强体积感和存在感"
     }
   ]
 }
@@ -68,11 +128,11 @@
       "target_part": "geometry_0__part_01.stl",
       "op": "scale",
       "params": {
-        "x": 1.08,
+        "x": 1.15,
         "y": 1.0,
         "z": 1.0
       },
-      "reason": "机身主段有限延展以增加内部空间"
+      "reason": "机身主段明显延展，增强纵向比例"
     }
   },
   {
@@ -80,14 +140,14 @@
     "valid": true,
     "errors": [],
     "change": {
-      "target_part": "geometry_0__part_43.stl",
+      "target_part": "geometry_0__part_14.stl",
       "op": "scale",
       "params": {
-        "x": 1.05,
-        "y": 1.02,
-        "z": 1.02
+        "x": 1.2,
+        "y": 1.1,
+        "z": 1.0
       },
-      "reason": "翼尖区域温和修订以改善展向气动特征"
+      "reason": "翼尖外缘明显外扩，增强俯视可见性"
     }
   },
   {
@@ -101,11 +161,11 @@
         "source_part": "geometry_0__part_16.stl",
         "offset": {
           "x": 0.0,
-          "y": 0.03,
+          "y": 0.08,
           "z": 0.0
         }
       },
-      "reason": "在机身背部中前段增加设备整流结构"
+      "reason": "在机背中前段新增醒目整流结构"
     }
   },
   {
@@ -113,14 +173,14 @@
     "valid": true,
     "errors": [],
     "change": {
-      "target_part": "geometry_0__part_10.stl",
+      "target_part": "geometry_0__part_33.stl",
       "op": "scale",
       "params": {
-        "x": 1.06,
-        "y": 1.03,
-        "z": 1.03
+        "x": 1.25,
+        "y": 1.25,
+        "z": 1.25
       },
-      "reason": "发动机短舱适度增量式放大以反映动力升级"
+      "reason": "发动机短舱明显放大，增强体积感和存在感"
     }
   }
 ]
@@ -132,7 +192,7 @@
   {
     "success": true,
     "output_files": [
-      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_01_scaled.stl"
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\geometry_0__part_01.stl"
     ],
     "warnings": [],
     "message": "scale success",
@@ -142,17 +202,17 @@
   {
     "success": true,
     "output_files": [
-      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_43_scaled.stl"
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\geometry_0__part_14.stl"
     ],
     "warnings": [],
     "message": "scale success",
-    "target_part": "geometry_0__part_43.stl",
+    "target_part": "geometry_0__part_14.stl",
     "op": "scale"
   },
   {
     "success": true,
     "output_files": [
-      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_16_added_001.stl"
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\geometry_0__part_16_added_001.stl"
     ],
     "warnings": [],
     "message": "add(copy) success",
@@ -162,11 +222,11 @@
   {
     "success": true,
     "output_files": [
-      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\modified_stl\\geometry_0__part_10_scaled.stl"
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\geometry_0__part_33.stl"
     ],
     "warnings": [],
     "message": "scale success",
-    "target_part": "geometry_0__part_10.stl",
+    "target_part": "geometry_0__part_33.stl",
     "op": "scale"
   }
 ]
@@ -174,9 +234,9 @@
 
 ## 成功项 (4)
 - scale geometry_0__part_01.stl: scale success
-- scale geometry_0__part_43.stl: scale success
+- scale geometry_0__part_14.stl: scale success
 - add geometry_0__part_16.stl: add(copy) success
-- scale geometry_0__part_10.stl: scale success
+- scale geometry_0__part_33.stl: scale success
 
 ## 失败项 (0)
 

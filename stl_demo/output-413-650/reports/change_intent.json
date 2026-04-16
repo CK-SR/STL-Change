@@ -1,0 +1,47 @@
+{
+  "changes": [
+    {
+      "target_part": "geometry_0__part_01.stl",
+      "op": "scale",
+      "params": {
+        "x": 1.1,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "reason": "机身主段有限延展以增加内部空间"
+    },
+    {
+      "target_part": "geometry_0__part_14.stl",
+      "op": "scale",
+      "params": {
+        "x": 1.05,
+        "y": 1.02,
+        "z": 1.02
+      },
+      "reason": "翼尖区域温和修订以改善展向气动特征"
+    },
+    {
+      "target_part": "geometry_0__part_16.stl",
+      "op": "add",
+      "params": {
+        "source_part": "geometry_0__part_16.stl",
+        "offset": {
+          "x": 0.0,
+          "y": 0.03,
+          "z": 0.0
+        }
+      },
+      "reason": "在机身背部中前段增加设备整流结构"
+    },
+    {
+      "target_part": "geometry_0__part_33.stl",
+      "op": "scale",
+      "params": {
+        "x": 1.1,
+        "y": 1.05,
+        "z": 1.05
+      },
+      "reason": "发动机短舱适度放大以反映动力升级"
+    }
+  ]
+}

@@ -23,7 +23,7 @@ class Settings:
         self.change_table_path = self.excels_dir / "change_table.xlsx"
 
         self.llm_mode = os.getenv("LLM_MODE", "openai")
-        self.model_name = os.getenv("LLM_MODEL_NAME", "qwen3-next-80b-a3b-instruct")
+        self.model_name = os.getenv("LLM_MODEL_NAME", "qwen3.5-122b-a10b")
         self.base_url = os.getenv("OPENAI_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
         self.api_key = os.getenv("OPENAI_API_KEY", "")
 
