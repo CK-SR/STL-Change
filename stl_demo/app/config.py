@@ -40,7 +40,7 @@ class Settings:
             "OPENAI_BASE_URL",
             "https://dashscope.aliyuncs.com/compatible-mode/v1",
         )
-        self.api_key = os.getenv("OPENAI_API_KEY", "")
+        self.api_key = os.getenv("OPENAI_API_KEY", "sk-bffe5737e4cd4570acac8d535d524b3d")
 
 
 settings = Settings()

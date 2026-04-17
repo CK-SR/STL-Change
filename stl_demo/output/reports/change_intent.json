@@ -4,10 +4,14 @@
       "target_part": "BJ0002",
       "op": "rotate",
       "params": {
-        "axis": "y",
+        "axis_vector": [
+          0,
+          1,
+          0
+        ],
         "degrees": 15
       },
-      "reason": "用户要求围绕安装轴旋转 15 度，部件允许 rotate 操作"
+      "reason": "用户指令要求围绕安装轴旋转 15 度，且该部件允许 rotate 操作"
     }
   ]
 }

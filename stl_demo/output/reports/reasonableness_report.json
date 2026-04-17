@@ -1,0 +1,49 @@
+[
+  {
+    "part_id": "BJ0002",
+    "op": "rotate",
+    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002.stl",
+    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002_rotated.stl",
+    "status": "warning",
+    "checks": [
+      {
+        "name": "mesh_basic",
+        "passed": true,
+        "detail": "is_watertight=False, is_winding_consistent=True",
+        "severity": "info"
+      },
+      {
+        "name": "volume_change",
+        "passed": true,
+        "detail": "volume ratio skipped because old volume is too small (old=0.000000, new=0.000000)",
+        "severity": "info"
+      },
+      {
+        "name": "primary_axis_extent",
+        "passed": true,
+        "detail": "old_extent=3048.710, new_extent=3048.710, ratio=1.000",
+        "severity": "info"
+      },
+      {
+        "name": "collision",
+        "passed": false,
+        "detail": "AABB collision with neighbors: BJ0001, BJ0004, BJ0005, BJ0006, BJ0007, BJ0020",
+        "severity": "error"
+      },
+      {
+        "name": "clearance",
+        "passed": true,
+        "detail": "neighbor clearance looks acceptable",
+        "severity": "info"
+      },
+      {
+        "name": "symmetry_group",
+        "passed": true,
+        "detail": "no symmetry mates configured, symmetry check skipped",
+        "severity": "info"
+      }
+    ],
+    "warnings": [],
+    "summary": "reasonableness check found high-risk issues"
+  }
+]

@@ -44,6 +44,7 @@ class DemoState(BaseModel):
     validated_changes: List[ValidationResult] = Field(default_factory=list)
     execution_results: List[SkillExecutionResult] = Field(default_factory=list)
     mesh_repair_reports: List[Dict[str, Any]] = Field(default_factory=list)
+    reasonableness_reports: List[Dict[str, Any]] = Field(default_factory=list)
     warnings: List[str] = Field(default_factory=list)
     report_paths: Dict[str, str] = Field(default_factory=dict)
 
