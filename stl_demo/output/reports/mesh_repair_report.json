@@ -1,7 +1,7 @@
 [
   {
-    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002_rotated.stl",
-    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002_rotated.stl",
+    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ0013_rotated.stl",
+    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ0013_rotated.stl",
     "success": true,
     "actions": [
       "fix_normals",
@@ -12,18 +12,18 @@
       "remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'"
     ],
     "stats_before": {
-      "vertices": 34704,
-      "faces": 11568,
+      "vertices": 40431,
+      "faces": 13477,
       "is_watertight": false,
       "is_winding_consistent": true,
-      "euler_number": 11568
+      "euler_number": 13477
     },
     "stats_after": {
-      "vertices": 34704,
-      "faces": 11568,
+      "vertices": 40431,
+      "faces": 13477,
       "is_watertight": false,
       "is_winding_consistent": true,
-      "euler_number": 11568
+      "euler_number": 13477
     },
     "message": "mesh repair finished"
   }

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import logging
+import os
+import shutil
 from pathlib import Path
 
 from app.config import settings
@@ -25,6 +27,28 @@ from app.services.mesh_repair_service import repair_mesh_file, record_to_dict
 from app.services.reasonableness_checker import check_reasonableness, report_to_dict
 
 logger = logging.getLogger(__name__)
+
+
+def _canonical_part_output_path(output_dir: Path, part_name: str) -> Path:
+    stem = Path(part_name).stem
+    return output_dir / f"{stem}.stl"
+
+
+def _promote_to_final_snapshot(temp_path: Path, final_path: Path) -> Path:
+    """
+    将临时产物提升为 final_stl 中的 canonical 文件。
+    使用 replace 语义，确保同一部件最终只保留一个文件。
+    """
+    final_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if temp_path.resolve() == final_path.resolve():
+        return final_path
+
+    if final_path.exists():
+        final_path.unlink()
+
+    os.replace(str(temp_path), str(final_path))
+    return final_path
 
 
 def load_inputs(state: DemoState) -> DemoState:
@@ -117,9 +141,11 @@ def apply_skills(state: DemoState) -> DemoState:
         if not vr.valid:
             continue
 
-        old_input_path = part_to_file.get(vr.change.target_part)
+        target = vr.change.target_part
+        op = vr.change.op
+        old_input_path = part_to_file.get(target)
 
-        if vr.change.target_part not in part_to_file and vr.change.op != "add":
+        if target not in part_to_file and op != "add":
             state.execution_results.append(
                 dispatch_change(vr.change, part_to_file, settings.final_stl_dir)
             )
@@ -127,14 +153,49 @@ def apply_skills(state: DemoState) -> DemoState:
 
         result = dispatch_change(vr.change, part_to_file, settings.final_stl_dir)
 
-        # Day3: 统一执行后 mesh repair
+        # delete 操作：直接从映射里移除，最终目录中也不再保留该文件
+        if op == "delete":
+            if result.success:
+                part_to_file.pop(target, None)
+            state.execution_results.append(result)
+            if result.warnings:
+                state.warnings.extend(result.warnings)
+            continue
+
+        # add(copy) 当前直接写 canonical 输出，不需要 promote 临时文件
+        if op == "add":
+            if result.success and result.output_files:
+                final_files = []
+                for output_file in result.output_files:
+                    final_path = Path(output_file)
+                    final_files.append(str(final_path))
+                    part_to_file[target] = final_path
+                    part_to_file[final_path.name] = final_path
+                result.output_files = final_files
+
+            state.execution_results.append(result)
+            if result.warnings:
+                state.warnings.extend(result.warnings)
+            continue
+
+        # translate / rotate / stretch / scale：
+        # skill 先生成临时 STL，随后：
+        # 1) repair 临时文件
+        # 2) reasonableness check（对比 old_input_path 和临时输出）
+        # 3) promote 为 canonical final 文件
         if result.success and result.output_files:
-            repaired_files = []
+            final_files = []
+
             for output_file in result.output_files:
+                temp_output = Path(output_file)
+
                 try:
-                    repair_record = repair_mesh_file(output_file, overwrite=True, enable_light_remesh=False)
+                    repair_record = repair_mesh_file(
+                        temp_output,
+                        overwrite=True,
+                        enable_light_remesh=False,
+                    )
                     state.mesh_repair_reports.append(record_to_dict(repair_record))
-                    repaired_files.append(repair_record.output_path)
 
                     if repair_record.actions:
                         result.warnings.append(
@@ -144,47 +205,44 @@ def apply_skills(state: DemoState) -> DemoState:
                         result.warnings.extend(
                             [f"mesh_repair_warning={w}" for w in repair_record.warnings]
                         )
+
+                    repaired_temp_output = Path(repair_record.output_path)
                 except Exception as exc:
                     result.warnings.append(f"mesh_repair_failed={exc}")
-                    repaired_files.append(output_file)
+                    repaired_temp_output = temp_output
 
-            result.output_files = repaired_files
+                if old_input_path is not None and Path(old_input_path).exists():
+                    try:
+                        reason_report = check_reasonableness(
+                            part_id=target,
+                            op=op,
+                            input_path=old_input_path,
+                            output_path=repaired_temp_output,
+                            part_to_file=part_to_file,
+                            part_constraints=state.part_constraints,
+                        )
+                        state.reasonableness_reports.append(report_to_dict(reason_report))
+
+                        if reason_report.status != "pass":
+                            result.warnings.append(
+                                f"reasonableness_status={reason_report.status}"
+                            )
+                    except Exception as exc:
+                        result.warnings.append(f"reasonableness_check_failed={exc}")
+
+                final_output_path = _canonical_part_output_path(settings.final_stl_dir, target)
+                promoted_path = _promote_to_final_snapshot(
+                    repaired_temp_output,
+                    final_output_path,
+                )
+
+                final_files.append(str(promoted_path))
+                part_to_file[target] = promoted_path
+                part_to_file[promoted_path.name] = promoted_path
+
+            result.output_files = final_files
 
         state.execution_results.append(result)
-
-        if vr.change.op == "add" and result.success and result.output_files:
-            new_file = Path(result.output_files[0])
-            part_to_file[new_file.name] = new_file
-
-        if vr.change.op in {"translate", "rotate", "stretch", "scale"} and result.success and result.output_files:
-            new_file = Path(result.output_files[0])
-            part_to_file[vr.change.target_part] = new_file
-
-        # Day4: 编辑后合理性检查
-        if (
-            result.success
-            and result.output_files
-            and old_input_path is not None
-            and Path(old_input_path).exists()
-        ):
-            for output_file in result.output_files:
-                try:
-                    reason_report = check_reasonableness(
-                        part_id=vr.change.target_part,
-                        op=vr.change.op,
-                        input_path=old_input_path,
-                        output_path=output_file,
-                        part_to_file=part_to_file,
-                        part_constraints=state.part_constraints,
-                    )
-                    state.reasonableness_reports.append(report_to_dict(reason_report))
-
-                    if reason_report.status != "pass":
-                        result.warnings.append(
-                            f"reasonableness_status={reason_report.status}"
-                        )
-                except Exception as exc:
-                    result.warnings.append(f"reasonableness_check_failed={exc}")
 
         if result.warnings:
             state.warnings.extend(result.warnings)

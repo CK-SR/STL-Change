@@ -8,9 +8,9 @@
 - 变更表 Excel: N/A
 
 ## 2. 情报文本
-- 将 BJ0001 支架沿其主轴加长 30mm，固定底面不要移动。
-将 BJ0002 围绕安装轴旋转 15 度。
-不要对禁止整体缩放的部件做 uniform scale。
+- 针对目标车辆 MB576055，执行一轮显著外观调整：
+1. 将炮塔向左旋转 35 度。
+要求：禁止整体缩放，仅允许对指定部件做局部受约束编辑，其余部件保持不变。
 
 ## 3. 约束来源
 ```json
@@ -24,17 +24,13 @@
 {
   "changes": [
     {
-      "target_part": "BJ0002",
+      "target_part": "BJ0013",
       "op": "rotate",
       "params": {
-        "axis_vector": [
-          0,
-          1,
-          0
-        ],
-        "degrees": 15
+        "axis": "z",
+        "degrees": 35
       },
-      "reason": "用户指令要求围绕安装轴旋转 15 度，且该部件允许 rotate 操作"
+      "reason": "情报文本要求将炮塔向左旋转 35 度"
     }
   ]
 }
@@ -52,17 +48,13 @@
     "valid": true,
     "errors": [],
     "change": {
-      "target_part": "BJ0002",
+      "target_part": "BJ0013",
       "op": "rotate",
       "params": {
-        "axis_vector": [
-          0,
-          1,
-          0
-        ],
-        "degrees": 15
+        "axis": "z",
+        "degrees": 35
       },
-      "reason": "用户指令要求围绕安装轴旋转 15 度，且该部件允许 rotate 操作"
+      "reason": "情报文本要求将炮塔向左旋转 35 度"
     }
   }
 ]
@@ -73,7 +65,7 @@
 - 失败执行数: 0
 
 ### 6.1 成功项
-- rotate BJ0002: Rotated by 15.0 deg; use min projection end along axis; center=preferred center hint
+- rotate BJ0013: Rotated by 35.0 deg; use geometry.center_mass hint; anchor=axis_fixed(center-like)
 
 ### 6.2 失败项
 - 无
@@ -84,17 +76,17 @@
   {
     "success": true,
     "output_files": [
-      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002_rotated.stl"
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0013.stl"
     ],
     "warnings": [
-      "anchor_point=[-3613.973102, -1487.6298, 1248.919162]",
-      "axis_used=[0.0, 1.0, 0.0]",
+      "anchor_point=[1567.133777, -1648.788886, 15661.488767]",
+      "axis_used=[0.0, 0.0, 1.0]",
       "mesh_repair_actions=fix_normals,fix_winding,remove_unreferenced_vertices",
       "mesh_repair_warning=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'",
       "reasonableness_status=warning"
     ],
-    "message": "Rotated by 15.0 deg; use min projection end along axis; center=preferred center hint",
-    "target_part": "BJ0002",
+    "message": "Rotated by 35.0 deg; use geometry.center_mass hint; anchor=axis_fixed(center-like)",
+    "target_part": "BJ0013",
     "op": "rotate"
   }
 ]
@@ -105,8 +97,8 @@
 ```json
 [
   {
-    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002_rotated.stl",
-    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002_rotated.stl",
+    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ0013_rotated.stl",
+    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ0013_rotated.stl",
     "success": true,
     "actions": [
       "fix_normals",
@@ -117,18 +109,18 @@
       "remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'"
     ],
     "stats_before": {
-      "vertices": 34704,
-      "faces": 11568,
+      "vertices": 40431,
+      "faces": 13477,
       "is_watertight": false,
       "is_winding_consistent": true,
-      "euler_number": 11568
+      "euler_number": 13477
     },
     "stats_after": {
-      "vertices": 34704,
-      "faces": 11568,
+      "vertices": 40431,
+      "faces": 13477,
       "is_watertight": false,
       "is_winding_consistent": true,
-      "euler_number": 11568
+      "euler_number": 13477
     },
     "message": "mesh repair finished"
   }
@@ -143,10 +135,10 @@
 ```json
 [
   {
-    "part_id": "BJ0002",
+    "part_id": "BJ0013",
     "op": "rotate",
-    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002.stl",
-    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002_rotated.stl",
+    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0013.stl",
+    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ0013_rotated.stl",
     "status": "warning",
     "checks": [
       {
@@ -164,13 +156,13 @@
       {
         "name": "primary_axis_extent",
         "passed": true,
-        "detail": "old_extent=3048.710, new_extent=3048.710, ratio=1.000",
+        "detail": "old_extent=5892.880, new_extent=4864.419, ratio=0.825",
         "severity": "info"
       },
       {
         "name": "collision",
         "passed": false,
-        "detail": "AABB collision with neighbors: BJ0001, BJ0004, BJ0005, BJ0006, BJ0007, BJ0020",
+        "detail": "AABB collision with neighbors: BJ0001, BJ0004, BJ0006, BJ0008, BJ0012, BJ0019",
         "severity": "error"
       },
       {
@@ -196,8 +188,8 @@
 - 本次变更流程已完成，但合理性检查给出 warning，建议结合碰撞/间隙/对称性结果人工复核。
 
 ## 10. 全局 Warnings
-- anchor_point=[-3613.973102, -1487.6298, 1248.919162]
-- axis_used=[0.0, 1.0, 0.0]
+- anchor_point=[1567.133777, -1648.788886, 15661.488767]
+- axis_used=[0.0, 0.0, 1.0]
 - mesh_repair_actions=fix_normals,fix_winding,remove_unreferenced_vertices
 - mesh_repair_warning=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'
 - reasonableness_status=warning

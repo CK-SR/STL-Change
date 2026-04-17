@@ -2,17 +2,17 @@
   {
     "success": true,
     "output_files": [
-      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002_rotated.stl"
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0013.stl"
     ],
     "warnings": [
-      "anchor_point=[-3613.973102, -1487.6298, 1248.919162]",
-      "axis_used=[0.0, 1.0, 0.0]",
+      "anchor_point=[1567.133777, -1648.788886, 15661.488767]",
+      "axis_used=[0.0, 0.0, 1.0]",
       "mesh_repair_actions=fix_normals,fix_winding,remove_unreferenced_vertices",
       "mesh_repair_warning=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'",
       "reasonableness_status=warning"
     ],
-    "message": "Rotated by 15.0 deg; use min projection end along axis; center=preferred center hint",
-    "target_part": "BJ0002",
+    "message": "Rotated by 35.0 deg; use geometry.center_mass hint; anchor=axis_fixed(center-like)",
+    "target_part": "BJ0013",
     "op": "rotate"
   }
 ]

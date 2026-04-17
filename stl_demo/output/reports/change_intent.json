@@ -1,17 +1,13 @@
 {
   "changes": [
     {
-      "target_part": "BJ0002",
+      "target_part": "BJ0013",
       "op": "rotate",
       "params": {
-        "axis_vector": [
-          0,
-          1,
-          0
-        ],
-        "degrees": 15
+        "axis": "z",
+        "degrees": 35
       },
-      "reason": "用户指令要求围绕安装轴旋转 15 度，且该部件允许 rotate 操作"
+      "reason": "情报文本要求将炮塔向左旋转 35 度"
     }
   ]
 }

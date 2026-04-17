@@ -1,9 +1,9 @@
 [
   {
-    "part_id": "BJ0002",
+    "part_id": "BJ0013",
     "op": "rotate",
-    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002.stl",
-    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0002_rotated.stl",
+    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0013.stl",
+    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ0013_rotated.stl",
     "status": "warning",
     "checks": [
       {
@@ -21,13 +21,13 @@
       {
         "name": "primary_axis_extent",
         "passed": true,
-        "detail": "old_extent=3048.710, new_extent=3048.710, ratio=1.000",
+        "detail": "old_extent=5892.880, new_extent=4864.419, ratio=0.825",
         "severity": "info"
       },
       {
         "name": "collision",
         "passed": false,
-        "detail": "AABB collision with neighbors: BJ0001, BJ0004, BJ0005, BJ0006, BJ0007, BJ0020",
+        "detail": "AABB collision with neighbors: BJ0001, BJ0004, BJ0006, BJ0008, BJ0012, BJ0019",
         "severity": "error"
       },
       {
