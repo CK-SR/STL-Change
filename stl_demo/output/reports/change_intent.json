@@ -1,13 +1,41 @@
 {
   "changes": [
     {
-      "target_part": "BJ0013",
-      "op": "rotate",
+      "target_part": "BJ9001",
+      "op": "add",
       "params": {
-        "axis": "z",
-        "degrees": 35
+        "attach_to": "BJ0007",
+        "asset_request": {
+          "content": "防无人机顶棚",
+          "input_type": "text",
+          "category": "roof",
+          "target_type": "armored_vehicle",
+          "mount_region": "top_hull",
+          "topk": 5,
+          "auto_approve": true,
+          "auto_accept_prompt": true,
+          "auto_accept_generation": true,
+          "force_generate": false
+        },
+        "fit_policy": {
+          "mode": "cover_parent",
+          "coverage_ratio": 0.92,
+          "clearance_mm": 20,
+          "allow_stretch": true
+        },
+        "post_transform_overrides": {
+          "translate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0
+          }
+        }
       },
-      "reason": "情报文本要求将炮塔向左旋转 35 度"
+      "reason": "在 BJ0007 顶部新增防无人机顶棚 BJ9001，优先检索 roof 素材，允许沿主轴拉伸以覆盖主要长度"
     }
   ]
 }

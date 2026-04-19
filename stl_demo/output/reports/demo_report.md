@@ -8,9 +8,7 @@
 - 变更表 Excel: N/A
 
 ## 2. 情报文本
-- 针对目标车辆 MB576055，执行一轮显著外观调整：
-1. 将炮塔向左旋转 35 度。
-要求：禁止整体缩放，仅允许对指定部件做局部受约束编辑，其余部件保持不变。
+- 在 BJ0007 顶部新增一个防无人机顶棚，新件命名为 BJ9001，优先检索现有 roof 素材，如无合适再生成；新增件需覆盖 BJ0007 顶部主要长度，允许沿主轴适度拉伸。
 
 ## 3. 约束来源
 ```json
@@ -24,13 +22,41 @@
 {
   "changes": [
     {
-      "target_part": "BJ0013",
-      "op": "rotate",
+      "target_part": "BJ9001",
+      "op": "add",
       "params": {
-        "axis": "z",
-        "degrees": 35
+        "attach_to": "BJ0007",
+        "asset_request": {
+          "content": "防无人机顶棚",
+          "input_type": "text",
+          "category": "roof",
+          "target_type": "armored_vehicle",
+          "mount_region": "top_hull",
+          "topk": 5,
+          "auto_approve": true,
+          "auto_accept_prompt": true,
+          "auto_accept_generation": true,
+          "force_generate": false
+        },
+        "fit_policy": {
+          "mode": "cover_parent",
+          "coverage_ratio": 0.92,
+          "clearance_mm": 20,
+          "allow_stretch": true
+        },
+        "post_transform_overrides": {
+          "translate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0
+          }
+        }
       },
-      "reason": "情报文本要求将炮塔向左旋转 35 度"
+      "reason": "在 BJ0007 顶部新增防无人机顶棚 BJ9001，优先检索 roof 素材，允许沿主轴拉伸以覆盖主要长度"
     }
   ]
 }
@@ -48,13 +74,41 @@
     "valid": true,
     "errors": [],
     "change": {
-      "target_part": "BJ0013",
-      "op": "rotate",
+      "target_part": "BJ9001",
+      "op": "add",
       "params": {
-        "axis": "z",
-        "degrees": 35
+        "attach_to": "BJ0007",
+        "asset_request": {
+          "content": "防无人机顶棚",
+          "input_type": "text",
+          "category": "roof",
+          "target_type": "armored_vehicle",
+          "mount_region": "top_hull",
+          "topk": 5,
+          "auto_approve": true,
+          "auto_accept_prompt": true,
+          "auto_accept_generation": true,
+          "force_generate": false
+        },
+        "fit_policy": {
+          "mode": "cover_parent",
+          "coverage_ratio": 0.92,
+          "clearance_mm": 20,
+          "allow_stretch": true
+        },
+        "post_transform_overrides": {
+          "translate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0
+          }
+        }
       },
-      "reason": "情报文本要求将炮塔向左旋转 35 度"
+      "reason": "在 BJ0007 顶部新增防无人机顶棚 BJ9001，优先检索 roof 素材，允许沿主轴拉伸以覆盖主要长度"
     }
   }
 ]
@@ -65,7 +119,7 @@
 - 失败执行数: 0
 
 ### 6.1 成功项
-- rotate BJ0013: Rotated by 35.0 deg; use geometry.center_mass hint; anchor=axis_fixed(center-like)
+- add BJ9001: add success via external asset acquisition + local fit
 
 ### 6.2 失败项
 - 无
@@ -76,18 +130,172 @@
   {
     "success": true,
     "output_files": [
-      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0013.stl"
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ9001.stl"
     ],
     "warnings": [
-      "anchor_point=[1567.133777, -1648.788886, 15661.488767]",
-      "axis_used=[0.0, 0.0, 1.0]",
-      "mesh_repair_actions=fix_normals,fix_winding,remove_unreferenced_vertices",
-      "mesh_repair_warning=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'",
-      "reasonableness_status=warning"
+      "mesh_repair_actions[BJ9001]=fix_normals,fix_winding,remove_unreferenced_vertices",
+      "mesh_repair_warning[BJ9001]=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'",
+      "reasonableness_skipped[BJ9001]=no_input_mesh"
     ],
-    "message": "Rotated by 35.0 deg; use geometry.center_mass hint; anchor=axis_fixed(center-like)",
-    "target_part": "BJ0013",
-    "op": "rotate"
+    "message": "add success via external asset acquisition + local fit",
+    "target_part": "BJ9001",
+    "op": "add",
+    "metadata": {
+      "affected_parts": [
+        {
+          "part_id": "BJ9001",
+          "input_path": "",
+          "temp_output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ9001_added_fitted.stl",
+          "role": "primary_add",
+          "linked_from": ""
+        }
+      ],
+      "attach_to": "BJ0007",
+      "asset_acquisition": {
+        "success": true,
+        "message": "asset selected and downloaded",
+        "local_stl_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\downloaded_assets\\BJ9001_dfd0e21728e141c8a5a1445f3bc10172.stl",
+        "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
+        "task_id": "",
+        "provider_status": "",
+        "asset_metadata": {
+          "name": "接口测试-手工上传防无人机顶棚",
+          "category": "roof",
+          "target_type": "armored_vehicle",
+          "mount_region": "top_hull",
+          "size_range": null,
+          "default_orientation": null,
+          "mount_ref_point": null,
+          "constraints": null,
+          "stl_object_key": "manual/7f8780347776455cb2d1c78db7682720.stl",
+          "preview_image_object_key": "manual/7f8780347776455cb2d1c78db7682720_preview.png",
+          "source": "manual_upload",
+          "generation_prompt": null,
+          "version": 1,
+          "version_group": null,
+          "parent_asset_id": null,
+          "id": 4,
+          "created_at": "2026-04-16T09:09:55",
+          "updated_at": "2026-04-16T09:09:55",
+          "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
+          "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720_preview.png"
+        },
+        "raw_submit_response": {
+          "status": "ASSET_SELECTED",
+          "parsed_input": {
+            "input_type": "text",
+            "content": "防无人机顶棚",
+            "normalized_content": "防无人机顶棚",
+            "metadata": {}
+          },
+          "intent": {
+            "query": "防无人机顶棚 装甲车",
+            "category": "roof",
+            "target_type": "armored_vehicle",
+            "mount_region": "top_hull",
+            "generation_prompt": "Anti-drone protective roof cage for armored vehicle, metal mesh structure, mounted on top hull, rugged tactical design, steel material, high detail 3D model",
+            "embedding_text": "装甲车 防无人机 顶棚 格栅 防护 顶部",
+            "attributes": {
+              "protection_type": "passive_armor",
+              "structure_form": "cage_mesh",
+              "material": "steel_alloy",
+              "threat_type": "uav_drone",
+              "compatible_targets": [
+                "tank",
+                "ifv",
+                "apc"
+              ],
+              "attachment_method": "welded_bolted"
+            }
+          },
+          "candidates": [
+            {
+              "asset": {
+                "name": "接口测试-手工上传防无人机顶棚",
+                "category": "roof",
+                "target_type": "armored_vehicle",
+                "mount_region": "top_hull",
+                "size_range": null,
+                "default_orientation": null,
+                "mount_ref_point": null,
+                "constraints": null,
+                "stl_object_key": "manual/7f8780347776455cb2d1c78db7682720.stl",
+                "preview_image_object_key": "manual/7f8780347776455cb2d1c78db7682720_preview.png",
+                "source": "manual_upload",
+                "generation_prompt": null,
+                "version": 1,
+                "version_group": null,
+                "parent_asset_id": null,
+                "id": 4,
+                "created_at": "2026-04-16T09:09:55",
+                "updated_at": "2026-04-16T09:09:55",
+                "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
+                "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720_preview.png"
+              },
+              "score": 0.7477,
+              "structured_score": 0.759,
+              "semantic_score": 0.7385,
+              "reason": "structured metadata match"
+            }
+          ],
+          "selected_asset": {
+            "name": "接口测试-手工上传防无人机顶棚",
+            "category": "roof",
+            "target_type": "armored_vehicle",
+            "mount_region": "top_hull",
+            "size_range": null,
+            "default_orientation": null,
+            "mount_ref_point": null,
+            "constraints": null,
+            "stl_object_key": "manual/7f8780347776455cb2d1c78db7682720.stl",
+            "preview_image_object_key": "manual/7f8780347776455cb2d1c78db7682720_preview.png",
+            "source": "manual_upload",
+            "generation_prompt": null,
+            "version": 1,
+            "version_group": null,
+            "parent_asset_id": null,
+            "id": 4,
+            "created_at": "2026-04-16T09:09:55",
+            "updated_at": "2026-04-16T09:09:55",
+            "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
+            "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720_preview.png"
+          },
+          "task_id": null,
+          "review_id": null,
+          "message": "Top candidate was selected by auto approval."
+        },
+        "raw_task_response": null,
+        "warnings": []
+      },
+      "fit_plan": {
+        "attach_to": "BJ0007",
+        "category": "roof",
+        "coverage_ratio": 0.92,
+        "allow_stretch": true,
+        "clearance_mm": 20.0,
+        "auto_translate": {
+          "x": -330.9549999999995,
+          "y": 1349.7333966094066,
+          "z": 2430.58
+        },
+        "auto_rotation": {
+          "thin_axis_to_z": true,
+          "long_axis_to_parent_primary_axis": true
+        },
+        "auto_stretch_delta_mm": 6162.576586437627,
+        "overrides_applied": {
+          "translate": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0.0
+          }
+        }
+      }
+    }
   }
 ]
 ```
@@ -97,8 +305,8 @@
 ```json
 [
   {
-    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ0013_rotated.stl",
-    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ0013_rotated.stl",
+    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ9001_added_fitted.stl",
+    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ9001_added_fitted.stl",
     "success": true,
     "actions": [
       "fix_normals",
@@ -109,18 +317,18 @@
       "remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'"
     ],
     "stats_before": {
-      "vertices": 40431,
-      "faces": 13477,
+      "vertices": 3,
+      "faces": 1,
       "is_watertight": false,
       "is_winding_consistent": true,
-      "euler_number": 13477
+      "euler_number": 1
     },
     "stats_after": {
-      "vertices": 40431,
-      "faces": 13477,
+      "vertices": 3,
+      "faces": 1,
       "is_watertight": false,
       "is_winding_consistent": true,
-      "euler_number": 13477
+      "euler_number": 1
     },
     "message": "mesh repair finished"
   }
@@ -129,67 +337,17 @@
 
 ## 8. 合理性检查结果
 - pass: 0
-- warning: 1
+- warning: 0
 - unknown: 0
 
 ```json
-[
-  {
-    "part_id": "BJ0013",
-    "op": "rotate",
-    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0013.stl",
-    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ0013_rotated.stl",
-    "status": "warning",
-    "checks": [
-      {
-        "name": "mesh_basic",
-        "passed": true,
-        "detail": "is_watertight=False, is_winding_consistent=True",
-        "severity": "info"
-      },
-      {
-        "name": "volume_change",
-        "passed": true,
-        "detail": "volume ratio skipped because old volume is too small (old=0.000000, new=0.000000)",
-        "severity": "info"
-      },
-      {
-        "name": "primary_axis_extent",
-        "passed": true,
-        "detail": "old_extent=5892.880, new_extent=4864.419, ratio=0.825",
-        "severity": "info"
-      },
-      {
-        "name": "collision",
-        "passed": false,
-        "detail": "AABB collision with neighbors: BJ0001, BJ0004, BJ0006, BJ0008, BJ0012, BJ0019",
-        "severity": "error"
-      },
-      {
-        "name": "clearance",
-        "passed": true,
-        "detail": "neighbor clearance looks acceptable",
-        "severity": "info"
-      },
-      {
-        "name": "symmetry_group",
-        "passed": true,
-        "detail": "no symmetry mates configured, symmetry check skipped",
-        "severity": "info"
-      }
-    ],
-    "warnings": [],
-    "summary": "reasonableness check found high-risk issues"
-  }
-]
+[]
 ```
 
 ## 9. 最终结论
-- 本次变更流程已完成，但合理性检查给出 warning，建议结合碰撞/间隙/对称性结果人工复核。
+- 本次变更流程顺利完成，且自动修复与合理性检查未发现明显异常，可作为当前阶段 demo 展示结果。
 
 ## 10. 全局 Warnings
-- anchor_point=[1567.133777, -1648.788886, 15661.488767]
-- axis_used=[0.0, 0.0, 1.0]
-- mesh_repair_actions=fix_normals,fix_winding,remove_unreferenced_vertices
-- mesh_repair_warning=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'
-- reasonableness_status=warning
+- mesh_repair_actions[BJ9001]=fix_normals,fix_winding,remove_unreferenced_vertices
+- mesh_repair_warning[BJ9001]=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'
+- reasonableness_skipped[BJ9001]=no_input_mesh

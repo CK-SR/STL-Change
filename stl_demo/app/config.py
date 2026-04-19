@@ -30,6 +30,7 @@ class Settings:
         self.logs_dir = self.output_dir / "logs"
         self.reports_dir = self.output_dir / "reports"
         self.excels_dir = self.output_dir / "excels"
+        self.asset_download_dir = self.output_dir / "downloaded_assets"
 
         self.updated_excel_path = self.excels_dir / "updated_parts.xlsx"
         self.change_table_path = self.excels_dir / "change_table.xlsx"
@@ -40,7 +41,32 @@ class Settings:
             "OPENAI_BASE_URL",
             "https://dashscope.aliyuncs.com/compatible-mode/v1",
         )
-        self.api_key = os.getenv("OPENAI_API_KEY", "sk-cbee5881d6c84e3db02683f982295ac8")
+        self.api_key = os.getenv("OPENAI_API_KEY", "")
+
+        # ===== 外部素材接口 =====
+        self.asset_api_base_url = os.getenv("ASSET_API_BASE_URL", "http://39.106.164.226:7000")
+        self.asset_api_request_timeout_sec = float(
+            os.getenv("ASSET_API_REQUEST_TIMEOUT_SEC", "600")
+        )
+        self.asset_task_poll_interval_sec = float(
+            os.getenv("ASSET_TASK_POLL_INTERVAL_SEC", "5")
+        )
+        self.asset_task_poll_timeout_sec = float(
+            os.getenv("ASSET_TASK_POLL_TIMEOUT_SEC", "900")
+        )
+
+        # add 默认走自动化闭环，避免当前 demo 卡在人审中间态
+        self.asset_api_topk = int(os.getenv("ASSET_API_TOPK", "5"))
+        self.asset_auto_approve = os.getenv("ASSET_AUTO_APPROVE", "true").lower() == "true"
+        self.asset_auto_accept_prompt = (
+            os.getenv("ASSET_AUTO_ACCEPT_PROMPT", "true").lower() == "true"
+        )
+        self.asset_auto_accept_generation = (
+            os.getenv("ASSET_AUTO_ACCEPT_GENERATION", "true").lower() == "true"
+        )
+        self.asset_force_generate_default = (
+            os.getenv("ASSET_FORCE_GENERATE_DEFAULT", "false").lower() == "true"
+        )
 
 
 settings = Settings()

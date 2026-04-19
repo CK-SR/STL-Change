@@ -16,6 +16,10 @@ def _coerce_float(value: object) -> bool:
         return False
 
 
+def _coerce_bool(value: object) -> bool:
+    return isinstance(value, bool)
+
+
 def _validate_xyz_dict(errors: List[str], params: Dict[str, object], prefix: str = "") -> None:
     for axis in ["x", "y", "z"]:
         key = f"{prefix}{axis}"
@@ -48,9 +52,6 @@ def validate_change_intent(
     for i, change in enumerate(intent.changes):
         errors: List[str] = []
 
-        if change.target_part not in existing_parts and change.op != "add":
-            errors.append("target_part 不存在")
-
         if change.op not in ALLOWED_OPS:
             errors.append("op 不在允许列表")
 
@@ -58,6 +59,9 @@ def validate_change_intent(
             errors.append("params 必须为 dict")
 
         p = change.params if isinstance(change.params, Dict) else {}
+
+        if change.op != "add" and change.target_part not in existing_parts:
+            errors.append("target_part 不存在")
 
         if change.op == "translate":
             _validate_xyz_dict(errors, p)
@@ -75,15 +79,10 @@ def validate_change_intent(
             if not _coerce_float(p.get("degrees")):
                 errors.append("rotate.degrees 必须是数值")
 
-
         elif change.op == "scale":
-
             if "delta_mm" not in p:
-
                 errors.append("uniform scale 已关闭，请改用 stretch 或 scale.delta_mm")
-
             elif not _coerce_float(p.get("delta_mm")):
-
                 errors.append("scale.delta_mm 必须是数值")
 
         elif change.op == "stretch":
@@ -99,14 +98,103 @@ def validate_change_intent(
                     errors.append("stretch.axis_vector 必须是长度为 3 的数值数组")
 
         elif change.op == "add":
-            source_part = p.get("source_part")
-            if source_part and source_part not in existing_parts:
-                errors.append("add.source_part 不存在")
-            offset = p.get("offset", {"x": 0, "y": 0, "z": 0})
-            if not isinstance(offset, dict):
-                errors.append("add.offset 必须是 dict")
+            if change.target_part in existing_parts:
+                errors.append("add.target_part 已存在，不能覆盖已有部件")
+
+            attach_to = str(p.get("attach_to", "")).strip()
+            if not attach_to:
+                errors.append("add.attach_to 缺失")
+            elif attach_to not in existing_parts:
+                errors.append("add.attach_to 不存在")
+
+            asset_request = p.get("asset_request")
+            if not isinstance(asset_request, dict):
+                errors.append("add.asset_request 必须是 dict")
             else:
-                _validate_xyz_dict(errors, offset, prefix="offset.")
+                content = str(asset_request.get("content", "")).strip()
+                if not content:
+                    errors.append("add.asset_request.content 不能为空")
+
+                input_type = asset_request.get("input_type")
+                if input_type is not None and input_type not in {"text", "image"}:
+                    errors.append("add.asset_request.input_type 只能是 text/image/null")
+
+                for name in [
+                    "auto_approve",
+                    "auto_accept_prompt",
+                    "auto_accept_generation",
+                    "force_generate",
+                ]:
+                    value = asset_request.get(name)
+                    if value is not None and not _coerce_bool(value):
+                        errors.append(f"add.asset_request.{name} 必须是 bool")
+
+                topk = asset_request.get("topk")
+                if topk is not None:
+                    try:
+                        if int(topk) <= 0:
+                            errors.append("add.asset_request.topk 必须 > 0")
+                    except Exception:
+                        errors.append("add.asset_request.topk 必须是整数")
+
+            fit_policy = p.get("fit_policy")
+            if fit_policy is not None:
+                if not isinstance(fit_policy, dict):
+                    errors.append("add.fit_policy 必须是 dict")
+                else:
+                    if fit_policy.get("coverage_ratio") is not None and not _coerce_float(
+                        fit_policy.get("coverage_ratio")
+                    ):
+                        errors.append("add.fit_policy.coverage_ratio 必须是数值")
+                    if fit_policy.get("clearance_mm") is not None and not _coerce_float(
+                        fit_policy.get("clearance_mm")
+                    ):
+                        errors.append("add.fit_policy.clearance_mm 必须是数值")
+                    if fit_policy.get("allow_stretch") is not None and not _coerce_bool(
+                        fit_policy.get("allow_stretch")
+                    ):
+                        errors.append("add.fit_policy.allow_stretch 必须是 bool")
+
+            overrides = p.get("post_transform_overrides")
+            if overrides is not None:
+                if not isinstance(overrides, dict):
+                    errors.append("add.post_transform_overrides 必须是 dict")
+                else:
+                    translate = overrides.get("translate")
+                    if translate is not None:
+                        if not isinstance(translate, dict):
+                            errors.append("add.post_transform_overrides.translate 必须是 dict")
+                        else:
+                            _validate_xyz_dict(
+                                errors,
+                                translate,
+                                prefix="add.post_transform_overrides.translate.",
+                            )
+
+                    rotate = overrides.get("rotate")
+                    if rotate is not None:
+                        if not isinstance(rotate, dict):
+                            errors.append("add.post_transform_overrides.rotate 必须是 dict")
+                        else:
+                            axis_value = rotate.get("axis")
+                            if axis_value not in {"x", "y", "z"}:
+                                errors.append(
+                                    "add.post_transform_overrides.rotate.axis 必须是 x/y/z"
+                                )
+                            if not _coerce_float(rotate.get("degrees")):
+                                errors.append(
+                                    "add.post_transform_overrides.rotate.degrees 必须是数值"
+                                )
+
+                    stretch = overrides.get("stretch")
+                    if stretch is not None:
+                        if not isinstance(stretch, dict):
+                            errors.append("add.post_transform_overrides.stretch 必须是 dict")
+                        else:
+                            if not _coerce_float(stretch.get("delta_mm")):
+                                errors.append(
+                                    "add.post_transform_overrides.stretch.delta_mm 必须是数值"
+                                )
 
         constraint = constraints_map.get(change.target_part)
         if constraint is not None:

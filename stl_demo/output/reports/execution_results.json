@@ -2,17 +2,171 @@
   {
     "success": true,
     "output_files": [
-      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ0013.stl"
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ9001.stl"
     ],
     "warnings": [
-      "anchor_point=[1567.133777, -1648.788886, 15661.488767]",
-      "axis_used=[0.0, 0.0, 1.0]",
-      "mesh_repair_actions=fix_normals,fix_winding,remove_unreferenced_vertices",
-      "mesh_repair_warning=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'",
-      "reasonableness_status=warning"
+      "mesh_repair_actions[BJ9001]=fix_normals,fix_winding,remove_unreferenced_vertices",
+      "mesh_repair_warning[BJ9001]=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'",
+      "reasonableness_skipped[BJ9001]=no_input_mesh"
     ],
-    "message": "Rotated by 35.0 deg; use geometry.center_mass hint; anchor=axis_fixed(center-like)",
-    "target_part": "BJ0013",
-    "op": "rotate"
+    "message": "add success via external asset acquisition + local fit",
+    "target_part": "BJ9001",
+    "op": "add",
+    "metadata": {
+      "affected_parts": [
+        {
+          "part_id": "BJ9001",
+          "input_path": "",
+          "temp_output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__BJ9001_added_fitted.stl",
+          "role": "primary_add",
+          "linked_from": ""
+        }
+      ],
+      "attach_to": "BJ0007",
+      "asset_acquisition": {
+        "success": true,
+        "message": "asset selected and downloaded",
+        "local_stl_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\downloaded_assets\\BJ9001_dfd0e21728e141c8a5a1445f3bc10172.stl",
+        "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
+        "task_id": "",
+        "provider_status": "",
+        "asset_metadata": {
+          "name": "接口测试-手工上传防无人机顶棚",
+          "category": "roof",
+          "target_type": "armored_vehicle",
+          "mount_region": "top_hull",
+          "size_range": null,
+          "default_orientation": null,
+          "mount_ref_point": null,
+          "constraints": null,
+          "stl_object_key": "manual/7f8780347776455cb2d1c78db7682720.stl",
+          "preview_image_object_key": "manual/7f8780347776455cb2d1c78db7682720_preview.png",
+          "source": "manual_upload",
+          "generation_prompt": null,
+          "version": 1,
+          "version_group": null,
+          "parent_asset_id": null,
+          "id": 4,
+          "created_at": "2026-04-16T09:09:55",
+          "updated_at": "2026-04-16T09:09:55",
+          "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
+          "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720_preview.png"
+        },
+        "raw_submit_response": {
+          "status": "ASSET_SELECTED",
+          "parsed_input": {
+            "input_type": "text",
+            "content": "防无人机顶棚",
+            "normalized_content": "防无人机顶棚",
+            "metadata": {}
+          },
+          "intent": {
+            "query": "防无人机顶棚 装甲车",
+            "category": "roof",
+            "target_type": "armored_vehicle",
+            "mount_region": "top_hull",
+            "generation_prompt": "Anti-drone protective roof cage for armored vehicle, metal mesh structure, mounted on top hull, rugged tactical design, steel material, high detail 3D model",
+            "embedding_text": "装甲车 防无人机 顶棚 格栅 防护 顶部",
+            "attributes": {
+              "protection_type": "passive_armor",
+              "structure_form": "cage_mesh",
+              "material": "steel_alloy",
+              "threat_type": "uav_drone",
+              "compatible_targets": [
+                "tank",
+                "ifv",
+                "apc"
+              ],
+              "attachment_method": "welded_bolted"
+            }
+          },
+          "candidates": [
+            {
+              "asset": {
+                "name": "接口测试-手工上传防无人机顶棚",
+                "category": "roof",
+                "target_type": "armored_vehicle",
+                "mount_region": "top_hull",
+                "size_range": null,
+                "default_orientation": null,
+                "mount_ref_point": null,
+                "constraints": null,
+                "stl_object_key": "manual/7f8780347776455cb2d1c78db7682720.stl",
+                "preview_image_object_key": "manual/7f8780347776455cb2d1c78db7682720_preview.png",
+                "source": "manual_upload",
+                "generation_prompt": null,
+                "version": 1,
+                "version_group": null,
+                "parent_asset_id": null,
+                "id": 4,
+                "created_at": "2026-04-16T09:09:55",
+                "updated_at": "2026-04-16T09:09:55",
+                "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
+                "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720_preview.png"
+              },
+              "score": 0.7477,
+              "structured_score": 0.759,
+              "semantic_score": 0.7385,
+              "reason": "structured metadata match"
+            }
+          ],
+          "selected_asset": {
+            "name": "接口测试-手工上传防无人机顶棚",
+            "category": "roof",
+            "target_type": "armored_vehicle",
+            "mount_region": "top_hull",
+            "size_range": null,
+            "default_orientation": null,
+            "mount_ref_point": null,
+            "constraints": null,
+            "stl_object_key": "manual/7f8780347776455cb2d1c78db7682720.stl",
+            "preview_image_object_key": "manual/7f8780347776455cb2d1c78db7682720_preview.png",
+            "source": "manual_upload",
+            "generation_prompt": null,
+            "version": 1,
+            "version_group": null,
+            "parent_asset_id": null,
+            "id": 4,
+            "created_at": "2026-04-16T09:09:55",
+            "updated_at": "2026-04-16T09:09:55",
+            "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
+            "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720_preview.png"
+          },
+          "task_id": null,
+          "review_id": null,
+          "message": "Top candidate was selected by auto approval."
+        },
+        "raw_task_response": null,
+        "warnings": []
+      },
+      "fit_plan": {
+        "attach_to": "BJ0007",
+        "category": "roof",
+        "coverage_ratio": 0.92,
+        "allow_stretch": true,
+        "clearance_mm": 20.0,
+        "auto_translate": {
+          "x": -330.9549999999995,
+          "y": 1349.7333966094066,
+          "z": 2430.58
+        },
+        "auto_rotation": {
+          "thin_axis_to_z": true,
+          "long_axis_to_parent_primary_axis": true
+        },
+        "auto_stretch_delta_mm": 6162.576586437627,
+        "overrides_applied": {
+          "translate": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0.0
+          }
+        }
+      }
+    }
   }
 ]

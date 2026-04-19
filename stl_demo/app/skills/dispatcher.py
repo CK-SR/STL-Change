@@ -5,9 +5,10 @@ from typing import Dict, Optional
 
 from app.config import settings
 from app.models import ChangeItem, SkillExecutionResult
+from app.services.asset_generation_service import AssetGenerationService
+from app.services.add_fit_service import AddFitService
 from app.services.geometry_anchor_service import GeometryAnchorService
 from app.services.part_constraint_service import PartConstraintService
-from app.skills.add_copy import add_stl_by_copy
 from app.skills.delete import delete_stl_file
 from app.skills.rigid_follow import apply_rigid_transform
 from app.skills.transform_with_constraints import (
@@ -48,14 +49,14 @@ def _build_temp_output_path(output_dir: Path, part_name: str, suffix: str) -> Pa
 def _make_affected_part_item(
     *,
     part_id: str,
-    input_path: Path,
+    input_path: Path | str,
     temp_output_path: Path,
     role: str,
     linked_from: Optional[str] = None,
 ) -> dict:
     return {
         "part_id": part_id,
-        "input_path": str(input_path),
+        "input_path": str(input_path) if input_path else "",
         "temp_output_path": str(temp_output_path),
         "role": role,
         "linked_from": linked_from or "",
@@ -69,29 +70,6 @@ def dispatch_change(
 ) -> SkillExecutionResult:
     op = change.op
     target = change.target_part
-
-    if op == "add":
-        source_part = change.params["source_part"]
-        result = add_stl_by_copy(
-            source_path=part_to_file[source_part],
-            output_dir=output_dir,
-            target_part=target,
-            offset=change.params.get("offset", {"x": 0, "y": 0, "z": 0}),
-        )
-        result.target_part = target
-        result.op = op
-        result.metadata = {
-            "affected_parts": [
-                {
-                    "part_id": target,
-                    "input_path": "",
-                    "temp_output_path": result.output_files[0] if result.output_files else "",
-                    "role": "primary_add",
-                    "linked_from": "",
-                }
-            ]
-        }
-        return result
 
     if op == "delete":
         result = delete_stl_file(part_to_file[target])
@@ -111,6 +89,105 @@ def dispatch_change(
         return result
 
     constraint_service = _load_constraint_service()
+
+    if op == "add":
+        attach_to = str(change.params.get("attach_to", "")).strip()
+        asset_request = change.params.get("asset_request", {}) or {}
+        fit_policy = change.params.get("fit_policy", {}) or {}
+        post_transform_overrides = change.params.get("post_transform_overrides", {}) or {}
+
+        if not attach_to:
+            return SkillExecutionResult(
+                success=False,
+                message="add failed: attach_to missing",
+                target_part=target,
+                op=op,
+            )
+
+        if attach_to not in part_to_file:
+            return SkillExecutionResult(
+                success=False,
+                message=f"add failed: attach_to STL not found for {attach_to}",
+                target_part=target,
+                op=op,
+            )
+
+        asset_service = AssetGenerationService()
+        asset_result = asset_service.acquire_asset_stl(
+            target_part=target,
+            asset_request=asset_request,
+            download_dir=settings.asset_download_dir,
+        )
+
+        if not asset_result.success:
+            return SkillExecutionResult(
+                success=False,
+                message=f"add failed during asset acquisition: {asset_result.message}",
+                target_part=target,
+                op=op,
+                warnings=asset_result.warnings or [],
+                metadata={
+                    "asset_acquisition": asset_result.to_dict(),
+                },
+            )
+
+        fit_service = AddFitService(
+            anchor_service=GeometryAnchorService(),
+            constraint_service=constraint_service,
+        )
+
+        temp_output = _build_temp_output_path(output_dir, target, "added_fitted")
+        fit_result = fit_service.fit_imported_asset(
+            imported_stl_path=asset_result.local_stl_path,
+            attach_to=attach_to,
+            attach_to_path=part_to_file[attach_to],
+            output_path=temp_output,
+            asset_metadata=asset_result.asset_metadata or {},
+            fit_policy=fit_policy,
+            post_transform_overrides=post_transform_overrides,
+        )
+
+        if not fit_result.success:
+            warnings = list(asset_result.warnings or [])
+            warnings.extend(fit_result.warnings)
+            return SkillExecutionResult(
+                success=False,
+                message=f"add failed during fit: {fit_result.message}",
+                target_part=target,
+                op=op,
+                warnings=warnings,
+                metadata={
+                    "asset_acquisition": asset_result.to_dict(),
+                    "fit_result": fit_result.to_dict(),
+                },
+            )
+
+        warnings = list(asset_result.warnings or [])
+        warnings.extend(fit_result.warnings)
+
+        return SkillExecutionResult(
+            success=True,
+            output_files=[fit_result.output_path],
+            warnings=warnings,
+            message="add success via external asset acquisition + local fit",
+            target_part=target,
+            op=op,
+            metadata={
+                "affected_parts": [
+                    _make_affected_part_item(
+                        part_id=target,
+                        input_path="",
+                        temp_output_path=Path(fit_result.output_path),
+                        role="primary_add",
+                        linked_from="",
+                    )
+                ],
+                "attach_to": attach_to,
+                "asset_acquisition": asset_result.to_dict(),
+                "fit_plan": fit_result.fit_plan,
+            },
+        )
+
     if target not in part_to_file:
         return SkillExecutionResult(
             success=False,

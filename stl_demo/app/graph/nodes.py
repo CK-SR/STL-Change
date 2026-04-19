@@ -155,30 +155,20 @@ def apply_skills(state: DemoState) -> DemoState:
                 state.warnings.extend(result.warnings)
             continue
 
-        if op == "add":
-            if result.success and result.output_files:
-                final_files = []
-                for output_file in result.output_files:
-                    final_path = Path(output_file)
-                    final_files.append(str(final_path))
-                    part_to_file[target] = final_path
-                    part_to_file[final_path.name] = final_path
-                result.output_files = final_files
-
-            state.execution_results.append(result)
-            if result.warnings:
-                state.warnings.extend(result.warnings)
-            continue
-
         affected_parts = result.metadata.get("affected_parts", []) if result.metadata else []
 
         final_files = []
         for item in affected_parts:
             part_id = str(item.get("part_id", "")).strip()
-            input_path = Path(str(item.get("input_path", "")).strip())
-            temp_output = Path(str(item.get("temp_output_path", "")).strip())
+            input_path_str = str(item.get("input_path", "")).strip()
+            temp_output_str = str(item.get("temp_output_path", "")).strip()
 
-            if not part_id or not temp_output.exists():
+            if not part_id or not temp_output_str:
+                continue
+
+            temp_output = Path(temp_output_str)
+            if not temp_output.exists():
+                result.warnings.append(f"missing_temp_output[{part_id}]={temp_output}")
                 continue
 
             repaired_output = temp_output
@@ -202,7 +192,8 @@ def apply_skills(state: DemoState) -> DemoState:
             except Exception as exc:
                 result.warnings.append(f"mesh_repair_failed[{part_id}]={exc}")
 
-            if input_path.exists():
+            input_path = Path(input_path_str) if input_path_str else None
+            if input_path is not None and input_path.exists():
                 try:
                     reason_report = check_reasonableness(
                         part_id=part_id,
@@ -220,6 +211,8 @@ def apply_skills(state: DemoState) -> DemoState:
                         )
                 except Exception as exc:
                     result.warnings.append(f"reasonableness_check_failed[{part_id}]={exc}")
+            else:
+                result.warnings.append(f"reasonableness_skipped[{part_id}]=no_input_mesh")
 
             final_output_path = _canonical_part_output_path(settings.final_stl_dir, part_id)
             promoted_path = _promote_to_final_snapshot(repaired_output, final_output_path)
