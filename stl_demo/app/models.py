@@ -33,6 +33,7 @@ class SkillExecutionResult(BaseModel):
     message: str = ""
     target_part: str = ""
     op: str = ""
+    metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
 class DemoState(BaseModel):

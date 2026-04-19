@@ -9,6 +9,7 @@ from app.services.geometry_anchor_service import GeometryAnchorService
 from app.services.part_constraint_service import PartConstraintService
 from app.skills.add_copy import add_stl_by_copy
 from app.skills.delete import delete_stl_file
+from app.skills.rigid_follow import apply_rigid_transform
 from app.skills.transform_with_constraints import (
     TransformWithConstraints,
     transform_result_to_skill_execution,
@@ -39,18 +40,26 @@ def _safe_axis_vector_from_params(params: dict) -> Optional[list[float]]:
     return None
 
 
-def _build_final_output_path(output_dir: Path, part_name: str) -> Path:
-    stem = Path(part_name).stem
-    return output_dir / f"{stem}.stl"
-
-
 def _build_temp_output_path(output_dir: Path, part_name: str, suffix: str) -> Path:
-    """
-    变换类操作先写入临时文件，后续由 nodes.py 统一完成：
-    mesh repair -> reasonableness check -> promote to final canonical path
-    """
     stem = Path(part_name).stem
     return output_dir / f".__tmp__{stem}_{suffix}.stl"
+
+
+def _make_affected_part_item(
+    *,
+    part_id: str,
+    input_path: Path,
+    temp_output_path: Path,
+    role: str,
+    linked_from: Optional[str] = None,
+) -> dict:
+    return {
+        "part_id": part_id,
+        "input_path": str(input_path),
+        "temp_output_path": str(temp_output_path),
+        "role": role,
+        "linked_from": linked_from or "",
+    }
 
 
 def dispatch_change(
@@ -71,12 +80,34 @@ def dispatch_change(
         )
         result.target_part = target
         result.op = op
+        result.metadata = {
+            "affected_parts": [
+                {
+                    "part_id": target,
+                    "input_path": "",
+                    "temp_output_path": result.output_files[0] if result.output_files else "",
+                    "role": "primary_add",
+                    "linked_from": "",
+                }
+            ]
+        }
         return result
 
     if op == "delete":
         result = delete_stl_file(part_to_file[target])
         result.target_part = target
         result.op = op
+        result.metadata = {
+            "affected_parts": [
+                {
+                    "part_id": target,
+                    "input_path": str(part_to_file[target]),
+                    "temp_output_path": "",
+                    "role": "primary_delete",
+                    "linked_from": "",
+                }
+            ]
+        }
         return result
 
     constraint_service = _load_constraint_service()
@@ -91,6 +122,12 @@ def dispatch_change(
     transformer = TransformWithConstraints(
         constraint_service=constraint_service,
         anchor_service=GeometryAnchorService(),
+    )
+
+    result = SkillExecutionResult(
+        success=False,
+        target_part=target,
+        op=op,
     )
 
     try:
@@ -144,10 +181,7 @@ def dispatch_change(
                 result = transform_result_to_skill_execution(tr)
 
         else:
-            result = SkillExecutionResult(
-                success=False,
-                message=f"unsupported op: {op}",
-            )
+            result = SkillExecutionResult(success=False, message=f"unsupported op: {op}")
 
     except Exception as exc:
         result = SkillExecutionResult(
@@ -157,4 +191,54 @@ def dispatch_change(
 
     result.target_part = target
     result.op = op
+
+    if not result.success:
+        return result
+
+    primary_temp_output = Path(result.output_files[0])
+    primary_input_path = part_to_file[target]
+
+    affected_parts = [
+        _make_affected_part_item(
+            part_id=target,
+            input_path=primary_input_path,
+            temp_output_path=primary_temp_output,
+            role="primary",
+        )
+    ]
+
+    # 联动：仅对刚体操作 cascade
+    transform_matrix = result.metadata.get("transform_matrix") if result.metadata else None
+    if op in {"rotate", "translate"} and transform_matrix:
+        linked_children = constraint_service.list_linked_children(target, op_name=op)
+
+        for child_id in linked_children:
+            if child_id not in part_to_file:
+                result.warnings.append(f"linked_child_missing={child_id}")
+                continue
+
+            child_input_path = part_to_file[child_id]
+            child_temp_output = _build_temp_output_path(output_dir, child_id, f"follow_{op}")
+
+            try:
+                apply_rigid_transform(
+                    part_id=child_id,
+                    stl_path=child_input_path,
+                    output_path=child_temp_output,
+                    transform_matrix=transform_matrix,
+                )
+                affected_parts.append(
+                    _make_affected_part_item(
+                        part_id=child_id,
+                        input_path=child_input_path,
+                        temp_output_path=child_temp_output,
+                        role="linked_follow",
+                        linked_from=target,
+                    )
+                )
+                result.warnings.append(f"linked_follow_applied={child_id}")
+            except Exception as exc:
+                result.warnings.append(f"linked_follow_failed={child_id}:{exc}")
+
+    result.metadata["affected_parts"] = affected_parts
     return result

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 import os
-import shutil
 from pathlib import Path
 
 from app.config import settings
@@ -35,10 +34,6 @@ def _canonical_part_output_path(output_dir: Path, part_name: str) -> Path:
 
 
 def _promote_to_final_snapshot(temp_path: Path, final_path: Path) -> Path:
-    """
-    将临时产物提升为 final_stl 中的 canonical 文件。
-    使用 replace 语义，确保同一部件最终只保留一个文件。
-    """
     final_path.parent.mkdir(parents=True, exist_ok=True)
 
     if temp_path.resolve() == final_path.resolve():
@@ -143,7 +138,6 @@ def apply_skills(state: DemoState) -> DemoState:
 
         target = vr.change.target_part
         op = vr.change.op
-        old_input_path = part_to_file.get(target)
 
         if target not in part_to_file and op != "add":
             state.execution_results.append(
@@ -153,7 +147,6 @@ def apply_skills(state: DemoState) -> DemoState:
 
         result = dispatch_change(vr.change, part_to_file, settings.final_stl_dir)
 
-        # delete 操作：直接从映射里移除，最终目录中也不再保留该文件
         if op == "delete":
             if result.success:
                 part_to_file.pop(target, None)
@@ -162,7 +155,6 @@ def apply_skills(state: DemoState) -> DemoState:
                 state.warnings.extend(result.warnings)
             continue
 
-        # add(copy) 当前直接写 canonical 输出，不需要 promote 临时文件
         if op == "add":
             if result.success and result.output_files:
                 final_files = []
@@ -178,68 +170,65 @@ def apply_skills(state: DemoState) -> DemoState:
                 state.warnings.extend(result.warnings)
             continue
 
-        # translate / rotate / stretch / scale：
-        # skill 先生成临时 STL，随后：
-        # 1) repair 临时文件
-        # 2) reasonableness check（对比 old_input_path 和临时输出）
-        # 3) promote 为 canonical final 文件
-        if result.success and result.output_files:
-            final_files = []
+        affected_parts = result.metadata.get("affected_parts", []) if result.metadata else []
 
-            for output_file in result.output_files:
-                temp_output = Path(output_file)
+        final_files = []
+        for item in affected_parts:
+            part_id = str(item.get("part_id", "")).strip()
+            input_path = Path(str(item.get("input_path", "")).strip())
+            temp_output = Path(str(item.get("temp_output_path", "")).strip())
 
-                try:
-                    repair_record = repair_mesh_file(
-                        temp_output,
-                        overwrite=True,
-                        enable_light_remesh=False,
-                    )
-                    state.mesh_repair_reports.append(record_to_dict(repair_record))
+            if not part_id or not temp_output.exists():
+                continue
 
-                    if repair_record.actions:
-                        result.warnings.append(
-                            f"mesh_repair_actions={','.join(repair_record.actions)}"
-                        )
-                    if repair_record.warnings:
-                        result.warnings.extend(
-                            [f"mesh_repair_warning={w}" for w in repair_record.warnings]
-                        )
-
-                    repaired_temp_output = Path(repair_record.output_path)
-                except Exception as exc:
-                    result.warnings.append(f"mesh_repair_failed={exc}")
-                    repaired_temp_output = temp_output
-
-                if old_input_path is not None and Path(old_input_path).exists():
-                    try:
-                        reason_report = check_reasonableness(
-                            part_id=target,
-                            op=op,
-                            input_path=old_input_path,
-                            output_path=repaired_temp_output,
-                            part_to_file=part_to_file,
-                            part_constraints=state.part_constraints,
-                        )
-                        state.reasonableness_reports.append(report_to_dict(reason_report))
-
-                        if reason_report.status != "pass":
-                            result.warnings.append(
-                                f"reasonableness_status={reason_report.status}"
-                            )
-                    except Exception as exc:
-                        result.warnings.append(f"reasonableness_check_failed={exc}")
-
-                final_output_path = _canonical_part_output_path(settings.final_stl_dir, target)
-                promoted_path = _promote_to_final_snapshot(
-                    repaired_temp_output,
-                    final_output_path,
+            repaired_output = temp_output
+            try:
+                repair_record = repair_mesh_file(
+                    temp_output,
+                    overwrite=True,
+                    enable_light_remesh=False,
                 )
+                state.mesh_repair_reports.append(record_to_dict(repair_record))
+                repaired_output = Path(repair_record.output_path)
 
-                final_files.append(str(promoted_path))
-                part_to_file[target] = promoted_path
-                part_to_file[promoted_path.name] = promoted_path
+                if repair_record.actions:
+                    result.warnings.append(
+                        f"mesh_repair_actions[{part_id}]={','.join(repair_record.actions)}"
+                    )
+                if repair_record.warnings:
+                    result.warnings.extend(
+                        [f"mesh_repair_warning[{part_id}]={w}" for w in repair_record.warnings]
+                    )
+            except Exception as exc:
+                result.warnings.append(f"mesh_repair_failed[{part_id}]={exc}")
 
+            if input_path.exists():
+                try:
+                    reason_report = check_reasonableness(
+                        part_id=part_id,
+                        op=op,
+                        input_path=input_path,
+                        output_path=repaired_output,
+                        part_to_file=part_to_file,
+                        part_constraints=state.part_constraints,
+                    )
+                    state.reasonableness_reports.append(report_to_dict(reason_report))
+
+                    if reason_report.status != "pass":
+                        result.warnings.append(
+                            f"reasonableness_status[{part_id}]={reason_report.status}"
+                        )
+                except Exception as exc:
+                    result.warnings.append(f"reasonableness_check_failed[{part_id}]={exc}")
+
+            final_output_path = _canonical_part_output_path(settings.final_stl_dir, part_id)
+            promoted_path = _promote_to_final_snapshot(repaired_output, final_output_path)
+
+            final_files.append(str(promoted_path))
+            part_to_file[part_id] = promoted_path
+            part_to_file[promoted_path.name] = promoted_path
+
+        if final_files:
             result.output_files = final_files
 
         state.execution_results.append(result)

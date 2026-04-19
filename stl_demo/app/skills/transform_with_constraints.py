@@ -29,19 +29,6 @@ class TransformResult:
 
 
 class TransformWithConstraints:
-    """
-    受约束几何编辑最小版：
-    - constrained_translate
-    - anchored_rotate
-    - constrained_stretch
-
-    本版修订重点：
-    1. 对齐你现在的 part_constraints.json 生成脚本；
-    2. 锚点计算统一交给 GeometryAnchorService；
-    3. 优先使用 geometry.center_mass / geometry.bbox_center；
-    4. 仍保持 demo 级最小实现，不引入复杂局部重构。
-    """
-
     def __init__(
         self,
         constraint_service: PartConstraintService,
@@ -220,6 +207,13 @@ def transform_result_to_skill_execution(result: TransformResult) -> SkillExecuti
     if result.axis_used is not None:
         warnings.append(f"axis_used={result.axis_used}")
 
+    metadata = {
+        "transform_matrix": result.transform_matrix,
+        "anchor_point": result.anchor_point,
+        "axis_used": result.axis_used,
+        "primary_part_id": result.part_id,
+    }
+
     return SkillExecutionResult(
         success=result.success,
         output_files=[result.output_path] if result.output_path else [],
@@ -227,4 +221,5 @@ def transform_result_to_skill_execution(result: TransformResult) -> SkillExecuti
         message=result.detail,
         target_part=result.part_id,
         op=result.operation,
+        metadata=metadata,
     )

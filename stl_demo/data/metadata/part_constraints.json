@@ -5,6 +5,8 @@
     "part_name": "车身",
     "parent_part_id": "BJ0024",
     "parent_part_name": "车",
+    "declared_parent_part_id": "BJ0024",
+    "declared_parent_part_name": "车",
     "edit_type": "structural_part",
     "primary_axis": [
       1.0,
@@ -44,9 +46,8 @@
     ],
     "forbidden_ops": [
       "uniform_scale",
-      "delete",
-      "modify_geometry",
-      "stretch"
+      "stretch",
+      "delete_core"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -70,7 +71,44 @@
       ]
     },
     "function_names": [],
-    "semantic_note": "Main hull of AAV7A1 amphibious assault vehicle, serves as structural base for tracks and turret."
+    "semantic_note": "AAV7A1 两栖装甲突击车的主体承载结构，定义整车外形与内部空间布局",
+    "semantic_role": "base_component",
+    "attachment_parent_part_id": "",
+    "attachment_parent_part_name": "",
+    "link_type": "",
+    "follow_transform_of": "",
+    "follow_ops": [],
+    "link_source": "",
+    "link_confidence": 0.0,
+    "attachment_parent_candidates": [],
+    "linked_children": [
+      "BJ0002",
+      "BJ0003",
+      "BJ0004",
+      "BJ0005",
+      "BJ0007",
+      "BJ0009",
+      "BJ0010",
+      "BJ0011",
+      "BJ0013",
+      "BJ0017",
+      "BJ0018",
+      "BJ0019"
+    ],
+    "linked_children_names": [
+      "履带右",
+      "履带左",
+      "指挥舱盖",
+      "油箱",
+      "炮塔",
+      "装甲右",
+      "车身上装甲",
+      "车身下装甲",
+      "车身前装甲",
+      "车身后装甲",
+      "车身左装甲",
+      "驾驶舱盖"
+    ]
   },
   {
     "target_id": "MB576055",
@@ -78,6 +116,8 @@
     "part_name": "车身后装甲",
     "parent_part_id": "BJ0021",
     "parent_part_name": "车身装甲类",
+    "declared_parent_part_id": "BJ0021",
+    "declared_parent_part_name": "车身装甲类",
     "edit_type": "structural_part",
     "primary_axis": [
       0.0,
@@ -105,9 +145,7 @@
     ],
     "forbidden_ops": [
       "uniform_scale",
-      "delete_core",
-      "delete",
-      "modify_geometry"
+      "delete_core"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -133,7 +171,94 @@
     "function_names": [
       "后装甲"
     ],
-    "semantic_note": "AAV7A1 车身后部主装甲结构，包含实体 STL 几何，作为车身装甲类父节点承载子部件"
+    "semantic_note": "AAV7A1 两栖装甲突击车的后部装甲板，提供结构防护并定义车身尾部边界。",
+    "semantic_role": "cover_panel",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.92,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 96.976,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3812.8023372880552,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 96.731,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3200.6659481705133,
+        "diag_mm": 6479.4,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 96.633,
+        "gap_mm": 0.0,
+        "center_distance_mm": 4024.31268846104,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 96.563,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3539.078597656143,
+        "diag_mm": 6985.661,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0020",
+        "part_name": "装甲左",
+        "score": 96.444,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3623.8260667612976,
+        "diag_mm": 6879.623,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0006",
+        "part_name": "车身右装甲",
+        "score": 96.363,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3516.553783592503,
+        "diag_mm": 6357.584,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -141,6 +266,8 @@
     "part_name": "车身前装甲",
     "parent_part_id": "BJ0021",
     "parent_part_name": "车身装甲类",
+    "declared_parent_part_id": "BJ0021",
+    "declared_parent_part_name": "车身装甲类",
     "edit_type": "structural_part",
     "primary_axis": [
       0.0,
@@ -167,14 +294,12 @@
       "measure",
       "translate",
       "rotate",
-      "stretch",
-      "delete"
+      "stretch"
     ],
     "forbidden_ops": [
       "uniform_scale",
       "delete_core",
-      "modify_geometry",
-      "no_direct_edit"
+      "delete"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -200,7 +325,98 @@
     "function_names": [
       "前装甲"
     ],
-    "semantic_note": "Front armor structural component of AAV7A1 amphibious assault vehicle."
+    "semantic_note": "Main frontal hull armor of the AAV7A1, providing primary ballistic protection and defining the vehicle's front structural profile.",
+    "semantic_role": "base_component",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.9,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 97.49,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3266.379465619765,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 97.088,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3598.846582403043,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 96.47,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3777.9070569880705,
+        "diag_mm": 6985.661,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0020",
+        "part_name": "装甲左",
+        "score": 96.366,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3850.391698212581,
+        "diag_mm": 6879.623,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 96.264,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3809.091346007715,
+        "diag_mm": 6479.4,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0006",
+        "part_name": "车身右装甲",
+        "score": 96.208,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3819.7825424400307,
+        "diag_mm": 6357.584,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      }
+    ],
+    "linked_children": [
+      "BJ0016"
+    ],
+    "linked_children_names": [
+      "引擎"
+    ]
   },
   {
     "target_id": "MB576055",
@@ -208,6 +424,8 @@
     "part_name": "车身上装甲",
     "parent_part_id": "BJ0021",
     "parent_part_name": "车身装甲类",
+    "declared_parent_part_id": "BJ0021",
+    "declared_parent_part_name": "车身装甲类",
     "edit_type": "structural_part",
     "primary_axis": [
       1.0,
@@ -268,7 +486,34 @@
     "function_names": [
       "上装甲"
     ],
-    "semantic_note": "AAV7A1 车身上部装甲结构件，包含多个子装甲板，具备实体几何，采用底面固定锚点模式以确保整车定位准确，支持平移旋转及拉伸调整，禁止整体缩放与核心删除。"
+    "semantic_note": "AAV7A1 车体上部主装甲，用于防护乘员舱及关键设备，属于结构覆盖件",
+    "semantic_role": "cover_panel",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.85,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 84.581,
+        "gap_mm": 0.0,
+        "center_distance_mm": 751.6386614778042,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -276,6 +521,8 @@
     "part_name": "车身下装甲",
     "parent_part_id": "BJ0021",
     "parent_part_name": "车身装甲类",
+    "declared_parent_part_id": "BJ0021",
+    "declared_parent_part_name": "车身装甲类",
     "edit_type": "structural_part",
     "primary_axis": [
       1.0,
@@ -305,8 +552,7 @@
     ],
     "forbidden_ops": [
       "uniform_scale",
-      "delete_core",
-      "delete"
+      "delete_core"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -332,7 +578,76 @@
     "function_names": [
       "下装甲"
     ],
-    "semantic_note": "车身下装甲结构件，底座固定"
+    "semantic_note": "AAV7A1 两栖突击车底部主装甲结构，负责水密密封及基础防护，构成车体下部主要受力面。",
+    "semantic_role": "cover_panel",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.85,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 83.819,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1863.7460288095251,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 83.701,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1749.3762613402664,
+        "diag_mm": 6985.661,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0020",
+        "part_name": "装甲左",
+        "score": 25.516,
+        "gap_mm": 399.345222,
+        "center_distance_mm": 1982.5249358527562,
+        "diag_mm": 6879.623,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 25.298,
+        "gap_mm": 1168.8266,
+        "center_distance_mm": 2573.9861201386725,
+        "diag_mm": 8642.37,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [
+      "BJ0014",
+      "BJ0015"
+    ],
+    "linked_children_names": [
+      "喷水推进器右",
+      "喷水推进器左"
+    ]
   },
   {
     "target_id": "MB576055",
@@ -340,6 +655,8 @@
     "part_name": "车身右装甲",
     "parent_part_id": "BJ0021",
     "parent_part_name": "车身装甲类",
+    "declared_parent_part_id": "BJ0021",
+    "declared_parent_part_name": "车身装甲类",
     "edit_type": "structural_part",
     "primary_axis": [
       1.0,
@@ -395,7 +712,18 @@
     "function_names": [
       "右侧装甲"
     ],
-    "semantic_note": "Right side armor plate, structural component requiring fixed base alignment and proportional scaling protection."
+    "semantic_note": "AAV7A1 两栖装甲突击车右侧主体装甲，属于车体主结构件，提供防弹保护及结构支撑。",
+    "semantic_role": "base_component",
+    "attachment_parent_part_id": "",
+    "attachment_parent_part_name": "",
+    "link_type": "",
+    "follow_transform_of": "",
+    "follow_ops": [],
+    "link_source": "",
+    "link_confidence": 0.0,
+    "attachment_parent_candidates": [],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -403,6 +731,8 @@
     "part_name": "车身左装甲",
     "parent_part_id": "BJ0021",
     "parent_part_name": "车身装甲类",
+    "declared_parent_part_id": "BJ0021",
+    "declared_parent_part_name": "车身装甲类",
     "edit_type": "structural_part",
     "primary_axis": [
       1.0,
@@ -459,7 +789,50 @@
     "function_names": [
       "左侧装甲"
     ],
-    "semantic_note": "左侧车体装甲结构件，具备实际STL几何，用于防护与结构支撑"
+    "semantic_note": "AAV7A1 车体左侧主装甲板，提供结构强度与弹道防护，需保持几何比例。",
+    "semantic_role": "cover_panel",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.9,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 84.029,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1581.0622993641305,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 83.687,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2051.6063895135594,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [
+      "BJ0020"
+    ],
+    "linked_children_names": [
+      "装甲左"
+    ]
   },
   {
     "target_id": "MB576055",
@@ -467,7 +840,9 @@
     "part_name": "机枪",
     "parent_part_id": "BJ0024",
     "parent_part_name": "车",
-    "edit_type": "mechanical_part",
+    "declared_parent_part_id": "BJ0024",
+    "declared_parent_part_name": "车",
+    "edit_type": "device_part",
     "primary_axis": [
       1.0,
       0.0,
@@ -486,7 +861,8 @@
       "hide",
       "measure",
       "translate",
-      "rotate"
+      "rotate",
+      "delete"
     ],
     "forbidden_ops": [
       "uniform_scale",
@@ -517,7 +893,94 @@
     "function_names": [
       "机枪"
     ],
-    "semantic_note": "AAV7A1 两栖装甲车车载机枪组件，具备实际 STL 几何数据。作为机械部件挂载于车体，需保持父子层级关系，禁止非均匀缩放及直接几何编辑以确保装配完整性。"
+    "semantic_note": "Mounted machine gun for AAV7A1 amphibious assault vehicle, serves as primary defensive armament.",
+    "semantic_role": "weapon_component",
+    "attachment_parent_part_id": "BJ0013",
+    "attachment_parent_part_name": "炮塔",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0013",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.85,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 97.711,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2415.7852130100473,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 97.583,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2392.673658460644,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0013",
+        "part_name": "炮塔",
+        "score": 91.953,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2986.868088331363,
+        "diag_mm": 6123.333,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "mechanical_part",
+        "semantic_role": "weapon_component"
+      },
+      {
+        "part_id": "BJ0019",
+        "part_name": "装甲右",
+        "score": 38.194,
+        "gap_mm": 608.61,
+        "center_distance_mm": 2716.2768941411327,
+        "diag_mm": 5879.424,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0006",
+        "part_name": "车身右装甲",
+        "score": 38.137,
+        "gap_mm": 585.8494,
+        "center_distance_mm": 2941.871678152081,
+        "diag_mm": 6357.584,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0003",
+        "part_name": "车身前装甲",
+        "score": 37.723,
+        "gap_mm": 530.6733,
+        "center_distance_mm": 2127.0025529476598,
+        "diag_mm": 3716.23,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -525,13 +988,15 @@
     "part_name": "驾驶舱盖",
     "parent_part_id": "BJ0024",
     "parent_part_name": "车",
+    "declared_parent_part_id": "BJ0024",
+    "declared_parent_part_name": "车",
     "edit_type": "panel_part",
     "primary_axis": [
       0.0,
       1.0,
       0.0
     ],
-    "anchor_mode": "center",
+    "anchor_mode": "parent_attach",
     "symmetry_group": "",
     "neighbors": [
       "BJ0001",
@@ -546,10 +1011,12 @@
       "measure",
       "translate",
       "rotate",
-      "modify_geometry"
+      "modify_geometry",
+      "delete"
     ],
     "forbidden_ops": [
       "uniform_scale",
+      "stretch",
       "delete_core"
     ],
     "clearance_min_mm": 2.0,
@@ -576,7 +1043,94 @@
     "function_names": [
       "驾驶舱盖"
     ],
-    "semantic_note": "AAV7A1 两栖装甲突击车驾驶舱盖，属于外部防护面板组件，需保持与车体结构配合间隙，禁止非均匀缩放以维持密封性与装配关系"
+    "semantic_note": "AAV7A1 两栖装甲突击车驾驶舱盖，属于防护面板部件，需随车体移动并保持密封间隙。",
+    "semantic_role": "cover_panel",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.9,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 97.599,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2492.6022269656764,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 97.335,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2592.409581960795,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 96.497,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2827.553658954272,
+        "diag_mm": 6985.661,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0020",
+        "part_name": "装甲左",
+        "score": 96.49,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2796.229225881973,
+        "diag_mm": 6879.623,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0003",
+        "part_name": "车身前装甲",
+        "score": 38.238,
+        "gap_mm": 227.0533,
+        "center_distance_mm": 1806.7675105044957,
+        "diag_mm": 3716.23,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 37.186,
+        "gap_mm": 1711.4859,
+        "center_distance_mm": 3642.1272661694875,
+        "diag_mm": 6479.4,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -584,6 +1138,8 @@
     "part_name": "履带右",
     "parent_part_id": "BJ0022",
     "parent_part_name": "行动系统类",
+    "declared_parent_part_id": "BJ0022",
+    "declared_parent_part_name": "行动系统类",
     "edit_type": "mechanical_part",
     "primary_axis": [
       1.0,
@@ -609,8 +1165,7 @@
     "forbidden_ops": [
       "stretch",
       "uniform_scale",
-      "delete_core",
-      "modify_geometry"
+      "delete_core"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -636,7 +1191,94 @@
     "function_names": [
       "履带系统右"
     ],
-    "semantic_note": "AAV7A1右侧履带组件，机械传动部件，需保持几何完整性与装配位置"
+    "semantic_note": "AAV7A1 两栖装甲车右侧履带组件，提供地面行驶牵引力与支撑",
+    "semantic_role": "drive_component",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.85,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 98.552,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2175.7171833293205,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0006",
+        "part_name": "车身右装甲",
+        "score": 84.295,
+        "gap_mm": 0.0,
+        "center_distance_mm": 851.8330607104687,
+        "diag_mm": 6357.584,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 84.099,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1100.011176714688,
+        "diag_mm": 6479.4,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0019",
+        "part_name": "装甲右",
+        "score": 84.099,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1046.3486975976375,
+        "diag_mm": 5879.424,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 40.053,
+        "gap_mm": 824.3507,
+        "center_distance_mm": 2798.302300613921,
+        "diag_mm": 8642.37,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 24.872,
+        "gap_mm": 1886.1429,
+        "center_distance_mm": 2705.631392098008,
+        "diag_mm": 6985.661,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -644,6 +1286,8 @@
     "part_name": "履带左",
     "parent_part_id": "BJ0022",
     "parent_part_name": "行动系统类",
+    "declared_parent_part_id": "BJ0022",
+    "declared_parent_part_name": "行动系统类",
     "edit_type": "mechanical_part",
     "primary_axis": [
       1.0,
@@ -694,7 +1338,94 @@
     "function_names": [
       "履带系统左"
     ],
-    "semantic_note": "履带为关键机械传动部件，具备实体几何，需固定基准面，禁止形变操作以维持装配关系。"
+    "semantic_note": "AAV7A1 左侧履带组件，属于行动系统驱动部分，用于承载车体并提供行进动力，需保持几何完整性。",
+    "semantic_role": "drive_component",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.9,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 98.556,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2180.85857731007,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 84.213,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1006.4534885090941,
+        "diag_mm": 6985.661,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0020",
+        "part_name": "装甲左",
+        "score": 84.06,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1192.545461078781,
+        "diag_mm": 6879.623,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 45.386,
+        "gap_mm": 13.559,
+        "center_distance_mm": 1295.6409304088934,
+        "diag_mm": 6479.4,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 25.049,
+        "gap_mm": 815.3707,
+        "center_distance_mm": 2818.5541034285934,
+        "diag_mm": 8642.37,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0006",
+        "part_name": "车身右装甲",
+        "score": 24.796,
+        "gap_mm": 1885.6009,
+        "center_distance_mm": 2679.3923504476247,
+        "diag_mm": 6357.584,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -702,13 +1433,15 @@
     "part_name": "瞄准镜",
     "parent_part_id": "BJ0024",
     "parent_part_name": "车",
+    "declared_parent_part_id": "BJ0024",
+    "declared_parent_part_name": "车",
     "edit_type": "device_part",
     "primary_axis": [
       0.0,
       1.0,
       0.0
     ],
-    "anchor_mode": "axis_fixed",
+    "anchor_mode": "center",
     "symmetry_group": "",
     "neighbors": [
       "BJ0001",
@@ -722,12 +1455,15 @@
       "measure",
       "translate",
       "rotate",
-      "add_attach"
+      "add_attach",
+      "delete"
     ],
     "forbidden_ops": [
       "stretch",
       "uniform_scale",
-      "delete_core"
+      "modify_geometry",
+      "delete_core",
+      "no_direct_edit"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -753,7 +1489,94 @@
     "function_names": [
       "瞄准镜"
     ],
-    "semantic_note": "该部件为AAV7A1装甲车的光学瞄准设备，拥有独立STL几何模型。作为关键功能组件，支持位置与角度调整以模拟瞄准操作，但禁止几何形变以保持装备精度。"
+    "semantic_note": "车载光学瞄准装置，用于辅助观察与目标指示。",
+    "semantic_role": "sensor_component",
+    "attachment_parent_part_id": "BJ0013",
+    "attachment_parent_part_name": "炮塔",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0013",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.95,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 83.26,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1538.9724432634407,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 83.213,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1697.879834411508,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0013",
+        "part_name": "炮塔",
+        "score": 77.523,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2199.680685624393,
+        "diag_mm": 6123.333,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "mechanical_part",
+        "semantic_role": "weapon_component"
+      },
+      {
+        "part_id": "BJ0008",
+        "part_name": "机枪",
+        "score": 35.913,
+        "gap_mm": 210.78,
+        "center_distance_mm": 889.0905541969558,
+        "diag_mm": 1257.391,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "device_part",
+        "semantic_role": "weapon_component"
+      },
+      {
+        "part_id": "BJ0003",
+        "part_name": "车身前装甲",
+        "score": 35.199,
+        "gap_mm": 1433.730794,
+        "center_distance_mm": 2665.5500673447523,
+        "diag_mm": 3716.23,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0002",
+        "part_name": "车身后装甲",
+        "score": 26.86,
+        "gap_mm": 4835.453247,
+        "center_distance_mm": 5320.945581905128,
+        "diag_mm": 3311.349,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -761,13 +1584,15 @@
     "part_name": "炮塔",
     "parent_part_id": "BJ0024",
     "parent_part_name": "车",
-    "edit_type": "device_part",
+    "declared_parent_part_id": "BJ0024",
+    "declared_parent_part_name": "车",
+    "edit_type": "mechanical_part",
     "primary_axis": [
       1.0,
       0.0,
       0.0
     ],
-    "anchor_mode": "axis_fixed",
+    "anchor_mode": "parent_attach",
     "symmetry_group": "",
     "neighbors": [
       "BJ0001",
@@ -783,14 +1608,12 @@
       "hide",
       "measure",
       "translate",
-      "rotate",
-      "add_attach"
+      "rotate"
     ],
     "forbidden_ops": [
-      "stretch",
       "uniform_scale",
-      "delete_core",
-      "modify_geometry"
+      "modify_geometry",
+      "delete"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -816,7 +1639,100 @@
     "function_names": [
       "炮塔"
     ],
-    "semantic_note": "Turret component with STL geometry, supports rotation around axis, prohibits deformation and scaling."
+    "semantic_note": "AAV7A1 主武器炮塔，具备旋转瞄准功能，安装于车体顶部结构上。",
+    "semantic_role": "weapon_component",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.95,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 99.201,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1232.6863771492124,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 84.162,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1236.7722351553439,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0006",
+        "part_name": "车身右装甲",
+        "score": 83.888,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1387.651685535222,
+        "diag_mm": 6357.584,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 25.253,
+        "gap_mm": 1345.9759,
+        "center_distance_mm": 2201.1968347611996,
+        "diag_mm": 6479.4,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 25.145,
+        "gap_mm": 1108.7729,
+        "center_distance_mm": 2431.695071503969,
+        "diag_mm": 6985.661,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0020",
+        "part_name": "装甲左",
+        "score": 25.054,
+        "gap_mm": 1461.389,
+        "center_distance_mm": 2530.1499264157255,
+        "diag_mm": 6879.623,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [
+      "BJ0008",
+      "BJ0012"
+    ],
+    "linked_children_names": [
+      "机枪",
+      "瞄准镜"
+    ]
   },
   {
     "target_id": "MB576055",
@@ -824,6 +1740,8 @@
     "part_name": "喷水推进器右",
     "parent_part_id": "BJ0022",
     "parent_part_name": "行动系统类",
+    "declared_parent_part_id": "BJ0022",
+    "declared_parent_part_name": "行动系统类",
     "edit_type": "mechanical_part",
     "primary_axis": [
       1.0,
@@ -845,8 +1763,9 @@
       "rotate"
     ],
     "forbidden_ops": [
+      "stretch",
       "uniform_scale",
-      "modify_geometry"
+      "delete_core"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -872,7 +1791,94 @@
     "function_names": [
       "水上推进系统右"
     ],
-    "semantic_note": "Right water jet propulsion unit for amphibious vehicle mobility"
+    "semantic_note": "AAV7A1 两栖装甲车右侧喷水推进单元，属于水上推进系统核心部件，提供水上航行推力。",
+    "semantic_role": "drive_component",
+    "attachment_parent_part_id": "BJ0005",
+    "attachment_parent_part_name": "车身下装甲",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0005",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "heuristic_fallback",
+    "link_confidence": 0.75,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 97.107,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2163.0095523627547,
+        "diag_mm": 6479.4,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 96.868,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3224.2389219529778,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0002",
+        "part_name": "车身后装甲",
+        "score": 38.901,
+        "gap_mm": 388.3054,
+        "center_distance_mm": 1335.1794983621512,
+        "diag_mm": 3311.349,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0006",
+        "part_name": "车身右装甲",
+        "score": 38.587,
+        "gap_mm": 163.9109,
+        "center_distance_mm": 2510.369595829485,
+        "diag_mm": 6357.584,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 38.233,
+        "gap_mm": 1115.5427,
+        "center_distance_mm": 3630.9770030427826,
+        "diag_mm": 8642.37,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 38.116,
+        "gap_mm": 1283.0849,
+        "center_distance_mm": 3100.5600258257446,
+        "diag_mm": 6985.661,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -880,6 +1886,8 @@
     "part_name": "喷水推进器左",
     "parent_part_id": "BJ0022",
     "parent_part_name": "行动系统类",
+    "declared_parent_part_id": "BJ0022",
+    "declared_parent_part_name": "行动系统类",
     "edit_type": "mechanical_part",
     "primary_axis": [
       1.0,
@@ -898,13 +1906,14 @@
       "hide",
       "measure",
       "translate",
-      "rotate"
+      "rotate",
+      "delete"
     ],
     "forbidden_ops": [
-      "uniform_scale",
-      "modify_geometry",
       "stretch",
-      "delete_core"
+      "uniform_scale",
+      "delete_core",
+      "modify_geometry"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -930,7 +1939,94 @@
     "function_names": [
       "水上推进系统左"
     ],
-    "semantic_note": "左侧喷水推进器，属于行动系统机械部件，需保持几何完整性与比例。"
+    "semantic_note": "AAV7A1 两栖装甲车左侧喷水推进单元，水上推进系统核心部件，提供水面航行推力。",
+    "semantic_role": "drive_component",
+    "attachment_parent_part_id": "BJ0005",
+    "attachment_parent_part_name": "车身下装甲",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0005",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "heuristic_fallback",
+    "link_confidence": 0.75,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 96.956,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2276.1340662612615,
+        "diag_mm": 6479.4,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 96.815,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3278.706863565612,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0002",
+        "part_name": "车身后装甲",
+        "score": 38.992,
+        "gap_mm": 329.3354,
+        "center_distance_mm": 1296.005183759388,
+        "diag_mm": 3311.349,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 38.706,
+        "gap_mm": 147.9469,
+        "center_distance_mm": 2629.12034726969,
+        "diag_mm": 6985.661,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0020",
+        "part_name": "装甲左",
+        "score": 38.517,
+        "gap_mm": 539.66783,
+        "center_distance_mm": 2743.753711595212,
+        "diag_mm": 6879.623,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 38.178,
+        "gap_mm": 1113.0037,
+        "center_distance_mm": 3683.742406345339,
+        "diag_mm": 8642.37,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -938,13 +2034,15 @@
     "part_name": "引擎",
     "parent_part_id": "BJ0023",
     "parent_part_name": "动力系统类",
+    "declared_parent_part_id": "BJ0023",
+    "declared_parent_part_name": "动力系统类",
     "edit_type": "mechanical_part",
     "primary_axis": [
       0.0,
       1.0,
       0.0
     ],
-    "anchor_mode": "center",
+    "anchor_mode": "parent_attach",
     "symmetry_group": "",
     "neighbors": [
       "BJ0001",
@@ -957,14 +2055,12 @@
       "hide",
       "measure",
       "translate",
-      "rotate",
-      "delete"
+      "rotate"
     ],
     "forbidden_ops": [
       "uniform_scale",
       "stretch",
-      "modify_geometry",
-      "add_attach"
+      "modify_geometry"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -990,7 +2086,94 @@
     "function_names": [
       "引擎"
     ],
-    "semantic_note": "AAV7A1 核心引擎组件，具有复杂 STL 几何结构，需保持形状完整，仅允许位姿调整与视图管理"
+    "semantic_note": "AAV7A1核心动力单元，为履带行走及喷水推进提供能源",
+    "semantic_role": "drive_component",
+    "attachment_parent_part_id": "BJ0003",
+    "attachment_parent_part_name": "车身前装甲",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0003",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "heuristic_fallback",
+    "link_confidence": 0.75,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0003",
+        "part_name": "车身前装甲",
+        "score": 98.151,
+        "gap_mm": 0.0,
+        "center_distance_mm": 922.2303730942787,
+        "diag_mm": 3716.23,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 97.553,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2585.3468095053036,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 97.182,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2793.3302009927943,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0017",
+        "part_name": "油箱",
+        "score": 42.087,
+        "gap_mm": 101.6,
+        "center_distance_mm": 754.0752021821166,
+        "diag_mm": 1318.707,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "general_part",
+        "semantic_role": "general_component"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 37.987,
+        "gap_mm": 465.8359,
+        "center_distance_mm": 3313.1692262448037,
+        "diag_mm": 6985.661,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0020",
+        "part_name": "装甲左",
+        "score": 37.874,
+        "gap_mm": 818.452,
+        "center_distance_mm": 3362.5022570671235,
+        "diag_mm": 6879.623,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -998,7 +2181,9 @@
     "part_name": "油箱",
     "parent_part_id": "BJ0023",
     "parent_part_name": "动力系统类",
-    "edit_type": "device_part",
+    "declared_parent_part_id": "BJ0023",
+    "declared_parent_part_name": "动力系统类",
+    "edit_type": "general_part",
     "primary_axis": [
       0.0,
       1.0,
@@ -1016,13 +2201,13 @@
       "hide",
       "measure",
       "translate",
-      "rotate"
+      "rotate",
+      "delete"
     ],
     "forbidden_ops": [
       "uniform_scale",
-      "modify_geometry",
       "stretch",
-      "delete"
+      "modify_geometry"
     ],
     "clearance_min_mm": 2.0,
     "has_stl_file": true,
@@ -1048,7 +2233,94 @@
     "function_names": [
       "油箱"
     ],
-    "semantic_note": "AAV7A1 两栖装甲车动力系统燃油箱，需保持尺寸精度，禁止缩放与几何修改。"
+    "semantic_note": "AAV7A1 动力系统燃油存储单元，属于关键功能部件，需保持几何形状与容积比例准确，禁止形变操作",
+    "semantic_role": "general_component",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.85,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0003",
+        "part_name": "车身前装甲",
+        "score": 99.629,
+        "gap_mm": 0.0,
+        "center_distance_mm": 186.56665145226913,
+        "diag_mm": 3716.23,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 97.053,
+        "gap_mm": 0.0,
+        "center_distance_mm": 3128.797717548108,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 61.492,
+        "gap_mm": 10.0507,
+        "center_distance_mm": 3443.813850451073,
+        "diag_mm": 8642.37,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 37.605,
+        "gap_mm": 339.0079,
+        "center_distance_mm": 3650.0594039264197,
+        "diag_mm": 6985.661,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0020",
+        "part_name": "装甲左",
+        "score": 37.467,
+        "gap_mm": 691.624,
+        "center_distance_mm": 3716.0468192410463,
+        "diag_mm": 6879.623,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 37.202,
+        "gap_mm": 630.539203,
+        "center_distance_mm": 3741.54752397203,
+        "diag_mm": 6479.4,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -1056,13 +2328,15 @@
     "part_name": "指挥舱盖",
     "parent_part_id": "BJ0024",
     "parent_part_name": "车",
+    "declared_parent_part_id": "BJ0024",
+    "declared_parent_part_name": "车",
     "edit_type": "panel_part",
     "primary_axis": [
       1.0,
       0.0,
       0.0
     ],
-    "anchor_mode": "center",
+    "anchor_mode": "parent_attach",
     "symmetry_group": "",
     "neighbors": [
       "BJ0001",
@@ -1081,6 +2355,7 @@
     ],
     "forbidden_ops": [
       "uniform_scale",
+      "stretch",
       "delete_core"
     ],
     "clearance_min_mm": 2.0,
@@ -1107,7 +2382,94 @@
     "function_names": [
       "指挥舱盖"
     ],
-    "semantic_note": "AAV7A1 指挥舱盖，装甲防护部件，支持开合与几何微调"
+    "semantic_note": "AAV7A1 车体顶部指挥舱盖，属于防护覆盖件，需随车体联动，禁止缩放变形",
+    "semantic_role": "cover_panel",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.9,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 98.437,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1647.6262254987475,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 98.246,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1734.0977960452649,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0020",
+        "part_name": "装甲左",
+        "score": 97.799,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1787.8961812374619,
+        "diag_mm": 6879.623,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 97.752,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1850.1795567350732,
+        "diag_mm": 6985.661,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 38.177,
+        "gap_mm": 1696.1459,
+        "center_distance_mm": 2952.7037125960546,
+        "diag_mm": 6479.4,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0006",
+        "part_name": "车身右装甲",
+        "score": 37.791,
+        "gap_mm": 1732.723612,
+        "center_distance_mm": 3199.546695316642,
+        "diag_mm": 6357.584,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -1115,6 +2477,8 @@
     "part_name": "装甲右",
     "parent_part_id": "BJ0021",
     "parent_part_name": "车身装甲类",
+    "declared_parent_part_id": "BJ0021",
+    "declared_parent_part_name": "车身装甲类",
     "edit_type": "structural_part",
     "primary_axis": [
       1.0,
@@ -1168,7 +2532,94 @@
     "function_names": [
       "右侧外挂装甲"
     ],
-    "semantic_note": "Right armor panel for AAV7A1 amphibious assault vehicle, structural component with fixed base alignment."
+    "semantic_note": "AAV7A1 右侧车体外部防护装甲，用于保护乘员舱及内部设备免受攻击，属于车身结构覆盖组件。",
+    "semantic_role": "cover_panel",
+    "attachment_parent_part_id": "BJ0001",
+    "attachment_parent_part_name": "车身",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0001",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.95,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 98.896,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1674.9095300108006,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0006",
+        "part_name": "车身右装甲",
+        "score": 84.779,
+        "gap_mm": 0.0,
+        "center_distance_mm": 270.03981739743955,
+        "diag_mm": 6357.584,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 83.546,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2110.77212165462,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0013",
+        "part_name": "炮塔",
+        "score": 79.834,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1399.0310002163105,
+        "diag_mm": 6123.333,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "mechanical_part",
+        "semantic_role": "weapon_component"
+      },
+      {
+        "part_id": "BJ0005",
+        "part_name": "车身下装甲",
+        "score": 25.603,
+        "gap_mm": 257.6779,
+        "center_distance_mm": 1726.9061497902471,
+        "diag_mm": 6479.4,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 24.827,
+        "gap_mm": 2064.3739,
+        "center_distance_mm": 2795.246574484618,
+        "diag_mm": 6985.661,
+        "is_neighbor": false,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -1176,6 +2627,8 @@
     "part_name": "装甲左",
     "parent_part_id": "BJ0021",
     "parent_part_name": "车身装甲类",
+    "declared_parent_part_id": "BJ0021",
+    "declared_parent_part_name": "车身装甲类",
     "edit_type": "structural_part",
     "primary_axis": [
       1.0,
@@ -1231,7 +2684,58 @@
     "function_names": [
       "左侧外挂装甲"
     ],
-    "semantic_note": "Left side external armor plate for AAV7A1 amphibious assault vehicle, primary structural protection component."
+    "semantic_note": "AAV7A1 两栖突击车左侧外部防护装甲，属于车身装甲结构组件，提供侧面防护。",
+    "semantic_role": "cover_panel",
+    "attachment_parent_part_id": "BJ0007",
+    "attachment_parent_part_name": "车身左装甲",
+    "link_type": "rigid_follow",
+    "follow_transform_of": "BJ0007",
+    "follow_ops": [
+      "translate",
+      "rotate"
+    ],
+    "link_source": "llm_candidate_selection",
+    "link_confidence": 0.85,
+    "attachment_parent_candidates": [
+      {
+        "part_id": "BJ0007",
+        "part_name": "车身左装甲",
+        "score": 84.83,
+        "gap_mm": 0.0,
+        "center_distance_mm": 235.07655017811217,
+        "diag_mm": 6985.661,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      },
+      {
+        "part_id": "BJ0001",
+        "part_name": "车身",
+        "score": 83.968,
+        "gap_mm": 0.0,
+        "center_distance_mm": 1668.8856717763053,
+        "diag_mm": 9296.786,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "base_component"
+      },
+      {
+        "part_id": "BJ0004",
+        "part_name": "车身上装甲",
+        "score": 83.669,
+        "gap_mm": 0.0,
+        "center_distance_mm": 2066.022287745112,
+        "diag_mm": 8642.37,
+        "is_neighbor": true,
+        "declared_parent_match": false,
+        "edit_type": "structural_part",
+        "semantic_role": "cover_panel"
+      }
+    ],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -1239,6 +2743,8 @@
     "part_name": "车身装甲类",
     "parent_part_id": "BJ0024",
     "parent_part_name": "车",
+    "declared_parent_part_id": "BJ0024",
+    "declared_parent_part_name": "车",
     "edit_type": "virtual_assembly",
     "primary_axis": [
       1.0,
@@ -1286,7 +2792,18 @@
       ]
     },
     "function_names": [],
-    "semantic_note": ""
+    "semantic_note": "",
+    "semantic_role": "virtual_assembly",
+    "attachment_parent_part_id": "",
+    "attachment_parent_part_name": "",
+    "link_type": "",
+    "follow_transform_of": "",
+    "follow_ops": [],
+    "link_source": "",
+    "link_confidence": 0.0,
+    "attachment_parent_candidates": [],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -1294,6 +2811,8 @@
     "part_name": "行动系统类",
     "parent_part_id": "BJ0024",
     "parent_part_name": "车",
+    "declared_parent_part_id": "BJ0024",
+    "declared_parent_part_name": "车",
     "edit_type": "virtual_assembly",
     "primary_axis": [
       1.0,
@@ -1341,7 +2860,18 @@
       ]
     },
     "function_names": [],
-    "semantic_note": ""
+    "semantic_note": "",
+    "semantic_role": "virtual_assembly",
+    "attachment_parent_part_id": "",
+    "attachment_parent_part_name": "",
+    "link_type": "",
+    "follow_transform_of": "",
+    "follow_ops": [],
+    "link_source": "",
+    "link_confidence": 0.0,
+    "attachment_parent_candidates": [],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -1349,6 +2879,8 @@
     "part_name": "动力系统类",
     "parent_part_id": "BJ0024",
     "parent_part_name": "车",
+    "declared_parent_part_id": "BJ0024",
+    "declared_parent_part_name": "车",
     "edit_type": "virtual_assembly",
     "primary_axis": [
       1.0,
@@ -1396,7 +2928,18 @@
       ]
     },
     "function_names": [],
-    "semantic_note": ""
+    "semantic_note": "",
+    "semantic_role": "virtual_assembly",
+    "attachment_parent_part_id": "",
+    "attachment_parent_part_name": "",
+    "link_type": "",
+    "follow_transform_of": "",
+    "follow_ops": [],
+    "link_source": "",
+    "link_confidence": 0.0,
+    "attachment_parent_candidates": [],
+    "linked_children": [],
+    "linked_children_names": []
   },
   {
     "target_id": "MB576055",
@@ -1404,6 +2947,8 @@
     "part_name": "车",
     "parent_part_id": "",
     "parent_part_name": "",
+    "declared_parent_part_id": "",
+    "declared_parent_part_name": "",
     "edit_type": "virtual_assembly",
     "primary_axis": [
       1.0,
@@ -1451,6 +2996,17 @@
       ]
     },
     "function_names": [],
-    "semantic_note": ""
+    "semantic_note": "",
+    "semantic_role": "virtual_assembly",
+    "attachment_parent_part_id": "",
+    "attachment_parent_part_name": "",
+    "link_type": "",
+    "follow_transform_of": "",
+    "follow_ops": [],
+    "link_source": "",
+    "link_confidence": 0.0,
+    "attachment_parent_candidates": [],
+    "linked_children": [],
+    "linked_children_names": []
   }
 ]
