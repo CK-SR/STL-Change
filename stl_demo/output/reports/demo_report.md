@@ -8,7 +8,7 @@
 - 变更表 Excel: N/A
 
 ## 2. 情报文本
-- 在 BJ0007 顶部新增一个防无人机顶棚，新件命名为 BJ9001，优先检索现有 roof 素材，如无合适再生成；新增件需覆盖 BJ0007 顶部主要长度，允许沿主轴适度拉伸。
+- 给当前装甲车在顶部新增一个防无人机顶棚，新件命名为 BJ9001；新增件需与车顶部主要长度比例合理，允许沿主轴适度拉伸。
 
 ## 3. 约束来源
 ```json
@@ -25,7 +25,7 @@
       "target_part": "BJ9001",
       "op": "add",
       "params": {
-        "attach_to": "BJ0007",
+        "attach_to": "BJ0001",
         "asset_request": {
           "content": "防无人机顶棚",
           "input_type": "text",
@@ -56,7 +56,7 @@
           }
         }
       },
-      "reason": "在 BJ0007 顶部新增防无人机顶棚 BJ9001，优先检索 roof 素材，允许沿主轴拉伸以覆盖主要长度"
+      "reason": "根据情报文本在车身顶部新增防无人机顶棚，允许沿主轴拉伸以适配比例"
     }
   ]
 }
@@ -77,7 +77,7 @@
       "target_part": "BJ9001",
       "op": "add",
       "params": {
-        "attach_to": "BJ0007",
+        "attach_to": "BJ0001",
         "asset_request": {
           "content": "防无人机顶棚",
           "input_type": "text",
@@ -108,7 +108,7 @@
           }
         }
       },
-      "reason": "在 BJ0007 顶部新增防无人机顶棚 BJ9001，优先检索 roof 素材，允许沿主轴拉伸以覆盖主要长度"
+      "reason": "根据情报文本在车身顶部新增防无人机顶棚，允许沿主轴拉伸以适配比例"
     }
   }
 ]
@@ -133,6 +133,8 @@
       "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\BJ9001.stl"
     ],
     "warnings": [
+      "large_uniform_scale_applied=3078.678; remote asset was likely much smaller than parent",
+      "large_axis_stretch_applied=2.273",
       "mesh_repair_actions[BJ9001]=fix_normals,fix_winding,remove_unreferenced_vertices",
       "mesh_repair_warning[BJ9001]=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'",
       "reasonableness_skipped[BJ9001]=no_input_mesh"
@@ -150,16 +152,16 @@
           "linked_from": ""
         }
       ],
-      "attach_to": "BJ0007",
+      "attach_to": "BJ0001",
       "asset_acquisition": {
         "success": true,
         "message": "asset selected and downloaded",
-        "local_stl_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\downloaded_assets\\BJ9001_dfd0e21728e141c8a5a1445f3bc10172.stl",
-        "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
+        "local_stl_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\downloaded_assets\\BJ9001_b2677cb2bc104ebbadbd5da850538ae1.stl",
+        "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
         "task_id": "",
         "provider_status": "",
         "asset_metadata": {
-          "name": "接口测试-手工上传防无人机顶棚",
+          "name": "防无人机顶棚",
           "category": "roof",
           "target_type": "armored_vehicle",
           "mount_region": "top_hull",
@@ -167,18 +169,18 @@
           "default_orientation": null,
           "mount_ref_point": null,
           "constraints": null,
-          "stl_object_key": "manual/7f8780347776455cb2d1c78db7682720.stl",
-          "preview_image_object_key": "manual/7f8780347776455cb2d1c78db7682720_preview.png",
+          "stl_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+          "preview_image_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png",
           "source": "manual_upload",
           "generation_prompt": null,
           "version": 1,
-          "version_group": null,
+          "version_group": "6476d3ed2b3e4bcb84d7c2a3638a4b93",
           "parent_asset_id": null,
-          "id": 4,
-          "created_at": "2026-04-16T09:09:55",
-          "updated_at": "2026-04-16T09:09:55",
-          "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
-          "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720_preview.png"
+          "id": 9,
+          "created_at": "2026-04-20T12:24:04",
+          "updated_at": "2026-04-20T12:24:04",
+          "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+          "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png"
         },
         "raw_submit_response": {
           "status": "ASSET_SELECTED",
@@ -189,29 +191,30 @@
             "metadata": {}
           },
           "intent": {
-            "query": "防无人机顶棚 装甲车",
+            "query": "防无人机顶棚",
             "category": "roof",
             "target_type": "armored_vehicle",
             "mount_region": "top_hull",
-            "generation_prompt": "Anti-drone protective roof cage for armored vehicle, metal mesh structure, mounted on top hull, rugged tactical design, steel material, high detail 3D model",
-            "embedding_text": "装甲车 防无人机 顶棚 格栅 防护 顶部",
+            "generation_prompt": "Anti-drone protective roof cage for armored vehicle, heavy-duty steel mesh structure, mounted on top hull, tactical camouflage finish, open grid design for ventilation, rugged industrial texture, high detail 3D model",
+            "embedding_text": "装甲车 防无人机 顶棚 顶部 防护 格栅",
             "attributes": {
-              "protection_type": "passive_armor",
+              "protection_type": "physical_barrier",
               "structure_form": "cage_mesh",
-              "material": "steel_alloy",
-              "threat_type": "uav_drone",
+              "material": "steel",
+              "coverage_area": "full_top",
+              "attachment_method": "bolted",
+              "threat_type": "uav",
               "compatible_targets": [
                 "tank",
                 "ifv",
                 "apc"
-              ],
-              "attachment_method": "welded_bolted"
+              ]
             }
           },
           "candidates": [
             {
               "asset": {
-                "name": "接口测试-手工上传防无人机顶棚",
+                "name": "防无人机顶棚",
                 "category": "roof",
                 "target_type": "armored_vehicle",
                 "mount_region": "top_hull",
@@ -219,27 +222,27 @@
                 "default_orientation": null,
                 "mount_ref_point": null,
                 "constraints": null,
-                "stl_object_key": "manual/7f8780347776455cb2d1c78db7682720.stl",
-                "preview_image_object_key": "manual/7f8780347776455cb2d1c78db7682720_preview.png",
+                "stl_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+                "preview_image_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png",
                 "source": "manual_upload",
                 "generation_prompt": null,
                 "version": 1,
-                "version_group": null,
+                "version_group": "6476d3ed2b3e4bcb84d7c2a3638a4b93",
                 "parent_asset_id": null,
-                "id": 4,
-                "created_at": "2026-04-16T09:09:55",
-                "updated_at": "2026-04-16T09:09:55",
-                "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
-                "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720_preview.png"
+                "id": 9,
+                "created_at": "2026-04-20T12:24:04",
+                "updated_at": "2026-04-20T12:24:04",
+                "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+                "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png"
               },
-              "score": 0.7477,
-              "structured_score": 0.759,
-              "semantic_score": 0.7385,
-              "reason": "structured metadata match"
+              "score": 0.868,
+              "structured_score": 0.7738,
+              "semantic_score": 0.945,
+              "reason": "semantic vector match"
             }
           ],
           "selected_asset": {
-            "name": "接口测试-手工上传防无人机顶棚",
+            "name": "防无人机顶棚",
             "category": "roof",
             "target_type": "armored_vehicle",
             "mount_region": "top_hull",
@@ -247,18 +250,18 @@
             "default_orientation": null,
             "mount_ref_point": null,
             "constraints": null,
-            "stl_object_key": "manual/7f8780347776455cb2d1c78db7682720.stl",
-            "preview_image_object_key": "manual/7f8780347776455cb2d1c78db7682720_preview.png",
+            "stl_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+            "preview_image_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png",
             "source": "manual_upload",
             "generation_prompt": null,
             "version": 1,
-            "version_group": null,
+            "version_group": "6476d3ed2b3e4bcb84d7c2a3638a4b93",
             "parent_asset_id": null,
-            "id": 4,
-            "created_at": "2026-04-16T09:09:55",
-            "updated_at": "2026-04-16T09:09:55",
-            "download_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720.stl",
-            "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/7f8780347776455cb2d1c78db7682720_preview.png"
+            "id": 9,
+            "created_at": "2026-04-20T12:24:04",
+            "updated_at": "2026-04-20T12:24:04",
+            "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+            "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png"
           },
           "task_id": null,
           "review_id": null,
@@ -268,21 +271,57 @@
         "warnings": []
       },
       "fit_plan": {
-        "attach_to": "BJ0007",
+        "attach_to": "BJ0001",
         "category": "roof",
+        "fit_mode": "cover_parent",
         "coverage_ratio": 0.92,
         "allow_stretch": true,
         "clearance_mm": 20.0,
+        "parent_extents": {
+          "x": 7763.04,
+          "y": 3327.7200000000003,
+          "z": 3884.8059999999996
+        },
+        "final_asset_extents": {
+          "x": 7141.9968,
+          "y": 3061.5024000000003,
+          "z": 2169.8948662423836
+        },
+        "visual_scale_normalization": {
+          "strategy": "cover_parent_xy",
+          "target_ratio_range": null,
+          "target_len": 7141.9968,
+          "raw_scale_factor": 3078.677947467294,
+          "final_scale_factor": 3078.677947467294,
+          "raw_scale_factor_xy_x": 6999.190232184794,
+          "raw_scale_factor_xy_y": 3078.677947467294,
+          "parent_xy": [
+            7763.04,
+            3327.7200000000003
+          ],
+          "asset_xy": [
+            1.0204032985356692,
+            0.9944211288870201
+          ]
+        },
+        "visual_scale_applied": 3078.677947467294,
         "auto_translate": {
-          "x": -330.9549999999995,
-          "y": 1349.7333966094066,
-          "z": 2430.58
+          "x": 61.25699445521991,
+          "y": 23.403524838043154,
+          "z": 5319.5486990008385
         },
         "auto_rotation": {
           "thin_axis_to_z": true,
           "long_axis_to_parent_primary_axis": true
         },
-        "auto_stretch_delta_mm": 6162.576586437627,
+        "bounded_stretch": {
+          "strategy": "cover_parent",
+          "target_len": 7141.9968,
+          "raw_scale_factor": 2.2734402076523623,
+          "final_scale_factor": 2.2734402076523623
+        },
+        "auto_stretch_delta_mm": 4000.5036672753495,
+        "axis_stretch_scale_factor_applied": 2.2734402076523623,
         "overrides_applied": {
           "translate": {
             "x": 0.0,
@@ -317,18 +356,18 @@
       "remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'"
     ],
     "stats_before": {
-      "vertices": 3,
-      "faces": 1,
+      "vertices": 3647478,
+      "faces": 1215826,
       "is_watertight": false,
       "is_winding_consistent": true,
-      "euler_number": 1
+      "euler_number": 1215826
     },
     "stats_after": {
-      "vertices": 3,
-      "faces": 1,
+      "vertices": 3647478,
+      "faces": 1215826,
       "is_watertight": false,
       "is_winding_consistent": true,
-      "euler_number": 1
+      "euler_number": 1215826
     },
     "message": "mesh repair finished"
   }
@@ -348,6 +387,8 @@
 - 本次变更流程顺利完成，且自动修复与合理性检查未发现明显异常，可作为当前阶段 demo 展示结果。
 
 ## 10. 全局 Warnings
+- large_uniform_scale_applied=3078.678; remote asset was likely much smaller than parent
+- large_axis_stretch_applied=2.273
 - mesh_repair_actions[BJ9001]=fix_normals,fix_winding,remove_unreferenced_vertices
 - mesh_repair_warning[BJ9001]=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'
 - reasonableness_skipped[BJ9001]=no_input_mesh

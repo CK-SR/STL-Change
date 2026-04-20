@@ -54,7 +54,7 @@ def build_change_intent_prompt(
    {{
      "attach_to": "已有部件ID，表示新增件挂载到哪个已有件上",
      "asset_request": {{
-       "content": "用于素材检索/生成的文本",
+       "content": "用于素材检索/生成的文本,最好是中文",
        "input_type": "text",
        "category": "可选，如 roof/sensor/pod",
        "target_type": "可选，如 armored_vehicle",

@@ -137,13 +137,24 @@ def dispatch_change(
         )
 
         temp_output = _build_temp_output_path(output_dir, target, "added_fitted")
+        resolved_asset_metadata = dict(asset_result.asset_metadata or {})
+        resolved_fit_policy = dict(fit_policy or {})
+
+        # 远程返回的 asset_metadata 可能缺 category/target_type/mount_region，
+        # 这里用 LLM 生成的 asset_request 做回填，保证 add_fit_service 能识别大覆盖件类别。
+        for key in ["category", "target_type", "mount_region"]:
+            req_val = asset_request.get(key)
+            if req_val is not None and str(req_val).strip():
+                resolved_asset_metadata.setdefault(key, req_val)
+                resolved_fit_policy.setdefault(key, req_val)
+
         fit_result = fit_service.fit_imported_asset(
             imported_stl_path=asset_result.local_stl_path,
             attach_to=attach_to,
             attach_to_path=part_to_file[attach_to],
             output_path=temp_output,
-            asset_metadata=asset_result.asset_metadata or {},
-            fit_policy=fit_policy,
+            asset_metadata=resolved_asset_metadata,
+            fit_policy=resolved_fit_policy,
             post_transform_overrides=post_transform_overrides,
         )
 

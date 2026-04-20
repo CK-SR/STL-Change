@@ -7,7 +7,7 @@
       "target_part": "BJ9001",
       "op": "add",
       "params": {
-        "attach_to": "BJ0007",
+        "attach_to": "BJ0001",
         "asset_request": {
           "content": "防无人机顶棚",
           "input_type": "text",
@@ -38,7 +38,7 @@
           }
         }
       },
-      "reason": "在 BJ0007 顶部新增防无人机顶棚 BJ9001，优先检索 roof 素材，允许沿主轴拉伸以覆盖主要长度"
+      "reason": "根据情报文本在车身顶部新增防无人机顶棚，允许沿主轴拉伸以适配比例"
     }
   }
 ]
