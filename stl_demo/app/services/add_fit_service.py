@@ -30,13 +30,16 @@ class AddFitService:
     1) 解析导入 STL 的主轴 / bbox / 底面
     2) 读取 attach_to 对应已有部件的几何与约束
     3) 先做“尺度归一化”，保证新增件与父件在同一量级
-    4) 再做粗旋转、中心对齐、底面对齐、可选有限拉伸
+    4) 再做粗旋转、中心对齐、顶部挂载面对齐、可选有限拉伸
     5) 应用少量覆写 post_transform_overrides
 
-    第二轮修订重点：
-    - 对 roof/cage/guard/frame + cover_parent，优先按 XY footprint 做 uniform scale
-    - 放宽大覆盖件的 scale 上限，让顶棚先到“看得见、同量级”
-    - 保留有限 stretch，避免直接退化成细线
+    第三轮修订重点：
+    - 修正“悬空”问题：
+      不再使用 bbox 整体 top / bottom 做 Z 对齐
+      改为估计：
+        1) 父件顶部主平面高度
+        2) 新增件底部安装基面高度
+    - 对 roof/cage/guard/frame + cover_parent 仍优先按 XY footprint 做 uniform scale
     """
 
     def __init__(
@@ -224,6 +227,111 @@ class AddFitService:
         c = (category or "").strip().lower()
         return c in {"roof", "cage", "guard", "frame"}
 
+    def _clip_xy_region(
+        self,
+        verts: np.ndarray,
+        *,
+        keep_ratio_x: float = 0.7,
+        keep_ratio_y: float = 0.7,
+    ) -> np.ndarray:
+        """
+        只保留靠近中心的 XY 区域，用于估计“主平面”，避免被边缘突起/离群点干扰。
+        """
+        if len(verts) == 0:
+            return verts
+
+        bounds_min = verts.min(axis=0)
+        bounds_max = verts.max(axis=0)
+        center = (bounds_min + bounds_max) / 2.0
+        ext = np.maximum(bounds_max - bounds_min, 1e-9)
+
+        hx = ext[0] * keep_ratio_x * 0.5
+        hy = ext[1] * keep_ratio_y * 0.5
+
+        mask = (
+            (verts[:, 0] >= center[0] - hx)
+            & (verts[:, 0] <= center[0] + hx)
+            & (verts[:, 1] >= center[1] - hy)
+            & (verts[:, 1] <= center[1] + hy)
+        )
+        clipped = verts[mask]
+        return clipped if len(clipped) > 0 else verts
+
+    def _estimate_parent_mount_top_z(self, mesh: trimesh.Trimesh, category: str) -> tuple[float, Dict[str, Any]]:
+        """
+        估计父件“顶部主平面”高度，而不是直接用 bbox max z。
+        目标：避免装甲车上的局部高突起把整个顶棚抬高。
+        """
+        verts = np.asarray(mesh.vertices, dtype=float)
+        if len(verts) == 0:
+            z = float(mesh.bounds[1][2])
+            return z, {"method": "fallback_bbox_top", "sample_count": 0}
+
+        clipped = self._clip_xy_region(verts, keep_ratio_x=0.72, keep_ratio_y=0.72)
+        z_values = clipped[:, 2]
+
+        z_min = float(z_values.min())
+        z_max = float(z_values.max())
+        z_span = max(z_max - z_min, 1e-9)
+
+        # 先取顶部一段，再取较低分位，避免被最高尖点带偏
+        top_band_threshold = z_max - 0.18 * z_span
+        top_band = z_values[z_values >= top_band_threshold]
+        if len(top_band) < 32:
+            top_band = z_values
+
+        mount_top_z = float(np.quantile(top_band, 0.20))
+
+        diag = {
+            "method": "central_top_band_quantile",
+            "sample_count": int(len(clipped)),
+            "top_band_count": int(len(top_band)),
+            "z_min": z_min,
+            "z_max": z_max,
+            "z_span": z_span,
+            "top_band_threshold": float(top_band_threshold),
+            "mount_top_z": mount_top_z,
+        }
+        return mount_top_z, diag
+
+    def _estimate_asset_mount_base_z(self, mesh: trimesh.Trimesh, category: str) -> tuple[float, Dict[str, Any]]:
+        """
+        估计新增件“安装基面”高度，而不是直接用 bbox min z。
+        目标：避免个别向下突出的支撑杆/尖脚导致整体被抬高。
+        """
+        verts = np.asarray(mesh.vertices, dtype=float)
+        if len(verts) == 0:
+            z = float(mesh.bounds[0][2])
+            return z, {"method": "fallback_bbox_bottom", "sample_count": 0}
+
+        # 底部安装面通常更接近中心区域，因此也做一次中心裁剪
+        clipped = self._clip_xy_region(verts, keep_ratio_x=0.88, keep_ratio_y=0.88)
+        z_values = clipped[:, 2]
+
+        z_min = float(z_values.min())
+        z_max = float(z_values.max())
+        z_span = max(z_max - z_min, 1e-9)
+
+        # 先截取底部一段，再取偏高分位，过滤掉极少数低垂离群点
+        bottom_band_threshold = z_min + 0.20 * z_span
+        bottom_band = z_values[z_values <= bottom_band_threshold]
+        if len(bottom_band) < 32:
+            bottom_band = z_values
+
+        mount_base_z = float(np.quantile(bottom_band, 0.80))
+
+        diag = {
+            "method": "central_bottom_band_quantile",
+            "sample_count": int(len(clipped)),
+            "bottom_band_count": int(len(bottom_band)),
+            "z_min": z_min,
+            "z_max": z_max,
+            "z_span": z_span,
+            "bottom_band_threshold": float(bottom_band_threshold),
+            "mount_base_z": mount_base_z,
+        }
+        return mount_base_z, diag
+
     def _fit_visual_scale_factor(
         self,
         *,
@@ -235,13 +343,6 @@ class AddFitService:
         fit_mode: str,
         coverage_ratio: float,
     ) -> tuple[float, Dict[str, Any]]:
-        """
-        第一阶段：视觉量级归一化。
-
-        第二轮修订：
-        - 对 roof/cage/guard/frame + cover_parent:
-          优先用 XY footprint 做 uniform scale，而不是只看主轴长度
-        """
         diagnostics: Dict[str, Any] = {
             "strategy": "none",
             "target_ratio_range": None,
@@ -260,7 +361,6 @@ class AddFitService:
 
         category_lower = (category or "").strip().lower()
 
-        # ===== 针对 roof/cage/guard/frame + cover_parent：优先按 XY footprint =====
         if fit_mode == "cover_parent" and self._is_large_cover_part(category_lower):
             parent_x, parent_y = self._xy_extents(parent_mesh)
             asset_x, asset_y = self._xy_extents(work_mesh)
@@ -275,11 +375,7 @@ class AddFitService:
                 raw_fx = target_x / asset_x
                 raw_fy = target_y / asset_y
 
-                # uniform scale 取更保守的较小值，避免某一维超铺太多
                 raw_factor = min(raw_fx, raw_fy)
-
-                # 第二轮修订：大覆盖件大幅放宽上限
-                # 这里允许极小素材直接被拉到同量级
                 final_factor = float(np.clip(raw_factor, 0.5, 5000.0))
 
                 diagnostics["strategy"] = "cover_parent_xy"
@@ -290,12 +386,10 @@ class AddFitService:
                 diagnostics["target_len"] = float(parent_len * coverage_ratio)
                 return final_factor, diagnostics
 
-        # ===== 其余情况沿用长度导向 =====
         if fit_mode == "cover_parent":
             target_len = parent_len * max(0.05, coverage_ratio)
             raw_factor = target_len / imported_len
 
-            # 对大覆盖件也给更宽上限
             if self._is_large_cover_part(category_lower):
                 final_factor = float(np.clip(raw_factor, 0.5, 5000.0))
             else:
@@ -333,9 +427,6 @@ class AddFitService:
         fit_mode: str,
         coverage_ratio: float,
     ) -> tuple[float, Dict[str, Any]]:
-        """
-        第二阶段：在已做过 uniform scale 后，再做有限轴向 stretch。
-        """
         diagnostics: Dict[str, Any] = {
             "strategy": "none",
             "target_len": None,
@@ -360,7 +451,6 @@ class AddFitService:
             target_len = parent_len * max(0.05, coverage_ratio)
             raw_factor = target_len / current_len
 
-            # 第二轮修订：roof 等大覆盖件允许更大的二阶段 stretch
             if self._is_large_cover_part(category_lower):
                 final_factor = float(np.clip(raw_factor, 0.67, 8.0))
             else:
@@ -415,7 +505,6 @@ class AddFitService:
         work_mesh = imported_mesh.copy()
         imported_center = self._mesh_bounds_center(work_mesh)
         parent_center = self._mesh_bounds_center(parent_mesh)
-        parent_bounds = parent_mesh.bounds
 
         attach_axis = self._find_attach_axis(attach_to)
         attach_axis_xy = np.asarray([attach_axis[0], attach_axis[1], 0.0], dtype=float)
@@ -542,15 +631,28 @@ class AddFitService:
         else:
             stretch_diag["strategy"] = "allow_stretch_false"
 
-        # 第四步：平移到父件顶部
-        work_bounds = work_mesh.bounds
+        # 第四步：顶部挂载面对齐（第三轮核心改动）
         work_center = self._mesh_bounds_center(work_mesh)
+
+        parent_mount_top_z, parent_mount_diag = self._estimate_parent_mount_top_z(
+            parent_mesh,
+            category=category,
+        )
+        asset_mount_base_z, asset_mount_diag = self._estimate_asset_mount_base_z(
+            work_mesh,
+            category=category,
+        )
+
+        # 对大覆盖件，clearance 不宜过于夸张；保留用户意图，但做一个温和限制，减少悬空观感
+        effective_clearance_mm = float(clearance_mm)
+        if self._is_large_cover_part(category):
+            effective_clearance_mm = float(np.clip(clearance_mm, 0.0, 10.0))
 
         translate_vec = np.asarray(
             [
                 float(parent_center[0] - work_center[0]),
                 float(parent_center[1] - work_center[1]),
-                float(parent_bounds[1][2] - work_bounds[0][2] + clearance_mm),
+                float(parent_mount_top_z - asset_mount_base_z + effective_clearance_mm),
             ],
             dtype=float,
         )
@@ -569,6 +671,7 @@ class AddFitService:
             "coverage_ratio": coverage_ratio,
             "allow_stretch": allow_stretch,
             "clearance_mm": clearance_mm,
+            "effective_clearance_mm": effective_clearance_mm,
             "parent_extents": {
                 "x": float(parent_extents[0]),
                 "y": float(parent_extents[1]),
@@ -581,6 +684,12 @@ class AddFitService:
             },
             "visual_scale_normalization": visual_scale_diag,
             "visual_scale_applied": float(visual_scale_applied),
+            "mount_alignment": {
+                "parent_mount_top_z": float(parent_mount_top_z),
+                "asset_mount_base_z": float(asset_mount_base_z),
+                "parent_mount_diagnostics": parent_mount_diag,
+                "asset_mount_diagnostics": asset_mount_diag,
+            },
             "auto_translate": {
                 "x": float(translate_vec[0]),
                 "y": float(translate_vec[1]),
@@ -635,7 +744,6 @@ class AddFitService:
                 target_len = current_len + delta_mm
                 if target_len > 1e-6 and current_len > 1e-6:
                     factor = target_len / current_len
-                    # roof 类 override 也允许更宽一点
                     if self._is_large_cover_part(category):
                         factor = float(np.clip(factor, 0.67, 3.0))
                     else:

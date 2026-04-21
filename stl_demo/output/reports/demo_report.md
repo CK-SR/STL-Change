@@ -56,7 +56,7 @@
           }
         }
       },
-      "reason": "根据情报文本在车身顶部新增防无人机顶棚，允许沿主轴拉伸以适配比例"
+      "reason": "根据情报文本在装甲车顶部新增防无人机顶棚，挂载于车身主体，允许沿主轴适度拉伸以适配车顶部长度比例"
     }
   ]
 }
@@ -108,7 +108,7 @@
           }
         }
       },
-      "reason": "根据情报文本在车身顶部新增防无人机顶棚，允许沿主轴拉伸以适配比例"
+      "reason": "根据情报文本在装甲车顶部新增防无人机顶棚，挂载于车身主体，允许沿主轴适度拉伸以适配车顶部长度比例"
     }
   }
 ]
@@ -156,7 +156,7 @@
       "asset_acquisition": {
         "success": true,
         "message": "asset selected and downloaded",
-        "local_stl_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\downloaded_assets\\BJ9001_b2677cb2bc104ebbadbd5da850538ae1.stl",
+        "local_stl_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\downloaded_assets\\BJ9001_9624bdf54e954a7b8fcff76ac49900f1.stl",
         "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
         "task_id": "",
         "provider_status": "",
@@ -195,15 +195,13 @@
             "category": "roof",
             "target_type": "armored_vehicle",
             "mount_region": "top_hull",
-            "generation_prompt": "Anti-drone protective roof cage for armored vehicle, heavy-duty steel mesh structure, mounted on top hull, tactical camouflage finish, open grid design for ventilation, rugged industrial texture, high detail 3D model",
-            "embedding_text": "装甲车 防无人机 顶棚 顶部 防护 格栅",
+            "generation_prompt": "Anti-drone protective roof cage for armored vehicle, metal mesh grid structure, mounted on top hull, open lattice design, rugged military aesthetic, grey metallic material, modular attachment points, high durability",
+            "embedding_text": "装甲车 防无人机 顶棚 格栅 顶部防护",
             "attributes": {
               "protection_type": "physical_barrier",
               "structure_form": "cage_mesh",
               "material": "steel",
-              "coverage_area": "full_top",
-              "attachment_method": "bolted",
-              "threat_type": "uav",
+              "threat_type": "uav_drone",
               "compatible_targets": [
                 "tank",
                 "ifv",
@@ -235,9 +233,9 @@
                 "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
                 "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png"
               },
-              "score": 0.868,
-              "structured_score": 0.7738,
-              "semantic_score": 0.945,
+              "score": 0.8628,
+              "structured_score": 0.7636,
+              "semantic_score": 0.9439,
               "reason": "semantic vector match"
             }
           ],
@@ -277,6 +275,7 @@
         "coverage_ratio": 0.92,
         "allow_stretch": true,
         "clearance_mm": 20.0,
+        "effective_clearance_mm": 10.0,
         "parent_extents": {
           "x": 7763.04,
           "y": 3327.7200000000003,
@@ -285,7 +284,7 @@
         "final_asset_extents": {
           "x": 7141.9968,
           "y": 3061.5024000000003,
-          "z": 2169.8948662423836
+          "z": 2169.8948662423845
         },
         "visual_scale_normalization": {
           "strategy": "cover_parent_xy",
@@ -305,10 +304,34 @@
           ]
         },
         "visual_scale_applied": 3078.677947467294,
+        "mount_alignment": {
+          "parent_mount_top_z": 2431.94,
+          "asset_mount_base_z": -924.0209075953662,
+          "parent_mount_diagnostics": {
+            "method": "central_top_band_quantile",
+            "sample_count": 234381,
+            "top_band_count": 181893,
+            "z_min": 330.144,
+            "z_max": 2839.43,
+            "z_span": 2509.286,
+            "top_band_threshold": 2387.75852,
+            "mount_top_z": 2431.94
+          },
+          "asset_mount_diagnostics": {
+            "method": "central_bottom_band_quantile",
+            "sample_count": 3467949,
+            "bottom_band_count": 84019,
+            "z_min": -1084.598699000839,
+            "z_max": 1085.2961672415454,
+            "z_span": 2169.8948662423845,
+            "bottom_band_threshold": -650.619725752362,
+            "mount_base_z": -924.0209075953662
+          }
+        },
         "auto_translate": {
           "x": 61.25699445521991,
           "y": 23.403524838043154,
-          "z": 5319.5486990008385
+          "z": 3365.9609075953663
         },
         "auto_rotation": {
           "thin_axis_to_z": true,
