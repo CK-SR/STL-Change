@@ -1,77 +1,137 @@
 # STL 文本驱动部件变更 Demo
 
-最小可运行闭环：**元数据 + STL + 情报文本 -> LLM 变更意图 -> 规则校验 -> Skill 几何修改 -> 报告输出**。
+这是一个围绕「**情报文本驱动 3D 部件变更**」的最小可运行闭环项目，核心流程为：
 
-## 功能说明
-- 加载 metadata JSON 并扫描 STL 目录
-- 生成 5~10 条 mock 情报文本
-- 支持统一 LLM 接口（Mock / OpenAI-compatible）
-- 生成结构化 change intent（JSON）
-- 执行最小规则校验（失败不中断）
-- 执行 scale/translate/rotate/delete/add(copy) 技能
-- 输出修改 STL、JSON 报告和 Markdown 报告
+**情报文本 + 部件约束 + STL 网格 → LLM 结构化意图 → 规则校验 → 几何技能执行 → 修复与合理性检查 → 报告导出**
 
-## 目录结构
+---
+
+## 1. 项目分析（架构与流程）
+
+### 1.1 工作流（LangGraph）
+项目在 `app/graph/workflow.py` 中定义了固定流水线：
+
+1. `load_inputs`：读取部件约束与 STL 文件清单  
+2. `generate_intelligence`：读取输入文本（无文本则自动 mock）  
+3. `build_part_summary`：将约束数据整理为 LLM 可消费摘要  
+4. `generate_change_intent`：调用 LLM 输出结构化变更意图  
+5. `validate_change_intent`：对每条变更做参数与约束校验  
+6. `prepare_stl_bundle`：将原始 STL 复制到输出目录作为工作集  
+7. `apply_skills`：按操作类型调用 skill 执行实际变更  
+8. `export_report`：导出 JSON + Markdown 报告
+
+### 1.2 核心能力
+- 支持操作：`translate` / `rotate` / `stretch` / `scale(delta_mm)` / `delete` / `add`  
+- `add` 支持外部素材拉取 + 本地拟合（fit）  
+- 每次几何修改后可执行网格修复与合理性检查  
+- 校验失败的变更不会中断整体流程，而是记录 warning
+
+### 1.3 LLM 模式
+- `LLM_MODE=openai`：默认模式，走 OpenAI-compatible 接口  
+- `LLM_MODE=mock`：离线模式，基于关键词生成可运行的模拟意图
+
+> 注意：当前代码默认 `LLM_MODE` 为 `openai`，如离线演示请显式设置为 `mock`。
+
+---
+
+## 2. 目录结构
+
 ```text
 stl_demo/
   app/
-    config.py
-    models.py
-    state.py
-    llm/
-    services/
-    skills/
-    graph/
-    utils/
+    graph/        # LangGraph 编排
+    llm/          # Mock / OpenAI-compatible LLM 客户端
+    services/     # 意图生成、校验、报告、网格修复、合理性检查等
+    skills/       # 几何技能分发与具体操作
+    config.py     # 环境配置
+    models.py     # Pydantic 数据模型
   data/
-    metadata/
-    stl_parts/
-  output/
+    metadata/     # 约束与示例元数据
+    stl_parts/    # 输入 STL
+    intelligence/ # 输入情报文本
+  output/         # 运行产物
   main.py
   requirements.txt
   README.md
 ```
 
-## 安装
+---
+
+## 3. 安装与运行
+
 ```bash
 cd stl_demo
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-## 运行
-```bash
 python main.py
 ```
 
-可选环境变量：
-- `STL_METADATA_PATH`：metadata JSON 路径
-- `STL_PARTS_DIR`：STL 目录
+---
+
+## 4. 配置说明（环境变量）
+
+### 4.1 输入/输出路径
+- `STL_PARTS_DIR`：输入 STL 目录（默认 `data/stl_parts`）
+- `STL_TEXT_PATH`：情报文本路径（默认 `data/intelligence/input.txt`）
+- `STL_PART_CONSTRAINTS_PATH`：部件约束文件（默认 `data/metadata/part_constraints.json`）
+- `STL_OUTPUT_DIR`：输出根目录（默认 `output`）
+
+### 4.2 LLM 相关
 - `LLM_MODE=mock|openai`
-- `OPENAI_BASE_URL` / `OPENAI_API_KEY` / `LLM_MODEL_NAME`
+- `OPENAI_BASE_URL`
+- `OPENAI_API_KEY`
+- `LLM_MODEL_NAME`
 
-## 输入数据说明
-- 默认 metadata: `data/metadata/metadata.json`
-- 默认 STL 目录: `data/stl_parts/`
-- metadata 使用现有中文字段，代码通过 Pydantic alias 兼容
+### 4.3 外部素材接口（add 场景）
+- `ASSET_API_BASE_URL`
+- `ASSET_API_REQUEST_TIMEOUT_SEC`
+- `ASSET_TASK_POLL_INTERVAL_SEC`
+- `ASSET_TASK_POLL_TIMEOUT_SEC`
+- `ASSET_API_TOPK`
+- `ASSET_AUTO_APPROVE`
+- `ASSET_AUTO_ACCEPT_PROMPT`
+- `ASSET_AUTO_ACCEPT_GENERATION`
+- `ASSET_FORCE_GENERATE_DEFAULT`
 
-## 输出结果
-在 `output/` 下生成：
-- `modified_stl/`：修改后的 STL
-- `reports/change_intent.json`
-- `reports/validated_changes.json`
-- `reports/execution_results.json`
-- `reports/demo_report.md`
-- `logs/stl_demo.log`
+---
 
-## 切换 LLM 客户端
-- 默认 `LLM_MODE=mock`（离线可跑）
-- 设置 `LLM_MODE=openai` 并提供 `OPENAI_BASE_URL`、`OPENAI_API_KEY` 即可走兼容 API（可配置 `LLM_MODEL_NAME=Qwen3-Next-80B`）
+## 5. 输出产物
 
-## 可扩展方向
-- 真实情报输入接入（文件/API）
-- 更强 intent 约束与 schema 输出
-- 装配关系和几何冲突校验
-- 更细粒度局部网格编辑
-- 增加回滚、审计与可视化 diff
+运行后将在 `output/` 下生成：
+
+- `final_stl/`：最终 STL 快照集合
+- `reports/change_intent.json`：LLM 生成意图
+- `reports/validated_changes.json`：校验结果
+- `reports/execution_results.json`：执行结果
+- `reports/mesh_repair_report.json`：网格修复记录
+- `reports/reasonableness_report.json`：合理性检查记录
+- `reports/demo_report.md`：汇总报告
+- `logs/stl_demo.log`：运行日志
+
+---
+
+## 6. Requirements（运行要求）
+
+### 6.1 Python 版本
+- 建议：**Python 3.10+**
+
+### 6.2 Python 依赖（`requirements.txt`）
+- `langgraph>=0.2.50`
+- `pydantic>=2.7.0`
+- `trimesh>=4.4.0`
+- `numpy>=1.26.0`
+- `openai>=1.45.0`
+
+### 6.3 可选外部依赖
+- 若使用 `LLM_MODE=openai`，需可访问兼容 OpenAI 的模型服务并配置 API Key。
+- 若大量使用 `add`（外部素材生成/拉取），需可访问 `ASSET_API_BASE_URL` 指向的服务。
+
+---
+
+## 7. 推荐扩展方向
+
+- 将情报输入从单文件扩展到 API/消息队列
+- 增强 prompt 与 schema 约束，提高意图可控性
+- 引入装配关系/碰撞检测
+- 增加回滚机制与变更可视化对比（before/after）
