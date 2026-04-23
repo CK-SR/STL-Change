@@ -11,7 +11,7 @@
 ### 1.1 工作流（LangGraph）
 项目在 `app/graph/workflow.py` 中定义了固定流水线：
 
-1. `load_inputs`：读取部件约束与 STL 文件清单  
+1. `load_inputs`：先调用 `scripts/build_part_constraints_v3.py` 生成约束，再读取约束与 STL 文件清单  
 2. `generate_intelligence`：读取输入文本（无文本则自动 mock）  
 3. `build_part_summary`：将约束数据整理为 LLM 可消费摘要  
 4. `generate_change_intent`：调用 LLM 输出结构化变更意图  
@@ -76,6 +76,12 @@ python main.py
 - `STL_TEXT_PATH`：情报文本路径（默认 `data/intelligence/input.txt`）
 - `STL_PART_CONSTRAINTS_PATH`：部件约束文件（默认 `data/metadata/part_constraints.json`）
 - `STL_OUTPUT_DIR`：输出根目录（默认 `output`）
+
+### 4.1.1 约束构建脚本参数
+- `PART_CONSTRAINTS_BUILDER_SCRIPT`：约束构建脚本路径（默认 `../scripts/build_part_constraints_v3.py`）
+- `PART_CONSTRAINTS_CSV_DIR`：脚本输入 CSV 目录
+- `PART_CONSTRAINTS_STL_ROOT`：脚本输入 STL 根目录
+- `PART_CONSTRAINTS_OUT_DIR`：脚本输出目录（会产出 `part_constraints.json`）
 
 ### 4.2 LLM 相关
 - `LLM_MODE=mock|openai`

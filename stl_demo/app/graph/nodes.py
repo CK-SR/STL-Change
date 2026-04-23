@@ -15,6 +15,7 @@ from app.services.part_constraints_loader import (
     build_part_to_file_map_from_constraints,
     load_part_constraints,
 )
+from app.services.part_constraints_builder import build_part_constraints_via_script
 from app.services.excel_loader import scan_stl_files
 from app.services.part_summary_builder import build_part_summary_from_constraints
 from app.services.stl_bundle_preparer import prepare_full_stl_bundle
@@ -47,6 +48,14 @@ def _promote_to_final_snapshot(temp_path: Path, final_path: Path) -> Path:
 
 
 def load_inputs(state: DemoState) -> DemoState:
+    generated_constraints_path = build_part_constraints_via_script(
+        script_path=settings.part_constraints_builder_script,
+        csv_dir=settings.part_constraints_csv_dir,
+        stl_root=settings.part_constraints_stl_root,
+        out_dir=settings.part_constraints_out_dir,
+    )
+    settings.part_constraints_path = generated_constraints_path
+
     part_constraints = load_part_constraints(settings.part_constraints_path)
     stl_files = scan_stl_files(settings.stl_dir)
 

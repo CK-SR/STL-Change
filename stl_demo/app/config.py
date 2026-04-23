@@ -25,6 +25,21 @@ class Settings:
                 str(self.data_dir / "metadata" / "part_constraints.json"),
             )
         )
+        self.part_constraints_builder_script = Path(
+            os.getenv(
+                "PART_CONSTRAINTS_BUILDER_SCRIPT",
+                str(self.project_root.parent / "scripts" / "build_part_constraints_v3.py"),
+            )
+        )
+        self.part_constraints_csv_dir = Path(
+            os.getenv("PART_CONSTRAINTS_CSV_DIR", str(self.data_dir / "metadata" / "csv"))
+        )
+        self.part_constraints_stl_root = Path(
+            os.getenv("PART_CONSTRAINTS_STL_ROOT", str(self.stl_dir))
+        )
+        self.part_constraints_out_dir = Path(
+            os.getenv("PART_CONSTRAINTS_OUT_DIR", str(self.part_constraints_path.parent))
+        )
 
         self.final_stl_dir = self.output_dir / "final_stl"
         self.logs_dir = self.output_dir / "logs"

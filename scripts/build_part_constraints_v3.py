@@ -38,9 +38,9 @@ import trimesh
 # =========================
 # 配置区
 # =========================
-CSV_DIR = Path(r"D:\bica\k-8\AAV7A1\csv")
-STL_ROOT = Path(r"D:\bica\k-8\AAV7A1\model")
-OUT_DIR = Path(r"D:\bica\k-8\AAV7A1\output")
+CSV_DIR = Path(os.getenv("PART_CONSTRAINTS_CSV_DIR", r"D:\bica\k-8\AAV7A1\csv"))
+STL_ROOT = Path(os.getenv("PART_CONSTRAINTS_STL_ROOT", r"D:\bica\k-8\AAV7A1\model"))
+OUT_DIR = Path(os.getenv("PART_CONSTRAINTS_OUT_DIR", r"D:\bica\k-8\AAV7A1\output"))
 
 TARGET_BASIC_CSV = CSV_DIR / "2.1目标基本信息数据.csv"
 PHYSICAL_CSV = CSV_DIR / "3.1目标物理结构数据.csv"
