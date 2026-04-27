@@ -12,14 +12,20 @@ def build_part_constraints_via_script(
     csv_dir: Path,
     stl_root: Path,
     out_dir: Path,
-    timeout_sec: int = 1800,
+    timeout_sec: int = 18000,
 ) -> Path:
+    output_path = out_dir / "part_constraints.json"
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # 已有结果就直接复用，不重复生成
+    if output_path.exists():
+        return output_path
+
     env = os.environ.copy()
     env["PART_CONSTRAINTS_CSV_DIR"] = str(csv_dir)
     env["PART_CONSTRAINTS_STL_ROOT"] = str(stl_root)
     env["PART_CONSTRAINTS_OUT_DIR"] = str(out_dir)
-
-    out_dir.mkdir(parents=True, exist_ok=True)
 
     proc = subprocess.run(
         [sys.executable, str(script_path)],
@@ -36,7 +42,6 @@ def build_part_constraints_via_script(
             f"stderr:\n{proc.stderr}"
         )
 
-    output_path = out_dir / "part_constraints.json"
     if not output_path.exists():
         raise FileNotFoundError(f"part_constraints.json not generated: {output_path}")
 

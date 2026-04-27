@@ -58,30 +58,28 @@ class Settings:
         )
         self.api_key = os.getenv("OPENAI_API_KEY", "")
 
-        # ===== 外部素材接口 =====
         self.asset_api_base_url = os.getenv("ASSET_API_BASE_URL", "http://192.168.130.111:7100")
-        self.asset_api_request_timeout_sec = float(
-            os.getenv("ASSET_API_REQUEST_TIMEOUT_SEC", "600")
-        )
-        self.asset_task_poll_interval_sec = float(
-            os.getenv("ASSET_TASK_POLL_INTERVAL_SEC", "5")
-        )
-        self.asset_task_poll_timeout_sec = float(
-            os.getenv("ASSET_TASK_POLL_TIMEOUT_SEC", "9000")
-        )
+        self.asset_api_request_timeout_sec = float(os.getenv("ASSET_API_REQUEST_TIMEOUT_SEC", "600"))
+        self.asset_task_poll_interval_sec = float(os.getenv("ASSET_TASK_POLL_INTERVAL_SEC", "5"))
+        self.asset_task_poll_timeout_sec = float(os.getenv("ASSET_TASK_POLL_TIMEOUT_SEC", "9000"))
 
-        # add 默认走自动化闭环，避免当前 demo 卡在人审中间态
         self.asset_api_topk = int(os.getenv("ASSET_API_TOPK", "30"))
         self.asset_auto_approve = os.getenv("ASSET_AUTO_APPROVE", "true").lower() == "true"
-        self.asset_auto_accept_prompt = (
-            os.getenv("ASSET_AUTO_ACCEPT_PROMPT", "true").lower() == "true"
+        self.asset_auto_accept_prompt = os.getenv("ASSET_AUTO_ACCEPT_PROMPT", "true").lower() == "true"
+        self.asset_auto_accept_generation = os.getenv("ASSET_AUTO_ACCEPT_GENERATION", "true").lower() == "true"
+        self.asset_force_generate_default = os.getenv("ASSET_FORCE_GENERATE_DEFAULT", "false").lower() == "false"
+
+        self.add_default_allow_unlimited_upscale = (
+            os.getenv("ADD_DEFAULT_ALLOW_UNLIMITED_UPSCALE", "true").lower() == "true"
         )
-        self.asset_auto_accept_generation = (
-            os.getenv("ASSET_AUTO_ACCEPT_GENERATION", "true").lower() == "true"
+        self.add_default_preserve_aspect_ratio = (
+            os.getenv("ADD_DEFAULT_PRESERVE_ASPECT_RATIO", "true").lower() == "true"
         )
-        self.asset_force_generate_default = (
-            os.getenv("ASSET_FORCE_GENERATE_DEFAULT", "false").lower() == "false"
+        self.add_default_allow_axis_stretch = (
+            os.getenv("ADD_DEFAULT_ALLOW_AXIS_STRETCH", "true").lower() == "true"
         )
+        self.add_default_side_scope = os.getenv("ADD_DEFAULT_SIDE_SCOPE", "both_sides")
+        self.add_default_perimeter_scope = os.getenv("ADD_DEFAULT_PERIMETER_SCOPE", "full_perimeter")
 
 
 settings = Settings()

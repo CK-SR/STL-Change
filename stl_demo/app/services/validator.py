@@ -6,6 +6,26 @@ from app.models import ChangeIntent, ValidationResult
 
 
 ALLOWED_OPS = {"scale", "translate", "rotate", "delete", "add", "stretch"}
+ALLOWED_MOUNT_REGION = {
+    "turret_top",
+    "top_hull",
+    "top",
+    "roof",
+    "hull_side",
+    "side",
+    "left_side",
+    "right_side",
+    "turret_side",
+    "turret_perimeter",
+    "perimeter",
+    "full_perimeter",
+    "wrap",
+    "rear",
+    "rear_hull",
+    "tail",
+}
+ALLOWED_PLACEMENT_SCOPE = {"single", "left", "right", "both_sides", "full_perimeter"}
+ALLOWED_MOUNT_STRATEGY = {"top_cover", "side_panel", "perimeter_wrap", "rear_frame"}
 
 
 def _coerce_float(value: object) -> bool:
@@ -114,21 +134,13 @@ def validate_change_intent(
                 content = str(asset_request.get("content", "")).strip()
                 if not content:
                     errors.append("add.asset_request.content 不能为空")
-
                 input_type = asset_request.get("input_type")
                 if input_type is not None and input_type not in {"text", "image"}:
                     errors.append("add.asset_request.input_type 只能是 text/image/null")
-
-                for name in [
-                    "auto_approve",
-                    "auto_accept_prompt",
-                    "auto_accept_generation",
-                    "force_generate",
-                ]:
+                for name in ["auto_approve", "auto_accept_prompt", "auto_accept_generation", "force_generate"]:
                     value = asset_request.get(name)
                     if value is not None and not _coerce_bool(value):
                         errors.append(f"add.asset_request.{name} 必须是 bool")
-
                 topk = asset_request.get("topk")
                 if topk is not None:
                     try:
@@ -136,24 +148,48 @@ def validate_change_intent(
                             errors.append("add.asset_request.topk 必须 > 0")
                     except Exception:
                         errors.append("add.asset_request.topk 必须是整数")
+                mount_region = asset_request.get("mount_region")
+                if mount_region is not None and str(mount_region).strip() and str(mount_region).strip() not in ALLOWED_MOUNT_REGION:
+                    errors.append("add.asset_request.mount_region 不在允许列表")
 
             fit_policy = p.get("fit_policy")
             if fit_policy is not None:
                 if not isinstance(fit_policy, dict):
                     errors.append("add.fit_policy 必须是 dict")
                 else:
-                    if fit_policy.get("coverage_ratio") is not None and not _coerce_float(
-                        fit_policy.get("coverage_ratio")
-                    ):
+                    if fit_policy.get("coverage_ratio") is not None and not _coerce_float(fit_policy.get("coverage_ratio")):
                         errors.append("add.fit_policy.coverage_ratio 必须是数值")
-                    if fit_policy.get("clearance_mm") is not None and not _coerce_float(
-                        fit_policy.get("clearance_mm")
-                    ):
+                    if fit_policy.get("clearance_mm") is not None and not _coerce_float(fit_policy.get("clearance_mm")):
                         errors.append("add.fit_policy.clearance_mm 必须是数值")
-                    if fit_policy.get("allow_stretch") is not None and not _coerce_bool(
-                        fit_policy.get("allow_stretch")
-                    ):
+                    if fit_policy.get("allow_stretch") is not None and not _coerce_bool(fit_policy.get("allow_stretch")):
                         errors.append("add.fit_policy.allow_stretch 必须是 bool")
+
+            mount_request = p.get("mount_request")
+            if mount_request is not None:
+                if not isinstance(mount_request, dict):
+                    errors.append("add.mount_request 必须是 dict")
+                else:
+                    mr = str(mount_request.get("mount_region", "")).strip()
+                    if mr and mr not in ALLOWED_MOUNT_REGION:
+                        errors.append("add.mount_request.mount_region 不在允许列表")
+                    scope = str(mount_request.get("placement_scope", "")).strip()
+                    if scope and scope not in ALLOWED_PLACEMENT_SCOPE:
+                        errors.append("add.mount_request.placement_scope 不在允许列表")
+                    strategy = str(mount_request.get("preferred_strategy", "")).strip()
+                    if strategy and strategy not in ALLOWED_MOUNT_STRATEGY:
+                        errors.append("add.mount_request.preferred_strategy 不在允许列表")
+
+            visual_fit = p.get("visual_fit")
+            if visual_fit is not None:
+                if not isinstance(visual_fit, dict):
+                    errors.append("add.visual_fit 必须是 dict")
+                else:
+                    if visual_fit.get("target_ratio") is not None and not _coerce_float(visual_fit.get("target_ratio")):
+                        errors.append("add.visual_fit.target_ratio 必须是数值")
+                    for name in ["preserve_aspect_ratio", "allow_axis_stretch", "allow_unlimited_upscale"]:
+                        value = visual_fit.get(name)
+                        if value is not None and not _coerce_bool(value):
+                            errors.append(f"add.visual_fit.{name} 必须是 bool")
 
             overrides = p.get("post_transform_overrides")
             if overrides is not None:
@@ -165,12 +201,7 @@ def validate_change_intent(
                         if not isinstance(translate, dict):
                             errors.append("add.post_transform_overrides.translate 必须是 dict")
                         else:
-                            _validate_xyz_dict(
-                                errors,
-                                translate,
-                                prefix="add.post_transform_overrides.translate.",
-                            )
-
+                            _validate_xyz_dict(errors, translate, prefix="add.post_transform_overrides.translate.")
                     rotate = overrides.get("rotate")
                     if rotate is not None:
                         if not isinstance(rotate, dict):
@@ -178,32 +209,23 @@ def validate_change_intent(
                         else:
                             axis_value = rotate.get("axis")
                             if axis_value not in {"x", "y", "z"}:
-                                errors.append(
-                                    "add.post_transform_overrides.rotate.axis 必须是 x/y/z"
-                                )
+                                errors.append("add.post_transform_overrides.rotate.axis 必须是 x/y/z")
                             if not _coerce_float(rotate.get("degrees")):
-                                errors.append(
-                                    "add.post_transform_overrides.rotate.degrees 必须是数值"
-                                )
-
+                                errors.append("add.post_transform_overrides.rotate.degrees 必须是数值")
                     stretch = overrides.get("stretch")
                     if stretch is not None:
                         if not isinstance(stretch, dict):
                             errors.append("add.post_transform_overrides.stretch 必须是 dict")
                         else:
                             if not _coerce_float(stretch.get("delta_mm")):
-                                errors.append(
-                                    "add.post_transform_overrides.stretch.delta_mm 必须是数值"
-                                )
+                                errors.append("add.post_transform_overrides.stretch.delta_mm 必须是数值")
 
         constraint = constraints_map.get(change.target_part)
         if constraint is not None:
             allowed_ops = set(constraint.get("allowed_ops", []) or [])
             forbidden_ops = set(constraint.get("forbidden_ops", []) or [])
-
             if constraint.get("is_virtual_part", False) and change.op != "add":
                 errors.append("虚拟部件不允许直接编辑")
-
             if change.op == "stretch" and "stretch" not in allowed_ops:
                 errors.append("该部件不允许 stretch")
             if change.op == "rotate" and "rotate" not in allowed_ops:

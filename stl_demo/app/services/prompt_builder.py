@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import List, Dict
+from typing import Dict, List
 
 
 def build_change_intent_prompt(
@@ -23,7 +23,7 @@ def build_change_intent_prompt(
 5. 若部件摘要中 allowed_ops 包含 stretch，且文本语义是“加长/伸长/延长”，必须优先输出 stretch。
 6. 若 forbidden_ops 包含 uniform_scale，则禁止输出传统整体 scale(x,y,z)。
 7. 若文本语义是“新增一个部件/装置/顶棚/传感器/吊舱/防护件”，优先输出 add，而不是修改已有件。
-8. 对 add，不要使用旧版 source_part/offset 语义，必须使用新的 asset_request + attach_to + fit_policy 结构。
+8. 对 add，不要使用旧版 source_part/offset 语义，必须使用新的 asset_request + attach_to + mount_request + visual_fit 结构。
 
 你必须遵守以下规则：
 1. 只能输出 JSON。
@@ -45,7 +45,6 @@ def build_change_intent_prompt(
 
 4. stretch 使用：
    - {{"delta_mm": 30}}
-   - 若文本中已明确“沿主轴”，无需重复输出 direction_hint，系统会从约束摘要中读取 primary_axis / anchor_mode。
 
 5. translate 使用：
    - {{"x":10,"y":0,"z":0}}
@@ -56,9 +55,9 @@ def build_change_intent_prompt(
      "asset_request": {{
        "content": "用于素材检索/生成的文本,最好是中文",
        "input_type": "text",
-       "category": "可选，如 roof/sensor/pod",
+       "category": "可选，如 roof/cage/guard/cable",
        "target_type": "可选，如 armored_vehicle",
-       "mount_region": "可选，如 top_hull",
+       "mount_region": "可选，如 turret_top/hull_side/turret_perimeter/rear",
        "topk": 5,
        "auto_approve": true,
        "auto_accept_prompt": true,
@@ -66,10 +65,20 @@ def build_change_intent_prompt(
        "force_generate": false
      }},
      "fit_policy": {{
-       "mode": "可选，优先用 cover_parent 或 keep_original",
        "coverage_ratio": 0.92,
        "clearance_mm": 20,
        "allow_stretch": true
+     }},
+     "mount_request": {{
+       "mount_region": "turret_top|top_hull|hull_side|turret_perimeter|rear",
+       "placement_scope": "single|left|right|both_sides|full_perimeter",
+       "preferred_strategy": "top_cover|side_panel|perimeter_wrap|rear_frame"
+     }},
+     "visual_fit": {{
+       "target_ratio": 0.92,
+       "preserve_aspect_ratio": true,
+       "allow_axis_stretch": true,
+       "allow_unlimited_upscale": true
      }},
      "post_transform_overrides": {{
        "translate": {{"x":0,"y":0,"z":0}},
@@ -81,10 +90,11 @@ def build_change_intent_prompt(
    - target_part 表示“新增件自身的 part_id”
    - attach_to 必须是“已有件”
    - 不要让 add 直接依赖人工审核流程
-   - 若只是“新增并适配到已有件”，优先通过 fit_policy 表达高层策略，而不是凭空编造大量精确毫米数
+   - 若语义是双侧防护，优先输出 placement_scope=both_sides
+   - 若语义是周边环绕或垂挂，优先输出 placement_scope=full_perimeter
+   - 若只是“新增并适配到已有件”，优先通过 mount_request 和 visual_fit 表达几何装配意图，而不是凭空编造大量精确毫米数
 
 8. 对虚拟部件、无直接编辑权限的部件，不要生成直接编辑操作。
-
 9. 只有在目标不明确、操作与约束冲突、或信息确实不足时，才能不输出该条变更。
 
 情报文本：
