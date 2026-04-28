@@ -116,6 +116,109 @@ def _normalize_add_request(change: ChangeItem) -> dict:
     }
 
 
+def _safe_join_text(parts: list[str]) -> str:
+    merged: list[str] = []
+    seen: set[str] = set()
+
+    for item in parts:
+        text = str(item or "").strip()
+        if not text:
+            continue
+        if text in seen:
+            continue
+        seen.add(text)
+        merged.append(text)
+
+    return "；".join(merged)
+
+
+def _format_function_names(names: list[str]) -> str:
+    cleaned = [str(x).strip() for x in names if str(x).strip()]
+    return "、".join(cleaned)
+
+
+def _format_size_hint(extents: list[float] | list[int] | None) -> str:
+    if not extents or len(extents) != 3:
+        return ""
+    try:
+        x, y, z = [float(v) for v in extents]
+        return f"父件尺寸约为 {x:.1f}×{y:.1f}×{z:.1f} mm"
+    except Exception:
+        return ""
+
+
+def _build_rich_asset_request_content(
+    *,
+    change: ChangeItem,
+    attach_to: str,
+    asset_request: dict,
+    mount_request: dict,
+    constraint_service: PartConstraintService,
+) -> str:
+    """
+    将短的 asset_request.content 扩展为更适合远程素材文本库检索的详细中文描述。
+    目标不是改远程接口 schema，而是在当前 content 字段内补足：
+    - 新增件类型
+    - 结构/外观特征
+    - 用途功能
+    - 安装区域
+    - 挂载父件上下文
+    """
+    base_content = str(asset_request.get("content", "")).strip()
+    category = str(asset_request.get("category", "")).strip()
+    target_type = str(asset_request.get("target_type", "")).strip()
+    mount_region = str(
+        mount_request.get("mount_region")
+        or asset_request.get("mount_region")
+        or ""
+    ).strip()
+    placement_scope = str(mount_request.get("placement_scope", "")).strip()
+    preferred_strategy = str(mount_request.get("preferred_strategy", "")).strip()
+    reason = str(change.reason or "").strip()
+
+    parent_part_name = ""
+    parent_edit_type = ""
+    parent_desc = ""
+    parent_functions = ""
+    parent_size_hint = ""
+
+    try:
+        parent_constraint = constraint_service.get_part_constraint(attach_to)
+        if parent_constraint is not None:
+            parent_part_name = str(parent_constraint.part_name or "").strip()
+            parent_edit_type = str(parent_constraint.edit_type or "").strip()
+            parent_desc = str(parent_constraint.semantic_note or "").strip()
+            parent_functions = _format_function_names(parent_constraint.function_names)
+            parent_size_hint = _format_size_hint(parent_constraint.geometry.aabb_extents)
+    except Exception:
+        pass
+
+    parent_ref = attach_to
+    if parent_part_name and parent_part_name != attach_to:
+        parent_ref = f"{attach_to}（{parent_part_name}）"
+
+    rich_content = _safe_join_text(
+        [
+            f"目标新增件标识：{change.target_part}" if str(change.target_part).strip() else "",
+            f"新增件基础检索词：{base_content}" if base_content else "",
+            f"原始需求：{reason}" if reason else "",
+            f"挂载父件：{parent_ref}" if parent_ref else "",
+            f"父件类型：{parent_edit_type}" if parent_edit_type else "",
+            f"父件功能：{parent_functions}" if parent_functions else "",
+            f"父件描述：{parent_desc}" if parent_desc else "",
+            parent_size_hint,
+            f"安装区域：{mount_region}" if mount_region else "",
+            f"布置范围：{placement_scope}" if placement_scope else "",
+            f"装配策略：{preferred_strategy}" if preferred_strategy else "",
+            f"素材类别偏好：{category}" if category else "",
+            f"目标平台：{target_type}" if target_type else "",
+            "请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+        ]
+    )
+
+    return rich_content or base_content
+
+
 def dispatch_change(
     change: ChangeItem,
     part_to_file: Dict[str, Path],
@@ -167,6 +270,19 @@ def dispatch_change(
                 op=op,
             )
 
+        # 关键增强：
+        # 不直接把 LLM 给出的短 content 原样发给远程素材文本库，
+        # 而是在本地将其扩展成“新增件类型 + 结构特征 + 用途功能 + 安装区域 + 父件上下文”的详细描述。
+        asset_request = dict(asset_request)
+        asset_request.setdefault("input_type", "text")
+        asset_request["content"] = _build_rich_asset_request_content(
+            change=change,
+            attach_to=attach_to,
+            asset_request=asset_request,
+            mount_request=mount_request,
+            constraint_service=constraint_service,
+        )
+
         asset_service = AssetGenerationService()
         asset_result = asset_service.acquire_asset_stl(
             target_part=target,
@@ -180,7 +296,10 @@ def dispatch_change(
                 target_part=target,
                 op=op,
                 warnings=asset_result.warnings or [],
-                metadata={"asset_acquisition": asset_result.to_dict()},
+                metadata={
+                    "asset_acquisition": asset_result.to_dict(),
+                    "asset_request_used": asset_request,
+                },
             )
 
         fit_service = AddFitService(
@@ -222,6 +341,7 @@ def dispatch_change(
                 metadata={
                     "asset_acquisition": asset_result.to_dict(),
                     "fit_result": fit_result.to_dict(),
+                    "asset_request_used": asset_request,
                 },
             )
 
@@ -245,6 +365,7 @@ def dispatch_change(
                     )
                 ],
                 "attach_to": attach_to,
+                "asset_request_used": asset_request,
                 "asset_acquisition": asset_result.to_dict(),
                 "fit_plan": fit_result.fit_plan,
                 "mount_request": mount_request,

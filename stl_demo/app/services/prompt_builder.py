@@ -24,6 +24,9 @@ def build_change_intent_prompt(
 6. 若 forbidden_ops 包含 uniform_scale，则禁止输出传统整体 scale(x,y,z)。
 7. 若文本语义是“新增一个部件/装置/顶棚/传感器/吊舱/防护件”，优先输出 add，而不是修改已有件。
 8. 对 add，不要使用旧版 source_part/offset 语义，必须使用新的 asset_request + attach_to + mount_request + visual_fit 结构。
+9. 对 add，asset_request.content 不能只写部件名称，必须写成便于远程素材文本库检索的详细中文描述。
+10. 对 add，asset_request.content 应尽量包含：新增件类型、结构/外观特征、用途功能、安装位置、挂载父件上下文；若部件摘要中有 description、function_names、edit_type 等信息，应优先吸收进 content。
+11. 对 add，若 attach_to 已明确，应在 asset_request.content 中体现挂载对象及挂载区域，而不是只写一个孤立名词。
 
 你必须遵守以下规则：
 1. 只能输出 JSON。
@@ -51,9 +54,9 @@ def build_change_intent_prompt(
 
 6. add 必须使用以下结构：
    {{
-     "attach_to": "已有部件ID，表示新增件挂载到哪个已有件上",
+     "attach_to": "已有部件ID，优先使用 part_id，不要只写部件名称",
      "asset_request": {{
-       "content": "用于素材检索/生成的文本,最好是中文",
+       "content": "用于素材检索/生成的详细中文描述，不能只写部件名称，必须包含新增件类型、结构/外观特征、用途功能、安装位置、父件上下文",
        "input_type": "text",
        "category": "可选，如 roof/cage/guard/cable",
        "target_type": "可选，如 armored_vehicle",
@@ -88,11 +91,16 @@ def build_change_intent_prompt(
 
 7. 对 add：
    - target_part 表示“新增件自身的 part_id”
-   - attach_to 必须是“已有件”
+   - attach_to 必须是“已有件”，优先使用 part_id
    - 不要让 add 直接依赖人工审核流程
    - 若语义是双侧防护，优先输出 placement_scope=both_sides
    - 若语义是周边环绕或垂挂，优先输出 placement_scope=full_perimeter
    - 若只是“新增并适配到已有件”，优先通过 mount_request 和 visual_fit 表达几何装配意图，而不是凭空编造大量精确毫米数
+   - asset_request.content 不能只写“顶盖”“护网”“护栏”“雷达”“传感器”这类短词
+   - asset_request.content 应优先写成“新增件类型 + 结构/外观特征 + 用途功能 + 安装区域 + 挂载父件上下文”的详细描述
+   - 若部件摘要中的 description / function_names / edit_type 能帮助检索，应尽量吸收进 asset_request.content
+   - 若 attach_to 已明确，应在 asset_request.content 中体现挂载对象及挂载区域
+   - 若是顶盖、笼装甲、周边防护、侧面挂装、后部挂架等，应在 content 中明确覆盖方式、位置特征和用途
 
 8. 对虚拟部件、无直接编辑权限的部件，不要生成直接编辑操作。
 9. 只有在目标不明确、操作与约束冲突、或信息确实不足时，才能不输出该条变更。
