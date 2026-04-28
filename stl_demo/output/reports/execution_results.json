@@ -1,0 +1,558 @@
+[
+  {
+    "success": true,
+    "output_files": [
+      "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\NEW_TURRET_CAGE_01.stl"
+    ],
+    "warnings": [
+      "large_uniform_scale_applied=1169.645; remote asset was likely much smaller than parent",
+      "large_axis_stretch_applied=4.542",
+      "settle_gap_reduced_from_clearance=20.000->2.000",
+      "settle_gap_reduced_from_clearance=20.000->2.000",
+      "mesh_repair_actions[NEW_TURRET_CAGE_01]=fix_normals,fix_winding,remove_unreferenced_vertices",
+      "mesh_repair_warning[NEW_TURRET_CAGE_01]=remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'",
+      "reasonableness_skipped[NEW_TURRET_CAGE_01]=no_input_mesh"
+    ],
+    "message": "add success via external asset acquisition + regional local fit",
+    "target_part": "NEW_TURRET_CAGE_01",
+    "op": "add",
+    "metadata": {
+      "affected_parts": [
+        {
+          "part_id": "NEW_TURRET_CAGE_01",
+          "input_path": "",
+          "temp_output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__NEW_TURRET_CAGE_01_added_fitted.stl",
+          "role": "primary_add",
+          "linked_from": ""
+        }
+      ],
+      "attach_to": "BJ0013",
+      "asset_request_used": {
+        "content": "目标新增件标识：NEW_TURRET_CAGE_01；新增件基础检索词：新增炮塔顶部笼式装甲，采用栅栏网格结构，设计用于防御 FPV 无人机俯冲攻击及标枪导弹穿顶打击，安装于炮塔（BJ0013）上方，需保留观察窗与机枪射界不被遮挡；原始需求：根据情报文本，为应对无人机威胁，需在炮塔顶部加装笼式装甲以防御俯冲攻击；挂载父件：BJ0013（炮塔）；父件类型：mechanical_part；父件功能：炮塔；父件描述：AAV7A1 主武器炮塔，具备旋转瞄准功能，安装于车体顶部结构上。；父件尺寸约为 5892.9×1264.3×1082.0 mm；安装区域：turret_top；布置范围：single；装配策略：top_cover；素材类别偏好：roof；目标平台：armored_vehicle；请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+        "input_type": "text",
+        "category": "roof",
+        "target_type": "armored_vehicle",
+        "mount_region": "turret_top",
+        "topk": 5,
+        "auto_approve": true,
+        "auto_accept_prompt": true,
+        "auto_accept_generation": true,
+        "force_generate": false
+      },
+      "asset_acquisition": {
+        "success": true,
+        "message": "asset selected and downloaded",
+        "local_stl_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\downloaded_assets\\NEW_TURRET_CAGE_01_7485b5d79d5043bb90b315cd4825c0ce.stl",
+        "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+        "task_id": "",
+        "provider_status": "",
+        "asset_metadata": {
+          "name": "防无人机顶棚",
+          "category": "roof",
+          "target_type": "armored_vehicle",
+          "mount_region": "top_hull",
+          "size_range": null,
+          "default_orientation": null,
+          "mount_ref_point": null,
+          "constraints": null,
+          "stl_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+          "preview_image_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png",
+          "source": "manual_upload",
+          "generation_prompt": null,
+          "version": 1,
+          "version_group": "6476d3ed2b3e4bcb84d7c2a3638a4b93",
+          "parent_asset_id": null,
+          "id": 9,
+          "created_at": "2026-04-20T12:24:04",
+          "updated_at": "2026-04-20T12:24:04",
+          "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+          "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png"
+        },
+        "raw_submit_response": {
+          "request_id": "ceeae39b28024d138dfa7f60be06609e",
+          "status": "ASSET_SELECTED",
+          "parsed_input": {
+            "input_type": "text",
+            "content": "目标新增件标识：NEW_TURRET_CAGE_01；新增件基础检索词：新增炮塔顶部笼式装甲，采用栅栏网格结构，设计用于防御 FPV 无人机俯冲攻击及标枪导弹穿顶打击，安装于炮塔（BJ0013）上方，需保留观察窗与机枪射界不被遮挡；原始需求：根据情报文本，为应对无人机威胁，需在炮塔顶部加装笼式装甲以防御俯冲攻击；挂载父件：BJ0013（炮塔）；父件类型：mechanical_part；父件功能：炮塔；父件描述：AAV7A1 主武器炮塔，具备旋转瞄准功能，安装于车体顶部结构上。；父件尺寸约为 5892.9×1264.3×1082.0 mm；安装区域：turret_top；布置范围：single；装配策略：top_cover；素材类别偏好：roof；目标平台：armored_vehicle；请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+            "normalized_content": "目标新增件标识：NEW_TURRET_CAGE_01；新增件基础检索词：新增炮塔顶部笼式装甲，采用栅栏网格结构，设计用于防御 FPV 无人机俯冲攻击及标枪导弹穿顶打击，安装于炮塔（BJ0013）上方，需保留观察窗与机枪射界不被遮挡；原始需求：根据情报文本，为应对无人机威胁，需在炮塔顶部加装笼式装甲以防御俯冲攻击；挂载父件：BJ0013（炮塔）；父件类型：mechanical_part；父件功能：炮塔；父件描述：AAV7A1 主武器炮塔，具备旋转瞄准功能，安装于车体顶部结构上。；父件尺寸约为 5892.9×1264.3×1082.0 mm；安装区域：turret_top；布置范围：single；装配策略：top_cover；素材类别偏好：roof；目标平台：armored_vehicle；请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+            "metadata": {}
+          },
+          "intent": {
+            "query": "炮塔顶部笼式装甲 防无人机 栅栏网格",
+            "category": "roof",
+            "target_type": "armored_vehicle",
+            "mount_region": "turret_top",
+            "generation_prompt": "Anti-drone protective cage armor for armored vehicle turret top, fence grid structure, metal material, installed on turret, leaving observation windows and machine gun fields of fire unobstructed, defense against FPV drones and top-attack missiles",
+            "embedding_text": "装甲车 炮塔 笼式装甲 防无人机 顶部 栅栏网格 防御导弹",
+            "attributes": {
+              "protection_type": "anti_drone_missile",
+              "structure_form": "cage_mesh",
+              "material": "metal",
+              "coverage_area": "turret_top",
+              "attachment_method": "bolted",
+              "threat_type": "FPV_drone_Javelin",
+              "compatible_targets": "AAV7A1"
+            }
+          },
+          "candidates": [
+            {
+              "asset": {
+                "name": "防无人机顶棚",
+                "category": "roof",
+                "target_type": "armored_vehicle",
+                "mount_region": "top_hull",
+                "size_range": null,
+                "default_orientation": null,
+                "mount_ref_point": null,
+                "constraints": null,
+                "stl_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+                "preview_image_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png",
+                "source": "manual_upload",
+                "generation_prompt": null,
+                "version": 1,
+                "version_group": "6476d3ed2b3e4bcb84d7c2a3638a4b93",
+                "parent_asset_id": null,
+                "id": 9,
+                "created_at": "2026-04-20T12:24:04",
+                "updated_at": "2026-04-20T12:24:04",
+                "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+                "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png"
+              },
+              "score": 0.7925,
+              "structured_score": 0.7385,
+              "semantic_score": 0.8366,
+              "reason": "semantic vector match"
+            }
+          ],
+          "selected_asset": {
+            "name": "防无人机顶棚",
+            "category": "roof",
+            "target_type": "armored_vehicle",
+            "mount_region": "top_hull",
+            "size_range": null,
+            "default_orientation": null,
+            "mount_ref_point": null,
+            "constraints": null,
+            "stl_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+            "preview_image_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png",
+            "source": "manual_upload",
+            "generation_prompt": null,
+            "version": 1,
+            "version_group": "6476d3ed2b3e4bcb84d7c2a3638a4b93",
+            "parent_asset_id": null,
+            "id": 9,
+            "created_at": "2026-04-20T12:24:04",
+            "updated_at": "2026-04-20T12:24:04",
+            "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+            "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png"
+          },
+          "task_id": null,
+          "review_id": null,
+          "message": "Top candidate was selected by auto approval."
+        },
+        "raw_task_response": null,
+        "warnings": []
+      },
+      "fit_plan": {
+        "attach_to": "BJ0013",
+        "resolved_request": {
+          "mount_region": "turret_top",
+          "placement_scope": "single",
+          "preferred_strategy": "top_cover",
+          "category": "roof",
+          "target_ratio": 0.92,
+          "preserve_aspect_ratio": true,
+          "allow_axis_stretch": true,
+          "allow_unlimited_upscale": true,
+          "clearance_mm": 20.0
+        },
+        "mount_plan": {
+          "mount_strategy": "top_cover",
+          "placement_scope": "single",
+          "attach_to": "BJ0013",
+          "frames": [
+            {
+              "origin": [
+                -820.8800000000001,
+                -793.2194999999999,
+                3086.44
+              ],
+              "normal": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "tangent": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bitangent": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "region_name": "top_cover",
+              "role": "primary",
+              "tangent_span": 5892.88,
+              "bitangent_span": 1264.261
+            }
+          ],
+          "preserve_aspect_ratio": true,
+          "allow_axis_stretch": true,
+          "diagnostics": {
+            "mount_region": "turret_top",
+            "resolved_mount_strategy": "top_cover",
+            "resolved_placement_scope": "single",
+            "parent_spans": {
+              "forward": 5892.88,
+              "lateral": 1264.261,
+              "up": 1082.04
+            },
+            "forward_axis": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "lateral_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "up_axis": [
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        },
+        "frame_reports": [
+          {
+            "frame": {
+              "origin": [
+                -820.8800000000001,
+                -793.2194999999999,
+                3086.44
+              ],
+              "normal": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "tangent": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "bitangent": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "region_name": "top_cover",
+              "role": "primary",
+              "tangent_span": 5892.88,
+              "bitangent_span": 1264.261
+            },
+            "scale_plan": {
+              "scale_mode": "top_cover_projection",
+              "uniform_scale_factor": 1169.645421051936,
+              "axis_stretch": {
+                "axis_vector": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "scale_factor": 4.54244153140277,
+                "target_after_uniform": 5421.4496,
+                "source_after_uniform": 1193.5100457585372,
+                "reason": "match_tangent_span"
+              },
+              "target_metrics": {
+                "target_tangent_span": 5421.4496,
+                "target_bitangent_span": 1163.12012
+              },
+              "source_metrics": {
+                "source_tangent_span": 1.0204032985356692,
+                "source_bitangent_span": 0.9944211288870201,
+                "source_normal_span": 0.7048138529811052
+              },
+              "diagnostics": {
+                "allow_unlimited_upscale": true,
+                "preserve_aspect_ratio": true,
+                "allow_axis_stretch": true,
+                "raw_scale_factor_tangent": 5313.045937601394,
+                "raw_scale_factor_bitangent": 1169.645421051936
+              }
+            },
+            "scale_applied": {
+              "uniform_scale_applied": 1169.645421051936,
+              "axis_stretch_applied": {
+                "axis_vector": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "scale_factor": 4.54244153140277,
+                "reason": "match_tangent_span"
+              }
+            },
+            "placement": {
+              "translate": {
+                "x": -820.89300554478,
+                "y": -793.2159751619566,
+                "z": 3518.282413796308
+              },
+              "target_n_min": 3106.44,
+              "frame_origin": [
+                -820.8800000000001,
+                -793.2194999999999,
+                3086.44
+              ]
+            },
+            "support_settle": {
+              "settle_gap_mm": 2.0,
+              "rotation_applied": false,
+              "rotation_deg": 0.11232857912735597,
+              "support_regions_before": 16,
+              "support_regions_after_align": 16,
+              "contact_regions_final": 16,
+              "hover_gap_mm": 0.0,
+              "support_plane_spread_mm": 1.9992939437674977,
+              "target_support_level": 3088.44,
+              "current_support_level_before_translate": 3107.2756841007163,
+              "translate_after_settle": {
+                "x": -0.0,
+                "y": -0.0,
+                "z": -18.835684100716207
+              },
+              "message": "support plane aligned and settled toward mount frame"
+            },
+            "final_extents": {
+              "x": 5421.4496,
+              "y": 1163.12012,
+              "z": 824.3822958333221
+            }
+          }
+        ],
+        "asset_metadata": {
+          "name": "防无人机顶棚",
+          "category": "roof",
+          "target_type": "armored_vehicle",
+          "mount_region": "top_hull",
+          "size_range": null,
+          "default_orientation": null,
+          "mount_ref_point": null,
+          "constraints": null,
+          "stl_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+          "preview_image_object_key": "manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png",
+          "source": "manual_upload",
+          "generation_prompt": null,
+          "version": 1,
+          "version_group": "6476d3ed2b3e4bcb84d7c2a3638a4b93",
+          "parent_asset_id": null,
+          "id": 9,
+          "created_at": "2026-04-20T12:24:04",
+          "updated_at": "2026-04-20T12:24:04",
+          "download_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd.stl",
+          "preview_image_url": "http://39.106.164.226:9000/stl-assets/manual/cf7d16994ae8492bb2ae02a7b1879fdd_preview.png"
+        },
+        "overrides_applied": {
+          "translate": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0.0
+          }
+        },
+        "combined_support_settle": {
+          "settle_gap_mm": 2.0,
+          "rotation_applied": false,
+          "rotation_deg": 0.11232857912735597,
+          "support_regions_before": 16,
+          "support_regions_after_align": 16,
+          "contact_regions_final": 16,
+          "hover_gap_mm": 0.0,
+          "support_plane_spread_mm": 1.9992939437674977,
+          "target_support_level": 3088.44,
+          "current_support_level_before_translate": 3088.44,
+          "translate_after_settle": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "message": "support plane aligned and settled toward mount frame"
+        },
+        "final_asset_extents": {
+          "x": 5421.4496,
+          "y": 1163.12012,
+          "z": 824.3822958333221
+        },
+        "instance_count": 1
+      },
+      "mount_request": {
+        "mount_region": "turret_top",
+        "placement_scope": "single",
+        "preferred_strategy": "top_cover"
+      },
+      "visual_fit": {
+        "target_ratio": 0.92,
+        "preserve_aspect_ratio": true,
+        "allow_axis_stretch": true,
+        "allow_unlimited_upscale": true
+      }
+    }
+  },
+  {
+    "success": false,
+    "output_files": [],
+    "warnings": [],
+    "message": "add failed during asset acquisition: asset task finished with status=FAILED",
+    "target_part": "NEW_HULL_NET_01",
+    "op": "add",
+    "metadata": {
+      "asset_acquisition": {
+        "success": false,
+        "message": "asset task finished with status=FAILED",
+        "local_stl_path": "",
+        "download_url": "",
+        "task_id": "c28137c466ad40f09455e8727d28a6b9",
+        "provider_status": "None",
+        "asset_metadata": null,
+        "raw_submit_response": {
+          "request_id": "9ca12c370dc74db9bf713f9aa2eeec38",
+          "status": "GENERATION_SUBMITTED",
+          "parsed_input": {
+            "input_type": "text",
+            "content": "目标新增件标识：NEW_HULL_NET_01；新增件基础检索词：新增车体侧面及后部防护网与钢缆脏辫，金属网基座配合悬挂钢缆，用于提前引爆聚能装药或缠绕无人机螺旋桨，挂载于车身上装甲（BJ0004）两侧，覆盖左右舷侧区域；原始需求：根据情报文本，野战改装趋势包括在侧面和后部加装防护网和钢缆以削弱无人机穿透力；挂载父件：BJ0004（车身上装甲）；父件类型：structural_part；父件功能：上装甲；父件描述：AAV7A1 车体上部主装甲，用于防护乘员舱及关键设备，属于结构覆盖件；父件尺寸约为 7632.4×3276.5×2387.7 mm；安装区域：hull_side；布置范围：both_sides；装配策略：side_panel；素材类别偏好：guard；目标平台：armored_vehicle；请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+            "normalized_content": "目标新增件标识：NEW_HULL_NET_01；新增件基础检索词：新增车体侧面及后部防护网与钢缆脏辫，金属网基座配合悬挂钢缆，用于提前引爆聚能装药或缠绕无人机螺旋桨，挂载于车身上装甲（BJ0004）两侧，覆盖左右舷侧区域；原始需求：根据情报文本，野战改装趋势包括在侧面和后部加装防护网和钢缆以削弱无人机穿透力；挂载父件：BJ0004（车身上装甲）；父件类型：structural_part；父件功能：上装甲；父件描述：AAV7A1 车体上部主装甲，用于防护乘员舱及关键设备，属于结构覆盖件；父件尺寸约为 7632.4×3276.5×2387.7 mm；安装区域：hull_side；布置范围：both_sides；装配策略：side_panel；素材类别偏好：guard；目标平台：armored_vehicle；请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+            "metadata": {}
+          },
+          "intent": {
+            "query": "装甲车侧面防护网 钢缆脏辫 防无人机",
+            "category": "cover",
+            "target_type": "armored_vehicle",
+            "mount_region": "side",
+            "generation_prompt": "3D model of armored vehicle side protection net with steel cable dreadlocks. Metal mesh base, hanging steel cables. Mounted on hull side armor. Anti-drone and anti-HEAT function. Industrial metal texture, tactical military style, weathered steel, detailed cable connections.",
+            "embedding_text": "装甲车 侧面防护网 钢缆脏辫 防无人机 上装甲 挂载",
+            "attributes": {
+              "protection_type": "anti_drone_heat",
+              "structure_form": "net_cable",
+              "material": "steel_metal",
+              "coverage_area": "both_sides",
+              "attachment_method": "side_panel",
+              "threat_type": "drone_heated_charge",
+              "compatible_targets": "BJ0004"
+            }
+          },
+          "candidates": [],
+          "selected_asset": null,
+          "task_id": "c28137c466ad40f09455e8727d28a6b9",
+          "review_id": null,
+          "message": "Generation task submitted."
+        },
+        "raw_task_response": {
+          "task_id": "c28137c466ad40f09455e8727d28a6b9",
+          "status": "FAILED",
+          "input_type": "text",
+          "input_content": "目标新增件标识：NEW_HULL_NET_01；新增件基础检索词：新增车体侧面及后部防护网与钢缆脏辫，金属网基座配合悬挂钢缆，用于提前引爆聚能装药或缠绕无人机螺旋桨，挂载于车身上装甲（BJ0004）两侧，覆盖左右舷侧区域；原始需求：根据情报文本，野战改装趋势包括在侧面和后部加装防护网和钢缆以削弱无人机穿透力；挂载父件：BJ0004（车身上装甲）；父件类型：structural_part；父件功能：上装甲；父件描述：AAV7A1 车体上部主装甲，用于防护乘员舱及关键设备，属于结构覆盖件；父件尺寸约为 7632.4×3276.5×2387.7 mm；安装区域：hull_side；布置范围：both_sides；装配策略：side_panel；素材类别偏好：guard；目标平台：armored_vehicle；请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+          "refined_prompt": "3D model of armored vehicle side protection net with steel cable dreadlocks. Metal mesh base, hanging steel cables. Mounted on hull side armor. Anti-drone and anti-HEAT function. Industrial metal texture, tactical military style, weathered steel, detailed cable connections.",
+          "result_asset_id": null,
+          "error_message": "TokenHub submit response did not include id: {'Response': {'RequestId': '04db23cc-b99f-4a61-85a5-53ffb471e30e', 'Error': {'Code': 'ResourceInsufficient', 'Message': '资源不足。'}}}",
+          "provider": null,
+          "provider_task_id": null,
+          "provider_request_id": null,
+          "provider_status": null,
+          "provider_result_type": null,
+          "provider_result_url": null,
+          "provider_preview_image_url": null,
+          "review_id": null,
+          "created_at": "2026-04-28T15:18:51",
+          "updated_at": "2026-04-28T15:18:52",
+          "result_asset": null
+        },
+        "warnings": []
+      },
+      "asset_request_used": {
+        "content": "目标新增件标识：NEW_HULL_NET_01；新增件基础检索词：新增车体侧面及后部防护网与钢缆脏辫，金属网基座配合悬挂钢缆，用于提前引爆聚能装药或缠绕无人机螺旋桨，挂载于车身上装甲（BJ0004）两侧，覆盖左右舷侧区域；原始需求：根据情报文本，野战改装趋势包括在侧面和后部加装防护网和钢缆以削弱无人机穿透力；挂载父件：BJ0004（车身上装甲）；父件类型：structural_part；父件功能：上装甲；父件描述：AAV7A1 车体上部主装甲，用于防护乘员舱及关键设备，属于结构覆盖件；父件尺寸约为 7632.4×3276.5×2387.7 mm；安装区域：hull_side；布置范围：both_sides；装配策略：side_panel；素材类别偏好：guard；目标平台：armored_vehicle；请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+        "input_type": "text",
+        "category": "guard",
+        "target_type": "armored_vehicle",
+        "mount_region": "hull_side",
+        "topk": 5,
+        "auto_approve": true,
+        "auto_accept_prompt": true,
+        "auto_accept_generation": true,
+        "force_generate": false
+      }
+    }
+  },
+  {
+    "success": false,
+    "output_files": [],
+    "warnings": [],
+    "message": "add failed during asset acquisition: poll task failed: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+    "target_part": "NEW_TSAR_FRAME_01",
+    "op": "add",
+    "metadata": {
+      "asset_acquisition": {
+        "success": false,
+        "message": "poll task failed: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+        "local_stl_path": "",
+        "download_url": "",
+        "task_id": "a9970b7b845e4f00a090371c442a1e86",
+        "provider_status": "",
+        "asset_metadata": null,
+        "raw_submit_response": {
+          "request_id": "c4016db515194ea686fe96cbc0939e87",
+          "status": "GENERATION_SUBMITTED",
+          "parsed_input": {
+            "input_type": "text",
+            "content": "目标新增件标识：NEW_TSAR_FRAME_01；新增件基础检索词：新增沙皇防护网全包围框架，焊接金属骨架与板材形成移动车库式外壳，牺牲炮塔旋转功能以换取极致防无人机生存率，安装于炮塔（BJ0013）外围，包裹炮塔四周及顶部；原始需求：根据情报文本，部分改装将炮塔改造为‘移动车库’式的沙皇防护网结构以提供全面防护；挂载父件：BJ0013（炮塔）；父件类型：mechanical_part；父件功能：炮塔；父件描述：AAV7A1 主武器炮塔，具备旋转瞄准功能，安装于车体顶部结构上。；父件尺寸约为 5892.9×1264.3×1082.0 mm；安装区域：turret_perimeter；布置范围：full_perimeter；装配策略：perimeter_wrap；素材类别偏好：cage；目标平台：armored_vehicle；请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+            "normalized_content": "目标新增件标识：NEW_TSAR_FRAME_01；新增件基础检索词：新增沙皇防护网全包围框架，焊接金属骨架与板材形成移动车库式外壳，牺牲炮塔旋转功能以换取极致防无人机生存率，安装于炮塔（BJ0013）外围，包裹炮塔四周及顶部；原始需求：根据情报文本，部分改装将炮塔改造为‘移动车库’式的沙皇防护网结构以提供全面防护；挂载父件：BJ0013（炮塔）；父件类型：mechanical_part；父件功能：炮塔；父件描述：AAV7A1 主武器炮塔，具备旋转瞄准功能，安装于车体顶部结构上。；父件尺寸约为 5892.9×1264.3×1082.0 mm；安装区域：turret_perimeter；布置范围：full_perimeter；装配策略：perimeter_wrap；素材类别偏好：cage；目标平台：armored_vehicle；请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+            "metadata": {}
+          },
+          "intent": {
+            "query": "沙皇防护网 炮塔全包围框架 防无人机",
+            "category": "cover",
+            "target_type": "armored_vehicle",
+            "mount_region": "turret_perimeter",
+            "generation_prompt": "Welded metal cage framework surrounding a military tank turret, full perimeter anti-drone protection structure, mobile garage style shell, metal skeleton with mesh plates, fixed installation around turret perimeter, sacrificing turret rotation for maximum survival, industrial military aesthetic, AAV7A1 turret dimensions compatible",
+            "embedding_text": "装甲车 沙皇防护网 炮塔 全包围框架 防无人机 移动车库",
+            "attributes": {
+              "protection_type": "anti_drone",
+              "structure_form": "cage_mesh",
+              "material": "welded_metal",
+              "coverage_area": "full_perimeter",
+              "attachment_method": "perimeter_wrap",
+              "threat_type": "uav",
+              "compatible_targets": "AAV7A1"
+            }
+          },
+          "candidates": [],
+          "selected_asset": null,
+          "task_id": "a9970b7b845e4f00a090371c442a1e86",
+          "review_id": null,
+          "message": "Generation task submitted."
+        },
+        "raw_task_response": null,
+        "warnings": []
+      },
+      "asset_request_used": {
+        "content": "目标新增件标识：NEW_TSAR_FRAME_01；新增件基础检索词：新增沙皇防护网全包围框架，焊接金属骨架与板材形成移动车库式外壳，牺牲炮塔旋转功能以换取极致防无人机生存率，安装于炮塔（BJ0013）外围，包裹炮塔四周及顶部；原始需求：根据情报文本，部分改装将炮塔改造为‘移动车库’式的沙皇防护网结构以提供全面防护；挂载父件：BJ0013（炮塔）；父件类型：mechanical_part；父件功能：炮塔；父件描述：AAV7A1 主武器炮塔，具备旋转瞄准功能，安装于车体顶部结构上。；父件尺寸约为 5892.9×1264.3×1082.0 mm；安装区域：turret_perimeter；布置范围：full_perimeter；装配策略：perimeter_wrap；素材类别偏好：cage；目标平台：armored_vehicle；请优先匹配与上述结构特征、用途和安装区域一致的 STL 素材，而不是仅按部件名称做模糊匹配。",
+        "input_type": "text",
+        "category": "cage",
+        "target_type": "armored_vehicle",
+        "mount_region": "turret_perimeter",
+        "topk": 5,
+        "auto_approve": true,
+        "auto_accept_prompt": true,
+        "auto_accept_generation": true,
+        "force_generate": false
+      }
+    }
+  }
+]

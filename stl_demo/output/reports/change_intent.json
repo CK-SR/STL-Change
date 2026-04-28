@@ -1,0 +1,145 @@
+{
+  "changes": [
+    {
+      "target_part": "NEW_TURRET_CAGE_01",
+      "op": "add",
+      "params": {
+        "attach_to": "BJ0013",
+        "asset_request": {
+          "content": "新增炮塔顶部笼式装甲，采用栅栏网格结构，设计用于防御 FPV 无人机俯冲攻击及标枪导弹穿顶打击，安装于炮塔（BJ0013）上方，需保留观察窗与机枪射界不被遮挡",
+          "input_type": "text",
+          "category": "roof",
+          "target_type": "armored_vehicle",
+          "mount_region": "turret_top",
+          "topk": 5,
+          "auto_approve": true,
+          "auto_accept_prompt": true,
+          "auto_accept_generation": true,
+          "force_generate": false
+        },
+        "fit_policy": {
+          "coverage_ratio": 0.92,
+          "clearance_mm": 20,
+          "allow_stretch": true
+        },
+        "mount_request": {
+          "mount_region": "turret_top",
+          "placement_scope": "single",
+          "preferred_strategy": "top_cover"
+        },
+        "visual_fit": {
+          "target_ratio": 0.92,
+          "preserve_aspect_ratio": true,
+          "allow_axis_stretch": true,
+          "allow_unlimited_upscale": true
+        },
+        "post_transform_overrides": {
+          "translate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0
+          }
+        }
+      },
+      "reason": "根据情报文本，为应对无人机威胁，需在炮塔顶部加装笼式装甲以防御俯冲攻击"
+    },
+    {
+      "target_part": "NEW_HULL_NET_01",
+      "op": "add",
+      "params": {
+        "attach_to": "BJ0004",
+        "asset_request": {
+          "content": "新增车体侧面及后部防护网与钢缆脏辫，金属网基座配合悬挂钢缆，用于提前引爆聚能装药或缠绕无人机螺旋桨，挂载于车身上装甲（BJ0004）两侧，覆盖左右舷侧区域",
+          "input_type": "text",
+          "category": "guard",
+          "target_type": "armored_vehicle",
+          "mount_region": "hull_side",
+          "topk": 5,
+          "auto_approve": true,
+          "auto_accept_prompt": true,
+          "auto_accept_generation": true,
+          "force_generate": false
+        },
+        "fit_policy": {
+          "coverage_ratio": 0.92,
+          "clearance_mm": 20,
+          "allow_stretch": true
+        },
+        "mount_request": {
+          "mount_region": "hull_side",
+          "placement_scope": "both_sides",
+          "preferred_strategy": "side_panel"
+        },
+        "visual_fit": {
+          "target_ratio": 0.92,
+          "preserve_aspect_ratio": true,
+          "allow_axis_stretch": true,
+          "allow_unlimited_upscale": true
+        },
+        "post_transform_overrides": {
+          "translate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0
+          }
+        }
+      },
+      "reason": "根据情报文本，野战改装趋势包括在侧面和后部加装防护网和钢缆以削弱无人机穿透力"
+    },
+    {
+      "target_part": "NEW_TSAR_FRAME_01",
+      "op": "add",
+      "params": {
+        "attach_to": "BJ0013",
+        "asset_request": {
+          "content": "新增沙皇防护网全包围框架，焊接金属骨架与板材形成移动车库式外壳，牺牲炮塔旋转功能以换取极致防无人机生存率，安装于炮塔（BJ0013）外围，包裹炮塔四周及顶部",
+          "input_type": "text",
+          "category": "cage",
+          "target_type": "armored_vehicle",
+          "mount_region": "turret_perimeter",
+          "topk": 5,
+          "auto_approve": true,
+          "auto_accept_prompt": true,
+          "auto_accept_generation": true,
+          "force_generate": false
+        },
+        "fit_policy": {
+          "coverage_ratio": 0.92,
+          "clearance_mm": 20,
+          "allow_stretch": true
+        },
+        "mount_request": {
+          "mount_region": "turret_perimeter",
+          "placement_scope": "full_perimeter",
+          "preferred_strategy": "perimeter_wrap"
+        },
+        "visual_fit": {
+          "target_ratio": 0.92,
+          "preserve_aspect_ratio": true,
+          "allow_axis_stretch": true,
+          "allow_unlimited_upscale": true
+        },
+        "post_transform_overrides": {
+          "translate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0
+          }
+        }
+      },
+      "reason": "根据情报文本，部分改装将炮塔改造为‘移动车库’式的沙皇防护网结构以提供全面防护"
+    }
+  ]
+}

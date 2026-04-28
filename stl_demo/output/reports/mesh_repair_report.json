@@ -1,0 +1,30 @@
+[
+  {
+    "input_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__NEW_TURRET_CAGE_01_added_fitted.stl",
+    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\final_stl\\.__tmp__NEW_TURRET_CAGE_01_added_fitted.stl",
+    "success": true,
+    "actions": [
+      "fix_normals",
+      "fix_winding",
+      "remove_unreferenced_vertices"
+    ],
+    "warnings": [
+      "remove_duplicate_faces failed: 'Trimesh' object has no attribute 'remove_duplicate_faces'"
+    ],
+    "stats_before": {
+      "vertices": 3647478,
+      "faces": 1215826,
+      "is_watertight": false,
+      "is_winding_consistent": true,
+      "euler_number": 1215826
+    },
+    "stats_after": {
+      "vertices": 3647478,
+      "faces": 1215826,
+      "is_watertight": false,
+      "is_winding_consistent": true,
+      "euler_number": 1215826
+    },
+    "message": "mesh repair finished"
+  }
+]
