@@ -4,12 +4,12 @@
     "valid": true,
     "errors": [],
     "change": {
-      "target_part": "NEW_TURRET_CAGE_01",
+      "target_part": "new_turret_roof_cage_armor",
       "op": "add",
       "params": {
         "attach_to": "BJ0013",
         "asset_request": {
-          "content": "新增炮塔顶部笼式装甲，采用栅栏网格结构，设计用于防御 FPV 无人机俯冲攻击及标枪导弹穿顶打击，安装于炮塔（BJ0013）上方，需保留观察窗与机枪射界不被遮挡",
+          "content": "新增顶盖笼装甲，栅栏式金属结构，覆盖炮塔顶部及舱口区域，用于防御无人机集束弹头及手榴弹垂直攻击，防止穿透，适配AAV7A1两栖装甲突击车炮塔外形，焊接于炮塔 BJ0013 顶部。",
           "input_type": "text",
           "category": "roof",
           "target_type": "armored_vehicle",
@@ -48,7 +48,7 @@
           }
         }
       },
-      "reason": "根据情报文本，为应对无人机威胁，需在炮塔顶部加装笼式装甲以防御俯冲攻击"
+      "reason": "根据情报文本，为应对无人机威胁，需在炮塔顶部焊接标准或自制顶盖笼装甲。"
     }
   },
   {
@@ -56,64 +56,12 @@
     "valid": true,
     "errors": [],
     "change": {
-      "target_part": "NEW_HULL_NET_01",
-      "op": "add",
-      "params": {
-        "attach_to": "BJ0004",
-        "asset_request": {
-          "content": "新增车体侧面及后部防护网与钢缆脏辫，金属网基座配合悬挂钢缆，用于提前引爆聚能装药或缠绕无人机螺旋桨，挂载于车身上装甲（BJ0004）两侧，覆盖左右舷侧区域",
-          "input_type": "text",
-          "category": "guard",
-          "target_type": "armored_vehicle",
-          "mount_region": "hull_side",
-          "topk": 5,
-          "auto_approve": true,
-          "auto_accept_prompt": true,
-          "auto_accept_generation": true,
-          "force_generate": false
-        },
-        "fit_policy": {
-          "coverage_ratio": 0.92,
-          "clearance_mm": 20,
-          "allow_stretch": true
-        },
-        "mount_request": {
-          "mount_region": "hull_side",
-          "placement_scope": "both_sides",
-          "preferred_strategy": "side_panel"
-        },
-        "visual_fit": {
-          "target_ratio": 0.92,
-          "preserve_aspect_ratio": true,
-          "allow_axis_stretch": true,
-          "allow_unlimited_upscale": true
-        },
-        "post_transform_overrides": {
-          "translate": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-          },
-          "rotate": {
-            "axis": "z",
-            "degrees": 0
-          }
-        }
-      },
-      "reason": "根据情报文本，野战改装趋势包括在侧面和后部加装防护网和钢缆以削弱无人机穿透力"
-    }
-  },
-  {
-    "index": 2,
-    "valid": true,
-    "errors": [],
-    "change": {
-      "target_part": "NEW_TSAR_FRAME_01",
+      "target_part": "new_perimeter_mangal_cage",
       "op": "add",
       "params": {
         "attach_to": "BJ0013",
         "asset_request": {
-          "content": "新增沙皇防护网全包围框架，焊接金属骨架与板材形成移动车库式外壳，牺牲炮塔旋转功能以换取极致防无人机生存率，安装于炮塔（BJ0013）外围，包裹炮塔四周及顶部",
+          "content": "新增沙皇式全周防护网（King-mangals），大型金属框架结构，包裹炮塔及部分车体上部，形成移动车库式防护，距离主装甲一定间隙，用于削弱FPV无人机聚能装药穿甲能力，覆盖侧面及顶部，挂载于炮塔 BJ0013 周边。",
           "input_type": "text",
           "category": "cage",
           "target_type": "armored_vehicle",
@@ -152,7 +100,111 @@
           }
         }
       },
-      "reason": "根据情报文本，部分改装将炮塔改造为‘移动车库’式的沙皇防护网结构以提供全面防护"
+      "reason": "根据情报文本，野战改装中常见将炮塔改造为移动车库式的沙皇防护网，提供全方位防护。"
+    }
+  },
+  {
+    "index": 2,
+    "valid": true,
+    "errors": [],
+    "change": {
+      "target_part": "new_steel_cable_dreadlocks",
+      "op": "add",
+      "params": {
+        "attach_to": "BJ0013",
+        "asset_request": {
+          "content": "新增钢缆脏辫防护装置，柔性钢缆束悬挂于防护网基座或车体上方，呈灌木丛状分布，用于在无人机接近时折断机翼或提前引爆引信，不限制炮塔机动性，适配野战改装风格，附着于炮塔 BJ0013 防护结构上。",
+          "input_type": "text",
+          "category": "guard",
+          "target_type": "armored_vehicle",
+          "mount_region": "turret_perimeter",
+          "topk": 5,
+          "auto_approve": true,
+          "auto_accept_prompt": true,
+          "auto_accept_generation": true,
+          "force_generate": false
+        },
+        "fit_policy": {
+          "coverage_ratio": 0.92,
+          "clearance_mm": 20,
+          "allow_stretch": true
+        },
+        "mount_request": {
+          "mount_region": "turret_perimeter",
+          "placement_scope": "both_sides",
+          "preferred_strategy": "side_panel"
+        },
+        "visual_fit": {
+          "target_ratio": 0.92,
+          "preserve_aspect_ratio": true,
+          "allow_axis_stretch": true,
+          "allow_unlimited_upscale": true
+        },
+        "post_transform_overrides": {
+          "translate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0
+          }
+        }
+      },
+      "reason": "根据情报文本，最新防护手段为悬挂钢缆脏辫，灵活且能有效干扰无人机引信。"
+    }
+  },
+  {
+    "index": 3,
+    "valid": true,
+    "errors": [],
+    "change": {
+      "target_part": "new_side_mesh_armor",
+      "op": "add",
+      "params": {
+        "attach_to": "BJ0006",
+        "asset_request": {
+          "content": "新增侧面金属网防护板，距离车体侧装甲一定间隙安装，采用金属网或铁皮材料，用于防御侧面FPV无人机攻击，弥补原厂侧面装甲薄弱缺陷，挂载于车身右装甲 BJ0006 外侧并延伸至左侧。",
+          "input_type": "text",
+          "category": "guard",
+          "target_type": "armored_vehicle",
+          "mount_region": "hull_side",
+          "topk": 5,
+          "auto_approve": true,
+          "auto_accept_prompt": true,
+          "auto_accept_generation": true,
+          "force_generate": false
+        },
+        "fit_policy": {
+          "coverage_ratio": 0.92,
+          "clearance_mm": 20,
+          "allow_stretch": true
+        },
+        "mount_request": {
+          "mount_region": "hull_side",
+          "placement_scope": "both_sides",
+          "preferred_strategy": "side_panel"
+        },
+        "visual_fit": {
+          "target_ratio": 0.92,
+          "preserve_aspect_ratio": true,
+          "allow_axis_stretch": true,
+          "allow_unlimited_upscale": true
+        },
+        "post_transform_overrides": {
+          "translate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotate": {
+            "axis": "z",
+            "degrees": 0
+          }
+        }
+      },
+      "reason": "根据情报文本，侧面和后部装甲薄弱，需加装金属网等防护结构以应对无人机威胁。"
     }
   }
 ]

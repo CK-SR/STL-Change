@@ -31,11 +31,16 @@ class AssetAcquisitionResult:
 class AssetGenerationService:
     """
     对接外部“目标结构推理智能体（素材库）”接口。
-    当前只支持：
+
+    当前支持：
     - POST /api/generate
     - GET /api/tasks/{task_id}
     - 自动闭环分支（ASSET_SELECTED / GENERATION_SUBMITTED -> SUCCESS）
-    不支持人工审核中间态。
+
+    这一版的 P0 修改重点：
+    1. 将 category / target_type / mount_region / placement_scope / preferred_strategy
+       显式透传给远端
+    2. 同时放入 metadata，便于远端保留结构化上下文
     """
 
     def __init__(self) -> None:
@@ -108,9 +113,23 @@ class AssetGenerationService:
     ) -> AssetAcquisitionResult:
         warnings: list[str] = []
 
+        metadata = {
+            "category": asset_request.get("category"),
+            "target_type": asset_request.get("target_type"),
+            "mount_region": asset_request.get("mount_region"),
+            "placement_scope": asset_request.get("placement_scope"),
+            "preferred_strategy": asset_request.get("preferred_strategy"),
+        }
+
         payload = {
             "content": asset_request.get("content", ""),
             "input_type": asset_request.get("input_type"),
+            "category": asset_request.get("category"),
+            "target_type": asset_request.get("target_type"),
+            "mount_region": asset_request.get("mount_region"),
+            "placement_scope": asset_request.get("placement_scope"),
+            "preferred_strategy": asset_request.get("preferred_strategy"),
+            "metadata": metadata,
             "topk": asset_request.get("topk", settings.asset_api_topk),
             "auto_approve": asset_request.get("auto_approve", settings.asset_auto_approve),
             "auto_accept_prompt": asset_request.get(

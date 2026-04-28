@@ -155,15 +155,6 @@ def _build_rich_asset_request_content(
     mount_request: dict,
     constraint_service: PartConstraintService,
 ) -> str:
-    """
-    将短的 asset_request.content 扩展为更适合远程素材文本库检索的详细中文描述。
-    目标不是改远程接口 schema，而是在当前 content 字段内补足：
-    - 新增件类型
-    - 结构/外观特征
-    - 用途功能
-    - 安装区域
-    - 挂载父件上下文
-    """
     base_content = str(asset_request.get("content", "")).strip()
     category = str(asset_request.get("category", "")).strip()
     target_type = str(asset_request.get("target_type", "")).strip()
@@ -270,11 +261,12 @@ def dispatch_change(
                 op=op,
             )
 
-        # 关键增强：
-        # 不直接把 LLM 给出的短 content 原样发给远程素材文本库，
-        # 而是在本地将其扩展成“新增件类型 + 结构特征 + 用途功能 + 安装区域 + 父件上下文”的详细描述。
         asset_request = dict(asset_request)
         asset_request.setdefault("input_type", "text")
+        asset_request.setdefault("mount_region", mount_request.get("mount_region", ""))
+        asset_request.setdefault("placement_scope", mount_request.get("placement_scope", ""))
+        asset_request.setdefault("preferred_strategy", mount_request.get("preferred_strategy", ""))
+
         asset_request["content"] = _build_rich_asset_request_content(
             change=change,
             attach_to=attach_to,
@@ -309,13 +301,17 @@ def dispatch_change(
 
         temp_output = _build_temp_output_path(output_dir, target, "added_fitted")
         resolved_asset_metadata = dict(asset_result.asset_metadata or {})
-        for key in ["category", "target_type", "mount_region"]:
+        for key in ["category", "target_type", "mount_region", "placement_scope", "preferred_strategy"]:
             req_val = asset_request.get(key)
             if req_val is not None and str(req_val).strip():
                 resolved_asset_metadata.setdefault(key, req_val)
                 fit_policy.setdefault(key, req_val)
         if mount_request.get("mount_region"):
             resolved_asset_metadata.setdefault("mount_region", mount_request["mount_region"])
+        if mount_request.get("placement_scope"):
+            resolved_asset_metadata.setdefault("placement_scope", mount_request["placement_scope"])
+        if mount_request.get("preferred_strategy"):
+            resolved_asset_metadata.setdefault("preferred_strategy", mount_request["preferred_strategy"])
 
         fit_result = fit_service.fit_imported_asset(
             imported_stl_path=asset_result.local_stl_path,

@@ -9,9 +9,15 @@ import numpy as np
 import trimesh
 
 from app.config import settings
-from app.services.add_mount_planner import AddMountPlanner, AddMountPlan, MountFrame
+from app.services.add_mount_planner import AddMountPlan, MountFrame
 from app.services.add_visual_scale_service import AddVisualScaleService, VisualScalePlan
+from app.services.asset_mount_anchor_service import AssetMountAnchorService
 from app.services.geometry_anchor_service import GeometryAnchorService
+from app.services.parent_mount_surface_service import (
+    ParentMountSurface,
+    ParentMountSurfacePlan,
+    ParentMountSurfaceService,
+)
 from app.services.part_constraint_service import PartConstraintService
 
 
@@ -33,19 +39,21 @@ class AddFitService:
         *,
         anchor_service: Optional[GeometryAnchorService] = None,
         constraint_service: Optional[PartConstraintService] = None,
-        mount_planner: Optional[AddMountPlanner] = None,
+        surface_service: Optional[ParentMountSurfaceService] = None,
+        asset_anchor_service: Optional[AssetMountAnchorService] = None,
         scale_service: Optional[AddVisualScaleService] = None,
     ) -> None:
         self.anchor_service = anchor_service or GeometryAnchorService()
         self.constraint_service = constraint_service
-        self.mount_planner = mount_planner or AddMountPlanner(
+        self.surface_service = surface_service or ParentMountSurfaceService(
             anchor_service=self.anchor_service,
             constraint_service=self.constraint_service,
         )
+        self.asset_anchor_service = asset_anchor_service or AssetMountAnchorService()
         self.scale_service = scale_service or AddVisualScaleService()
 
     # =========================================================
-    # 基础几何工具
+    # 基础工具
     # =========================================================
     def _normalize(self, vec: Iterable[float]) -> np.ndarray:
         arr = np.asarray(list(vec), dtype=float).reshape(3)
@@ -57,6 +65,10 @@ class AddFitService:
     def _mesh_bounds_center(self, mesh: trimesh.Trimesh) -> np.ndarray:
         b = mesh.bounds
         return (b[0] + b[1]) / 2.0
+
+    def _project_values(self, points: np.ndarray, axis: Iterable[float]) -> np.ndarray:
+        axis_vec = self._normalize(axis)
+        return np.dot(points, axis_vec)
 
     def _project_extent(self, mesh: trimesh.Trimesh, axis: Iterable[float]) -> float:
         axis_vec = self._normalize(axis)
@@ -136,7 +148,7 @@ class AddFitService:
         return t2 @ mat @ t1
 
     # =========================================================
-    # 请求解析 / 现有逻辑
+    # 请求解析
     # =========================================================
     def _resolve_mount_request(
         self,
@@ -195,11 +207,81 @@ class AddFitService:
             "clearance_mm": float(fit_policy.get("clearance_mm", 0.0) or 0.0),
         }
 
-    def _orient_source_to_frame(self, mesh: trimesh.Trimesh, frame: MountFrame) -> None:
+    # =========================================================
+    # P0：选材兼容性门禁
+    # =========================================================
+    def _category_family(self, text: str) -> str:
+        t = (text or "").strip().lower()
+        if not t:
+            return ""
+        if any(k in t for k in ["roof", "top", "cage", "frame", "armor_cage"]):
+            return "top_cover"
+        if any(k in t for k in ["side", "panel", "guard", "net", "mesh"]):
+            return "side_panel"
+        if any(k in t for k in ["perimeter", "wrap", "dread", "cable", "rope", "chain", "guard_net"]):
+            return "perimeter_wrap"
+        return ""
+
+    def _mount_region_family(self, text: str) -> str:
+        t = (text or "").strip().lower()
+        if not t:
+            return ""
+        if t in {"turret_top", "top_hull", "top", "roof"}:
+            return "top_cover"
+        if t in {"hull_side", "side", "left_side", "right_side", "turret_side"}:
+            return "side_panel"
+        if t in {"turret_perimeter", "perimeter", "full_perimeter", "wrap", "rear", "front"}:
+            return "perimeter_wrap"
+        return ""
+
+    def _validate_asset_choice(
+        self,
+        *,
+        resolved_request: Dict[str, Any],
+        asset_metadata: Dict[str, Any],
+        mount_strategy: str,
+    ) -> Dict[str, Any]:
+        asset_category = str(asset_metadata.get("category", "")).strip()
+        asset_mount_region = str(asset_metadata.get("mount_region", "")).strip()
+
+        category_family = self._category_family(asset_category)
+        region_family = self._mount_region_family(asset_mount_region)
+
+        compatible = True
+        reasons: list[str] = []
+
+        if mount_strategy == "top_cover":
+            if category_family not in {"", "top_cover"} and region_family not in {"", "top_cover"}:
+                compatible = False
+                reasons.append("selected asset is not compatible with top_cover")
+        elif mount_strategy == "side_panel":
+            if category_family not in {"", "side_panel", "perimeter_wrap"} and region_family not in {"", "side_panel"}:
+                compatible = False
+                reasons.append("selected asset is not compatible with side_panel")
+        elif mount_strategy == "perimeter_wrap":
+            if category_family in {"top_cover"} or region_family in {"top_cover"}:
+                compatible = False
+                reasons.append("selected asset looks like roof/top_cover, not perimeter_wrap")
+
+        return {
+            "compatible": compatible,
+            "mount_strategy": mount_strategy,
+            "asset_category": asset_category,
+            "asset_mount_region": asset_mount_region,
+            "category_family": category_family,
+            "region_family": region_family,
+            "reasons": reasons,
+        }
+
+    # =========================================================
+    # 资产粗对齐 / 细对齐
+    # =========================================================
+    def _coarse_orient_source_to_frame(self, mesh: trimesh.Trimesh, frame: MountFrame) -> Dict[str, Any]:
         center = self._mesh_bounds_center(mesh)
         axes, lengths = self._principal_axes(mesh)
         thin_axis = np.asarray(axes[int(np.argmin(lengths))], dtype=float)
         normal = np.asarray(frame.normal, dtype=float)
+
         rot1 = self._rotation_matrix_align_vectors(thin_axis, normal, center)
         mesh.apply_transform(rot1)
 
@@ -209,20 +291,65 @@ class AddFitService:
         longest_plane = longest_axis - np.dot(longest_axis, normal) * normal
         if np.linalg.norm(longest_plane) < 1e-9:
             longest_plane = np.asarray(frame.tangent, dtype=float)
+
         tangent = np.asarray(frame.tangent, dtype=float)
         rot2 = self._rotation_matrix_align_vectors(longest_plane, tangent, center2)
         mesh.apply_transform(rot2)
 
-    def _apply_scale_plan(self, mesh: trimesh.Trimesh, scale_plan: VisualScalePlan, warnings: List[str]) -> Dict[str, Any]:
+        return {
+            "coarse_center_before": [float(x) for x in center.tolist()],
+            "coarse_center_after": [float(x) for x in self._mesh_bounds_center(mesh).tolist()],
+        }
+
+    def _refine_anchor_inplane_axis(
+        self,
+        mesh: trimesh.Trimesh,
+        *,
+        anchor_info: Dict[str, Any],
+        frame: MountFrame,
+    ) -> Dict[str, Any]:
+        current_axis = np.asarray(anchor_info["inplane_axis"], dtype=float)
+        target_axis = np.asarray(frame.tangent, dtype=float)
+        center = np.asarray(anchor_info["alignment_center"], dtype=float)
+
+        dot = float(np.clip(np.dot(self._normalize(current_axis), self._normalize(target_axis)), -1.0, 1.0))
+        angle_deg = float(math.degrees(math.acos(dot)))
+
+        if angle_deg < 0.3:
+            return {
+                "rotation_applied": False,
+                "rotation_deg": angle_deg,
+                "message": "inplane axis already aligned",
+            }
+
+        rot = self._rotation_matrix_align_vectors(current_axis, target_axis, center)
+        mesh.apply_transform(rot)
+        return {
+            "rotation_applied": True,
+            "rotation_deg": angle_deg,
+            "message": "inplane anchor axis aligned to frame tangent",
+        }
+
+    # =========================================================
+    # 缩放 / 放置
+    # =========================================================
+    def _apply_scale_plan(
+        self,
+        mesh: trimesh.Trimesh,
+        scale_plan: VisualScalePlan,
+        warnings: List[str],
+        *,
+        anchor_point: np.ndarray,
+    ) -> Dict[str, Any]:
         applied: Dict[str, Any] = {
             "uniform_scale_applied": 1.0,
             "axis_stretch_applied": None,
         }
-        center = self._mesh_bounds_center(mesh)
+
         if abs(scale_plan.uniform_scale_factor - 1.0) > 1e-9:
             mat = self._uniform_scale_matrix_about_point(
                 scale_factor=float(scale_plan.uniform_scale_factor),
-                anchor_point=center,
+                anchor_point=anchor_point,
             )
             mesh.apply_transform(mat)
             applied["uniform_scale_applied"] = float(scale_plan.uniform_scale_factor)
@@ -238,7 +365,7 @@ class AddFitService:
             mat = self._stretch_matrix_about_point(
                 axis=np.asarray(axis_vec, dtype=float),
                 scale_factor=factor,
-                anchor_point=self._mesh_bounds_center(mesh),
+                anchor_point=anchor_point,
             )
             mesh.apply_transform(mat)
             applied["axis_stretch_applied"] = {
@@ -248,13 +375,15 @@ class AddFitService:
             }
             if factor > 2.0:
                 warnings.append(f"large_axis_stretch_applied={factor:.3f}")
+
         return applied
 
-    def _place_mesh_on_frame(
+    def _place_mesh_on_surface(
         self,
         mesh: trimesh.Trimesh,
         *,
         frame: MountFrame,
+        anchor_info: Dict[str, Any],
         clearance_mm: float,
     ) -> Dict[str, Any]:
         normal = np.asarray(frame.normal, dtype=float)
@@ -262,16 +391,16 @@ class AddFitService:
         bitangent = np.asarray(frame.bitangent, dtype=float)
         origin = np.asarray(frame.origin, dtype=float)
 
-        current_n_min = self._projection_min(mesh, normal)
-        current_t_center = self._projection_center(mesh, tangent)
-        current_b_center = self._projection_center(mesh, bitangent)
+        current_support_level = float(anchor_info["support_level_mean"])
+        current_t_center = float(anchor_info["placement_t_center"])
+        current_b_center = float(anchor_info["placement_b_center"])
 
-        target_n_min = float(np.dot(origin, normal) + clearance_mm)
+        target_support_level = float(np.dot(origin, normal) + clearance_mm)
         target_t_center = float(np.dot(origin, tangent))
         target_b_center = float(np.dot(origin, bitangent))
 
         delta = (
-            (target_n_min - current_n_min) * normal
+            (target_support_level - current_support_level) * normal
             + (target_t_center - current_t_center) * tangent
             + (target_b_center - current_b_center) * bitangent
         )
@@ -286,8 +415,12 @@ class AddFitService:
                 "y": float(delta[1]),
                 "z": float(delta[2]),
             },
-            "target_n_min": target_n_min,
+            "target_support_level": target_support_level,
             "frame_origin": [float(x) for x in origin.tolist()],
+            "current_t_center_before_translate": current_t_center,
+            "current_b_center_before_translate": current_b_center,
+            "target_t_center": target_t_center,
+            "target_b_center": target_b_center,
         }
 
     def _apply_post_overrides(
@@ -355,12 +488,8 @@ class AddFitService:
         return trimesh.util.concatenate(tuple(meshes))
 
     # =========================================================
-    # 新增：防悬空 / 多腿落座
+    # 支撑点 / 附着 / 质量检查
     # =========================================================
-    def _project_values(self, points: np.ndarray, axis: Iterable[float]) -> np.ndarray:
-        axis_vec = self._normalize(axis)
-        return np.dot(points, axis_vec)
-
     def _count_support_regions(
         self,
         points: np.ndarray,
@@ -391,72 +520,6 @@ class AddFitService:
             occupied.add((ti, bi))
 
         return len(occupied)
-
-    def _select_support_points(
-        self,
-        mesh: trimesh.Trimesh,
-        *,
-        frame: MountFrame,
-        min_regions: int = 2,
-    ) -> Dict[str, Any]:
-        verts = np.asarray(mesh.vertices, dtype=float)
-        normal = np.asarray(frame.normal, dtype=float)
-
-        proj_n = self._project_values(verts, normal)
-        n_min = float(proj_n.min())
-        n_span = float(proj_n.max() - proj_n.min())
-
-        # 尝试从较窄的底部带逐步扩大，尽量抓到多个支撑区域，而不是只抓到单个最低点
-        band_candidates = sorted(
-            {
-                max(n_span * 0.01, 1.0),
-                max(n_span * 0.02, 2.0),
-                max(n_span * 0.04, 4.0),
-                max(n_span * 0.06, 6.0),
-                max(n_span * 0.10, 10.0),
-                2.0,
-                5.0,
-                10.0,
-                20.0,
-                40.0,
-            }
-        )
-
-        best: Dict[str, Any] | None = None
-
-        for band in band_candidates:
-            mask = proj_n <= (n_min + band)
-            pts = verts[mask]
-            regions = self._count_support_regions(pts, frame.tangent, frame.bitangent)
-
-            candidate = {
-                "band_mm": float(band),
-                "points": pts,
-                "point_count": int(len(pts)),
-                "support_regions": int(regions),
-            }
-
-            if best is None:
-                best = candidate
-            else:
-                if (
-                    candidate["support_regions"] > best["support_regions"]
-                    or (
-                        candidate["support_regions"] == best["support_regions"]
-                        and candidate["point_count"] > best["point_count"]
-                    )
-                ):
-                    best = candidate
-
-            if candidate["support_regions"] >= min_regions and candidate["point_count"] >= 12:
-                return candidate
-
-        return best or {
-            "band_mm": 0.0,
-            "points": np.zeros((0, 3), dtype=float),
-            "point_count": 0,
-            "support_regions": 0,
-        }
 
     def _fit_plane_normal(
         self,
@@ -502,11 +565,6 @@ class AddFitService:
         mount_strategy: str,
         requested_clearance_mm: float,
     ) -> float:
-        """
-        为了避免“整体最低点离面 20mm，但实际只有一个腿接触/其余全悬空”的问题，
-        对 top_cover / side_panel / rear_frame 优先压低到更接近落座状态。
-        perimeter_wrap 可保守一些。
-        """
         clearance = float(requested_clearance_mm or 0.0)
         if mount_strategy in {"top_cover", "side_panel", "rear_frame"}:
             return min(clearance, 2.0)
@@ -514,17 +572,58 @@ class AddFitService:
             return min(clearance, 5.0)
         return clearance
 
-    def _settle_mesh_supports_to_frame(
+    def _check_support_inside_footprint(
+        self,
+        points: np.ndarray,
+        *,
+        frame: MountFrame,
+        footprint_bounds: Dict[str, float],
+        tolerance_mm: float = 5.0,
+    ) -> Dict[str, Any]:
+        if points.size == 0:
+            return {
+                "contact_point_count": 0,
+                "outside_count": 0,
+                "outside_ratio": 0.0,
+            }
+
+        proj_t = self._project_values(points, frame.tangent)
+        proj_b = self._project_values(points, frame.bitangent)
+
+        inside = (
+            (proj_t >= footprint_bounds["t_min"] - tolerance_mm)
+            & (proj_t <= footprint_bounds["t_max"] + tolerance_mm)
+            & (proj_b >= footprint_bounds["b_min"] - tolerance_mm)
+            & (proj_b <= footprint_bounds["b_max"] + tolerance_mm)
+        )
+        outside_count = int(np.count_nonzero(~inside))
+        total = int(len(points))
+        outside_ratio = float(outside_count / max(total, 1))
+        return {
+            "contact_point_count": total,
+            "outside_count": outside_count,
+            "outside_ratio": outside_ratio,
+        }
+
+    def _settle_mesh_supports_to_surface(
         self,
         mesh: trimesh.Trimesh,
         *,
         frame: MountFrame,
+        surface: ParentMountSurface,
         mount_strategy: str,
         requested_clearance_mm: float,
         warnings: List[str],
     ) -> Dict[str, Any]:
         normal = np.asarray(frame.normal, dtype=float)
         target_origin = np.asarray(frame.origin, dtype=float)
+
+        support_info_before = self.asset_anchor_service.analyze_oriented_asset(
+            mesh,
+            frame=frame,
+            mount_strategy=mount_strategy,
+        )
+        support_points_before = np.asarray(support_info_before["support_points"], dtype=float)
 
         settle_gap_mm = self._resolve_settle_gap_mm(
             mount_strategy=mount_strategy,
@@ -535,11 +634,8 @@ class AddFitService:
                 f"settle_gap_reduced_from_clearance={float(requested_clearance_mm):.3f}->{settle_gap_mm:.3f}"
             )
 
-        before = self._select_support_points(mesh, frame=frame, min_regions=2)
-        before_pts = before["points"]
-
         plane_fit_before = self._fit_plane_normal(
-            before_pts,
+            support_points_before,
             preferred_normal=normal,
         )
 
@@ -556,24 +652,29 @@ class AddFitService:
                 mesh.apply_transform(rot)
                 rotation_applied = True
 
-        after_align = self._select_support_points(mesh, frame=frame, min_regions=2)
-        after_align_pts = after_align["points"]
+        support_info_after_align = self.asset_anchor_service.analyze_oriented_asset(
+            mesh,
+            frame=frame,
+            mount_strategy=mount_strategy,
+        )
+        support_points_after_align = np.asarray(support_info_after_align["support_points"], dtype=float)
 
-        if after_align_pts.size == 0:
+        if support_points_after_align.size == 0:
             warnings.append("support_settle_failed=no_support_points_after_align")
             return {
                 "settle_gap_mm": settle_gap_mm,
                 "rotation_applied": rotation_applied,
                 "rotation_deg": rotation_deg,
-                "support_regions_before": int(before["support_regions"]),
-                "support_regions_after_align": int(after_align["support_regions"]),
+                "support_regions_before": 0,
+                "support_regions_after_align": 0,
                 "contact_regions_final": 0,
                 "hover_gap_mm": None,
                 "support_plane_spread_mm": None,
+                "outside_footprint_ratio": 0.0,
                 "message": "support settle skipped because no support points were found",
             }
 
-        proj_support = self._project_values(after_align_pts, normal)
+        proj_support = self._project_values(support_points_after_align, normal)
         current_support_level = float(np.mean(proj_support))
         target_support_level = float(np.dot(target_origin, normal) + settle_gap_mm)
 
@@ -582,24 +683,41 @@ class AddFitService:
         mat[:3, 3] = delta
         mesh.apply_transform(mat)
 
-        final_support = self._select_support_points(mesh, frame=frame, min_regions=2)
-        final_pts = final_support["points"]
-        final_proj = self._project_values(final_pts, normal) if final_pts.size else np.asarray([], dtype=float)
+        final_support_info = self.asset_anchor_service.analyze_oriented_asset(
+            mesh,
+            frame=frame,
+            mount_strategy=mount_strategy,
+        )
+        final_support_points = np.asarray(final_support_info["support_points"], dtype=float)
+        final_proj = self._project_values(final_support_points, normal) if final_support_points.size else np.asarray([], dtype=float)
 
         if len(final_proj) > 0:
             hover_gap_mm = float(max(0.0, float(final_proj.min()) - target_support_level))
             support_plane_spread_mm = float(final_proj.max() - final_proj.min())
             near_contact_mask = final_proj <= (target_support_level + 3.0)
-            near_contact_pts = final_pts[near_contact_mask] if np.any(near_contact_mask) else np.zeros((0, 3), dtype=float)
+            near_contact_pts = final_support_points[near_contact_mask] if np.any(near_contact_mask) else np.zeros((0, 3), dtype=float)
             contact_regions = self._count_support_regions(
                 near_contact_pts,
                 frame.tangent,
                 frame.bitangent,
             )
+            footprint_check = self._check_support_inside_footprint(
+                near_contact_pts,
+                frame=frame,
+                footprint_bounds=surface.footprint_bounds,
+                tolerance_mm=5.0,
+            )
         else:
             hover_gap_mm = None
             support_plane_spread_mm = None
             contact_regions = 0
+            footprint_check = {
+                "contact_point_count": 0,
+                "outside_count": 0,
+                "outside_ratio": 0.0,
+            }
+
+        outside_ratio = float(footprint_check["outside_ratio"])
 
         if contact_regions < 2:
             warnings.append(f"support_contact_regions_low={contact_regions}")
@@ -607,16 +725,27 @@ class AddFitService:
             warnings.append(f"support_hover_gap_large={hover_gap_mm:.3f}mm")
         if support_plane_spread_mm is not None and support_plane_spread_mm > 8.0:
             warnings.append(f"support_plane_spread_large={support_plane_spread_mm:.3f}mm")
+        if outside_ratio > 0.20:
+            warnings.append(f"support_outside_footprint_ratio_high={outside_ratio:.3f}")
 
         return {
             "settle_gap_mm": settle_gap_mm,
             "rotation_applied": rotation_applied,
             "rotation_deg": rotation_deg,
-            "support_regions_before": int(before["support_regions"]),
-            "support_regions_after_align": int(after_align["support_regions"]),
+            "support_regions_before": self._count_support_regions(
+                support_points_before,
+                frame.tangent,
+                frame.bitangent,
+            ),
+            "support_regions_after_align": self._count_support_regions(
+                support_points_after_align,
+                frame.tangent,
+                frame.bitangent,
+            ),
             "contact_regions_final": int(contact_regions),
             "hover_gap_mm": hover_gap_mm,
             "support_plane_spread_mm": support_plane_spread_mm,
+            "outside_footprint_ratio": outside_ratio,
             "target_support_level": target_support_level,
             "current_support_level_before_translate": current_support_level,
             "translate_after_settle": {
@@ -624,7 +753,26 @@ class AddFitService:
                 "y": float(delta[1]),
                 "z": float(delta[2]),
             },
-            "message": "support plane aligned and settled toward mount frame",
+            "message": "support plane aligned and settled toward mount surface",
+        }
+
+    def _validate_surface_fit(
+        self,
+        *,
+        mount_strategy: str,
+        support_settle: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        errors: List[str] = []
+
+        if mount_strategy == "top_cover":
+            if int(support_settle.get("contact_regions_final", 0)) < 2:
+                errors.append("top_cover has insufficient support contact regions")
+            if float(support_settle.get("outside_footprint_ratio", 0.0)) > 0.35:
+                errors.append("top_cover support points fall outside parent footprint too much")
+
+        return {
+            "valid": len(errors) == 0,
+            "errors": errors,
         }
 
     # =========================================================
@@ -652,7 +800,7 @@ class AddFitService:
 
         try:
             imported_mesh = self.anchor_service.load_mesh(imported_stl_path)
-            parent_mesh = self.anchor_service.load_mesh(attach_to_path)
+            self.anchor_service.load_mesh(attach_to_path)  # 仅校验能否加载
         except Exception as exc:
             return AddFitResult(False, "", {}, f"load mesh failed: {exc}", warnings)
 
@@ -663,72 +811,146 @@ class AddFitService:
             visual_fit=visual_fit,
         )
 
-        mount_plan = self.mount_planner.plan_add_mount(
+        surface_plan = self.surface_service.plan_mount_surfaces(
             attach_to=attach_to,
             attach_to_path=attach_to_path,
             mount_region=resolved["mount_region"],
             placement_scope=resolved["placement_scope"],
             preferred_strategy=resolved["preferred_strategy"],
             category=resolved["category"],
-            preserve_aspect_ratio=resolved["preserve_aspect_ratio"],
-            allow_axis_stretch=resolved["allow_axis_stretch"],
         )
 
-        fitted_meshes: List[trimesh.Trimesh] = []
-        frame_reports: List[Dict[str, Any]] = []
+        asset_match = self._validate_asset_choice(
+            resolved_request=resolved,
+            asset_metadata=asset_metadata,
+            mount_strategy=surface_plan.mount_strategy,
+        )
+        if not asset_match["compatible"]:
+            return AddFitResult(
+                success=False,
+                output_path="",
+                fit_plan={
+                    "attach_to": attach_to,
+                    "resolved_request": resolved,
+                    "surface_plan": surface_plan.to_dict(),
+                    "asset_metadata": asset_metadata,
+                    "asset_match_validation": asset_match,
+                },
+                message=f"selected asset is incompatible with mount strategy: {asset_match['reasons']}",
+                warnings=warnings,
+            )
 
-        for frame in mount_plan.frames:
+        fitted_meshes: List[trimesh.Trimesh] = []
+        surface_reports: List[Dict[str, Any]] = []
+
+        for surface in surface_plan.surfaces:
+            frame = surface.to_mount_frame()
             work_mesh = imported_mesh.copy()
 
-            # 1) 原始主轴对齐
-            self._orient_source_to_frame(work_mesh, frame)
+            coarse_orientation = self._coarse_orient_source_to_frame(work_mesh, frame)
 
-            # 2) 视觉尺度拟合
+            anchor_before_refine = self.asset_anchor_service.analyze_oriented_asset(
+                work_mesh,
+                frame=frame,
+                mount_strategy=surface_plan.mount_strategy,
+            )
+            refine_report = self._refine_anchor_inplane_axis(
+                work_mesh,
+                anchor_info=anchor_before_refine,
+                frame=frame,
+            )
+
+            anchor_after_refine = self.asset_anchor_service.analyze_oriented_asset(
+                work_mesh,
+                frame=frame,
+                mount_strategy=surface_plan.mount_strategy,
+            )
+
             single_frame_plan = AddMountPlan(
-                mount_strategy=mount_plan.mount_strategy,
-                placement_scope=mount_plan.placement_scope,
-                attach_to=mount_plan.attach_to,
+                mount_strategy=surface_plan.mount_strategy,
+                placement_scope=surface_plan.placement_scope,
+                attach_to=surface_plan.attach_to,
                 frames=[frame],
-                preserve_aspect_ratio=mount_plan.preserve_aspect_ratio,
-                allow_axis_stretch=mount_plan.allow_axis_stretch,
-                diagnostics=mount_plan.diagnostics,
+                preserve_aspect_ratio=resolved["preserve_aspect_ratio"],
+                allow_axis_stretch=resolved["allow_axis_stretch"],
+                diagnostics=surface_plan.diagnostics,
             )
 
             scale_plan = self.scale_service.compute_visual_scale_plan(
                 oriented_mesh=work_mesh,
-                parent_mesh=parent_mesh,
+                parent_mesh=self.anchor_service.load_mesh(attach_to_path),
                 mount_plan=single_frame_plan,
                 target_ratio=resolved["target_ratio"],
                 preserve_aspect_ratio=resolved["preserve_aspect_ratio"],
                 allow_axis_stretch=resolved["allow_axis_stretch"],
                 allow_unlimited_upscale=resolved["allow_unlimited_upscale"],
             )
-            scale_applied = self._apply_scale_plan(work_mesh, scale_plan, warnings)
 
-            # 3) 先做一次粗放置（保留现有链路）
-            placement = self._place_mesh_on_frame(
+            scale_applied = self._apply_scale_plan(
+                work_mesh,
+                scale_plan,
+                warnings,
+                anchor_point=np.asarray(anchor_after_refine["alignment_center"], dtype=float),
+            )
+
+            anchor_after_scale = self.asset_anchor_service.analyze_oriented_asset(
                 work_mesh,
                 frame=frame,
+                mount_strategy=surface_plan.mount_strategy,
+            )
+
+            placement = self._place_mesh_on_surface(
+                work_mesh,
+                frame=frame,
+                anchor_info=anchor_after_scale,
                 clearance_mm=resolved["clearance_mm"],
             )
 
-            # 4) 新增：支撑点找平 + 多点落座修正（第一优先级）
-            support_settle = self._settle_mesh_supports_to_frame(
+            support_settle = self._settle_mesh_supports_to_surface(
                 work_mesh,
                 frame=frame,
-                mount_strategy=mount_plan.mount_strategy,
+                surface=surface,
+                mount_strategy=surface_plan.mount_strategy,
                 requested_clearance_mm=resolved["clearance_mm"],
                 warnings=warnings,
             )
 
+            surface_validation = self._validate_surface_fit(
+                mount_strategy=surface_plan.mount_strategy,
+                support_settle=support_settle,
+            )
+            if not surface_validation["valid"]:
+                return AddFitResult(
+                    success=False,
+                    output_path="",
+                    fit_plan={
+                        "attach_to": attach_to,
+                        "resolved_request": resolved,
+                        "surface_plan": surface_plan.to_dict(),
+                        "surface_reports": surface_reports,
+                        "failed_surface": surface.to_dict(),
+                        "surface_validation": surface_validation,
+                        "asset_metadata": asset_metadata,
+                        "asset_match_validation": asset_match,
+                    },
+                    message=f"surface fit validation failed: {surface_validation['errors']}",
+                    warnings=warnings,
+                )
+
             fitted_meshes.append(work_mesh)
-            frame_reports.append(
+            surface_reports.append(
                 {
-                    "frame": frame.to_dict(),
+                    "surface": surface.to_dict(),
+                    "coarse_orientation": coarse_orientation,
+                    "anchor_before_refine": anchor_before_refine["report"],
+                    "refine_report": refine_report,
+                    "anchor_after_refine": anchor_after_refine["report"],
                     "scale_plan": scale_plan.to_dict(),
                     "scale_applied": scale_applied,
+                    "anchor_after_scale": anchor_after_scale["report"],
                     "placement": placement,
                     "support_settle": support_settle,
+                    "surface_validation": surface_validation,
                     "final_extents": {
                         "x": float(work_mesh.extents[0]),
                         "y": float(work_mesh.extents[1]),
@@ -739,21 +961,28 @@ class AddFitService:
 
         combined = self._merge_meshes(fitted_meshes)
 
-        primary_axis = np.asarray(mount_plan.frames[0].tangent, dtype=float)
+        primary_axis = np.asarray(surface_plan.surfaces[0].tangent, dtype=float)
         overrides_applied = self._apply_post_overrides(
             combined,
             post_transform_overrides=post_transform_overrides,
             primary_axis=primary_axis,
         )
 
-        # 对 merge 后整体再做一次轻量落座修正，避免 override 或 merge 后再次悬空
-        combined_support_settle = self._settle_mesh_supports_to_frame(
-            combined,
-            frame=mount_plan.frames[0],
-            mount_strategy=mount_plan.mount_strategy,
-            requested_clearance_mm=resolved["clearance_mm"],
-            warnings=warnings,
-        )
+        # P0：多 surface（尤其 perimeter_wrap）不再对 merge 后整体再次按单 frame 落座
+        if len(fitted_meshes) == 1:
+            combined_support_settle = self._settle_mesh_supports_to_surface(
+                combined,
+                frame=surface_plan.surfaces[0].to_mount_frame(),
+                surface=surface_plan.surfaces[0],
+                mount_strategy=surface_plan.mount_strategy,
+                requested_clearance_mm=resolved["clearance_mm"],
+                warnings=warnings,
+            )
+        else:
+            combined_support_settle = {
+                "skipped": True,
+                "reason": "multi_surface_asset_skip_combined_support_settle",
+            }
 
         try:
             saved = self.anchor_service.save_mesh(combined, output_path)
@@ -763,9 +992,10 @@ class AddFitService:
         fit_plan: Dict[str, Any] = {
             "attach_to": attach_to,
             "resolved_request": resolved,
-            "mount_plan": mount_plan.to_dict(),
-            "frame_reports": frame_reports,
+            "surface_plan": surface_plan.to_dict(),
+            "surface_reports": surface_reports,
             "asset_metadata": asset_metadata,
+            "asset_match_validation": asset_match,
             "overrides_applied": overrides_applied,
             "combined_support_settle": combined_support_settle,
             "final_asset_extents": {
@@ -780,6 +1010,6 @@ class AddFitService:
             success=True,
             output_path=saved,
             fit_plan=fit_plan,
-            message="add success via regional mount planning + visual scale fitting + support settling",
+            message="add success via structured mount surface + asset anchor + local fit",
             warnings=warnings,
         )
