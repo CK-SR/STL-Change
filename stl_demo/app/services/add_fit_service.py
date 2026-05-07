@@ -10,6 +10,7 @@ import trimesh
 
 from app.config import settings
 from app.services.add_mount_planner import AddMountPlan, MountFrame
+from app.services.add_pose_selection_service import PoseCandidate, PoseSelectionResult, VisionPoseSelectionService
 from app.services.add_visual_scale_service import AddVisualScaleService, VisualScalePlan
 from app.services.asset_mount_anchor_service import AssetMountAnchorService
 from app.services.geometry_anchor_service import GeometryAnchorService
@@ -42,6 +43,7 @@ class AddFitService:
         surface_service: Optional[ParentMountSurfaceService] = None,
         asset_anchor_service: Optional[AssetMountAnchorService] = None,
         scale_service: Optional[AddVisualScaleService] = None,
+        pose_selection_service: Optional[VisionPoseSelectionService] = None,
     ) -> None:
         self.anchor_service = anchor_service or GeometryAnchorService()
         self.constraint_service = constraint_service
@@ -51,6 +53,7 @@ class AddFitService:
         )
         self.asset_anchor_service = asset_anchor_service or AssetMountAnchorService()
         self.scale_service = scale_service or AddVisualScaleService()
+        self.pose_selection_service = pose_selection_service or VisionPoseSelectionService()
 
     # =========================================================
     # 基础工具
@@ -801,7 +804,7 @@ class AddFitService:
 
         try:
             imported_mesh = self.anchor_service.load_mesh(imported_stl_path)
-            self.anchor_service.load_mesh(attach_to_path)  # 仅校验能否加载
+            parent_mesh = self.anchor_service.load_mesh(attach_to_path)  # 校验并复用父部件网格
         except Exception as exc:
             return AddFitResult(False, "", {}, f"load mesh failed: {exc}", warnings)
 
@@ -893,50 +896,108 @@ class AddFitService:
                 diagnostics=surface_plan.diagnostics,
             )
 
-            scale_plan = self.scale_service.compute_visual_scale_plan(
-                oriented_mesh=work_mesh,
-                parent_mesh=self.anchor_service.load_mesh(attach_to_path),
-                mount_plan=single_frame_plan,
-                target_ratio=resolved["target_ratio"],
-                preserve_aspect_ratio=resolved["preserve_aspect_ratio"],
-                allow_axis_stretch=resolved["allow_axis_stretch"],
-                allow_unlimited_upscale=resolved["allow_unlimited_upscale"],
+            max_pose_candidates = (
+                settings.add_vision_pose_max_candidates
+                if settings.add_vision_pose_selection_enabled
+                else 1
+            )
+            pose_seed_specs = self.pose_selection_service.build_candidate_seed_transforms(
+                normal=frame.normal,
+                tangent=frame.tangent,
+                bitangent=frame.bitangent,
+                origin=anchor_after_refine["alignment_center"],
+                max_candidates=max_pose_candidates,
             )
 
-            scale_applied = self._apply_scale_plan(
-                work_mesh,
-                scale_plan,
-                warnings,
-                anchor_point=np.asarray(anchor_after_refine["alignment_center"], dtype=float),
-            )
+            valid_pose_candidates: List[PoseCandidate] = []
+            invalid_pose_reports: List[Dict[str, Any]] = []
 
-            anchor_after_scale = self.asset_anchor_service.analyze_oriented_asset(
-                work_mesh,
-                frame=frame,
-                mount_strategy=surface_plan.mount_strategy,
-            )
+            for seed_spec in pose_seed_specs:
+                candidate_mesh = work_mesh.copy()
+                candidate_mesh.apply_transform(seed_spec["transform"])
 
-            placement = self._place_mesh_on_surface(
-                work_mesh,
-                frame=frame,
-                anchor_info=anchor_after_scale,
-                clearance_mm=resolved["clearance_mm"],
-            )
+                candidate_anchor_before_scale = self.asset_anchor_service.analyze_oriented_asset(
+                    candidate_mesh,
+                    frame=frame,
+                    mount_strategy=surface_plan.mount_strategy,
+                )
 
-            support_settle = self._settle_mesh_supports_to_surface(
-                work_mesh,
-                frame=frame,
-                surface=surface,
-                mount_strategy=surface_plan.mount_strategy,
-                requested_clearance_mm=resolved["clearance_mm"],
-                warnings=warnings,
-            )
+                scale_plan = self.scale_service.compute_visual_scale_plan(
+                    oriented_mesh=candidate_mesh,
+                    parent_mesh=parent_mesh,
+                    mount_plan=single_frame_plan,
+                    target_ratio=resolved["target_ratio"],
+                    preserve_aspect_ratio=resolved["preserve_aspect_ratio"],
+                    allow_axis_stretch=resolved["allow_axis_stretch"],
+                    allow_unlimited_upscale=resolved["allow_unlimited_upscale"],
+                )
 
-            surface_validation = self._validate_surface_fit(
-                mount_strategy=surface_plan.mount_strategy,
-                support_settle=support_settle,
-            )
-            if not surface_validation["valid"]:
+                scale_applied = self._apply_scale_plan(
+                    candidate_mesh,
+                    scale_plan,
+                    warnings,
+                    anchor_point=np.asarray(candidate_anchor_before_scale["alignment_center"], dtype=float),
+                )
+
+                anchor_after_scale = self.asset_anchor_service.analyze_oriented_asset(
+                    candidate_mesh,
+                    frame=frame,
+                    mount_strategy=surface_plan.mount_strategy,
+                )
+
+                placement = self._place_mesh_on_surface(
+                    candidate_mesh,
+                    frame=frame,
+                    anchor_info=anchor_after_scale,
+                    clearance_mm=resolved["clearance_mm"],
+                )
+
+                support_settle = self._settle_mesh_supports_to_surface(
+                    candidate_mesh,
+                    frame=frame,
+                    surface=surface,
+                    mount_strategy=surface_plan.mount_strategy,
+                    requested_clearance_mm=resolved["clearance_mm"],
+                    warnings=warnings,
+                )
+
+                surface_validation = self._validate_surface_fit(
+                    mount_strategy=surface_plan.mount_strategy,
+                    support_settle=support_settle,
+                )
+                candidate_report = {
+                    "candidate_id": seed_spec["candidate_id"],
+                    "description": seed_spec["description"],
+                    "pose_seed_transform": seed_spec["transform"].tolist(),
+                    "pose_seed_rotations": seed_spec.get("rotations", []),
+                    "anchor_before_scale": candidate_anchor_before_scale["report"],
+                    "scale_plan": scale_plan.to_dict(),
+                    "scale_applied": scale_applied,
+                    "anchor_after_scale": anchor_after_scale["report"],
+                    "placement": placement,
+                    "support_settle": support_settle,
+                    "surface_validation": surface_validation,
+                    "final_extents": {
+                        "x": float(candidate_mesh.extents[0]),
+                        "y": float(candidate_mesh.extents[1]),
+                        "z": float(candidate_mesh.extents[2]),
+                    },
+                }
+
+                if surface_validation["valid"]:
+                    valid_pose_candidates.append(
+                        PoseCandidate(
+                            candidate_id=seed_spec["candidate_id"],
+                            mesh=candidate_mesh,
+                            transform=seed_spec["transform"],
+                            description=seed_spec["description"],
+                            geometry_report=candidate_report,
+                        )
+                    )
+                else:
+                    invalid_pose_reports.append(candidate_report)
+
+            if not valid_pose_candidates:
                 return AddFitResult(
                     success=False,
                     output_path="",
@@ -946,15 +1007,40 @@ class AddFitService:
                         "surface_plan": surface_plan.to_dict(),
                         "surface_reports": surface_reports,
                         "failed_surface": surface.to_dict(),
-                        "surface_validation": surface_validation,
+                        "invalid_pose_candidates": invalid_pose_reports,
                         "asset_metadata": asset_metadata,
                         "asset_match_validation": asset_match,
                     },
-                    message=f"surface fit validation failed: {surface_validation['errors']}",
+                    message="surface fit validation failed for all pose candidates",
                     warnings=warnings,
                 )
 
-            fitted_meshes.append(work_mesh)
+            try:
+                pose_selection = self.pose_selection_service.select_best_candidate(
+                    parent_mesh=parent_mesh,
+                    candidates=valid_pose_candidates,
+                    mount_strategy=surface_plan.mount_strategy,
+                    attach_to=attach_to,
+                    asset_metadata=asset_metadata,
+                    run_id=f"{Path(output_path).stem}_{surface.region_name}_{len(surface_reports)}",
+                )
+                warnings.extend(pose_selection.warnings)
+            except Exception as exc:
+                warnings.append(f"vision_pose_selection_failed={exc}; fallback_to_first_valid_candidate")
+                pose_selection = PoseSelectionResult(
+                    enabled=False,
+                    selected_candidate_id=valid_pose_candidates[0].candidate_id,
+                    selected_index=0,
+                    candidates=[candidate.to_dict() for candidate in valid_pose_candidates],
+                    scores=[],
+                    render_paths=[],
+                    message="vision pose selection failed; using first valid candidate",
+                    warnings=[str(exc)],
+                )
+
+            selected_candidate = valid_pose_candidates[int(pose_selection.selected_index)]
+            fitted_meshes.append(selected_candidate.mesh)
+            selected_report = selected_candidate.geometry_report
             surface_reports.append(
                 {
                     "surface": surface.to_dict(),
@@ -962,17 +1048,10 @@ class AddFitService:
                     "anchor_before_refine": anchor_before_refine["report"],
                     "refine_report": refine_report,
                     "anchor_after_refine": anchor_after_refine["report"],
-                    "scale_plan": scale_plan.to_dict(),
-                    "scale_applied": scale_applied,
-                    "anchor_after_scale": anchor_after_scale["report"],
-                    "placement": placement,
-                    "support_settle": support_settle,
-                    "surface_validation": surface_validation,
-                    "final_extents": {
-                        "x": float(work_mesh.extents[0]),
-                        "y": float(work_mesh.extents[1]),
-                        "z": float(work_mesh.extents[2]),
-                    },
+                    "pose_selection": pose_selection.to_dict(),
+                    "selected_pose_candidate": selected_report,
+                    "invalid_pose_candidates": invalid_pose_reports,
+                    "final_extents": selected_report["final_extents"],
                 }
             )
 

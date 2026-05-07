@@ -100,6 +100,13 @@ python main.py
 - `ASSET_AUTO_ACCEPT_GENERATION`
 - `ASSET_FORCE_GENERATE_DEFAULT`
 
+### 4.4 add 姿态视觉评分（可选）
+- `ADD_VISION_POSE_SELECTION_ENABLED=true|false`：是否在 add/top_cover fit 后渲染多组姿态候选并调用视觉模型评分，默认关闭。
+- `ADD_VISION_POSE_MODEL_NAME`：视觉评分模型名，默认复用 `LLM_MODEL_NAME`。
+- `ADD_VISION_POSE_IMAGE_SIZE`：候选渲染图片尺寸，默认 `768`。
+- `ADD_VISION_POSE_MAX_CANDIDATES`：最多生成的姿态候选数量，默认 `8`。
+- `ADD_VISION_POSE_RENDER_DIR`：候选图片输出目录，默认 `output/reports/pose_candidates`。
+
 ---
 
 ## 5. 输出产物
@@ -128,10 +135,13 @@ python main.py
 - `trimesh>=4.4.0`
 - `numpy>=1.26.0`
 - `openai>=1.45.0`
+- `Pillow>=10.0.0`
+- `pyrender>=0.1.45`
 
 ### 6.3 可选外部依赖
 - 若使用 `LLM_MODE=openai`，需可访问兼容 OpenAI 的模型服务并配置 API Key。
 - 若大量使用 `add`（外部素材生成/拉取），需可访问 `ASSET_API_BASE_URL` 指向的服务。
+- 若启用 `ADD_VISION_POSE_SELECTION_ENABLED`，需确保 `OPENAI_BASE_URL` / `OPENAI_API_KEY` 指向支持图片输入的 OpenAI-compatible 接口，并且运行环境支持 `pyrender` 离屏渲染。
 
 ---
 
