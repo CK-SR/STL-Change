@@ -129,6 +129,69 @@ class AssetMountAnchorService:
             "b_center": 0.5 * (float(proj_b.min()) + float(proj_b.max())),
         }
 
+    def _convex_hull_2d(self, coords: np.ndarray) -> np.ndarray:
+        unique = sorted({(float(x), float(y)) for x, y in coords.tolist()})
+        if len(unique) <= 1:
+            return np.asarray(unique, dtype=float)
+
+        def cross(
+            o: tuple[float, float],
+            a: tuple[float, float],
+            b: tuple[float, float],
+        ) -> float:
+            return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+        lower: list[tuple[float, float]] = []
+        for point in unique:
+            while len(lower) >= 2 and cross(lower[-2], lower[-1], point) <= 0:
+                lower.pop()
+            lower.append(point)
+
+        upper: list[tuple[float, float]] = []
+        for point in reversed(unique):
+            while len(upper) >= 2 and cross(upper[-2], upper[-1], point) <= 0:
+                upper.pop()
+            upper.append(point)
+
+        return np.asarray(lower[:-1] + upper[:-1], dtype=float)
+
+    def _compute_obb_inplane_axis_2d(self, coords: np.ndarray) -> np.ndarray:
+        hull = self._convex_hull_2d(coords)
+        if len(hull) < 2:
+            return np.asarray([1.0, 0.0], dtype=float)
+
+        best_axis = np.asarray([1.0, 0.0], dtype=float)
+        best_area = float("inf")
+        best_long_span = -1.0
+
+        for idx in range(len(hull)):
+            edge = hull[(idx + 1) % len(hull)] - hull[idx]
+            edge_norm = np.linalg.norm(edge)
+            if edge_norm < 1e-9:
+                continue
+            axis = edge / edge_norm
+            perp = np.asarray([-axis[1], axis[0]], dtype=float)
+
+            proj_axis = coords @ axis
+            proj_perp = coords @ perp
+            span_axis = float(proj_axis.max() - proj_axis.min())
+            span_perp = float(proj_perp.max() - proj_perp.min())
+            area = span_axis * span_perp
+            long_axis = axis if span_axis >= span_perp else perp
+            long_span = max(span_axis, span_perp)
+
+            better_area = area < best_area - 1e-9
+            same_area_longer = abs(area - best_area) <= 1e-9 and long_span > best_long_span
+            if better_area or same_area_longer:
+                best_area = area
+                best_long_span = long_span
+                best_axis = long_axis
+
+        norm = np.linalg.norm(best_axis)
+        if norm < 1e-9:
+            return np.asarray([1.0, 0.0], dtype=float)
+        return best_axis / norm
+
     def _compute_inplane_axis(
         self,
         points: np.ndarray,
@@ -145,9 +208,7 @@ class AssetMountAnchorService:
         proj_t = self._project_values(points, tangent)
         proj_b = self._project_values(points, bitangent)
         coords = np.stack([proj_t, proj_b], axis=1)
-        cov = np.cov(coords.T)
-        eigvals, eigvecs = np.linalg.eigh(cov)
-        axis_2d = eigvecs[:, int(np.argmax(eigvals))]
+        axis_2d = self._compute_obb_inplane_axis_2d(coords)
         axis = axis_2d[0] * tangent + axis_2d[1] * bitangent
         axis = self._normalize(axis)
         if float(np.dot(axis, tangent)) < 0:

@@ -86,20 +86,21 @@ class AddFitService:
         return float((proj.min() + proj.max()) * 0.5)
 
     def _principal_axes(self, mesh: trimesh.Trimesh) -> tuple[np.ndarray, np.ndarray]:
-        verts = np.asarray(mesh.vertices, dtype=float)
-        center = verts.mean(axis=0)
-        centered = verts - center
-        cov = np.cov(centered.T)
-        eigvals, eigvecs = np.linalg.eigh(cov)
-        order = np.argsort(eigvals)[::-1]
-        eigvals = eigvals[order]
-        eigvecs = eigvecs[:, order]
-        axes = eigvecs.T
-        lengths = []
-        for axis in axes:
-            proj = centered @ axis
-            lengths.append(float(proj.max() - proj.min()))
-        return axes, np.asarray(lengths, dtype=float)
+        # Keep imported-asset axis inference consistent with the constraint builder,
+        # which derives primary axes from trimesh.bounding_box_oriented when available.
+        try:
+            obb = mesh.bounding_box_oriented
+            axes = np.asarray(obb.primitive.transform[:3, :3], dtype=float).T
+            lengths = np.asarray(obb.primitive.extents, dtype=float)
+            valid_axes = axes.shape == (3, 3) and np.all(np.isfinite(axes))
+            valid_lengths = lengths.shape == (3,) and np.all(np.isfinite(lengths))
+            if valid_axes and valid_lengths:
+                return axes, lengths
+        except Exception:
+            pass
+
+        extents = np.asarray(mesh.extents, dtype=float)
+        return np.eye(3, dtype=float), extents
 
     def _rotation_matrix_align_vectors(self, src: np.ndarray, dst: np.ndarray, point: np.ndarray) -> np.ndarray:
         src = self._normalize(src)
@@ -819,6 +820,22 @@ class AddFitService:
             preferred_strategy=resolved["preferred_strategy"],
             category=resolved["category"],
         )
+        if surface_plan.mount_strategy != "top_cover":
+            return AddFitResult(
+                success=False,
+                output_path="",
+                fit_plan={
+                    "attach_to": attach_to,
+                    "resolved_request": resolved,
+                    "surface_plan": surface_plan.to_dict(),
+                    "supported_mount_strategies": ["top_cover"],
+                },
+                message=(
+                    f"add skipped: unsupported mount strategy {surface_plan.mount_strategy}; "
+                    "only top_cover is enabled"
+                ),
+                warnings=warnings,
+            )
 
         asset_match = self._validate_asset_choice(
             resolved_request=resolved,
