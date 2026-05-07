@@ -81,5 +81,18 @@ class Settings:
         self.add_default_side_scope = os.getenv("ADD_DEFAULT_SIDE_SCOPE", "both_sides")
         self.add_default_perimeter_scope = os.getenv("ADD_DEFAULT_PERIMETER_SCOPE", "full_perimeter")
 
+        self.add_vision_pose_selection_enabled = (
+            os.getenv("ADD_VISION_POSE_SELECTION_ENABLED", "false").lower() == "true"
+        )
+        self.add_vision_pose_model_name = os.getenv("ADD_VISION_POSE_MODEL_NAME", self.model_name)
+        self.add_vision_pose_image_size = int(os.getenv("ADD_VISION_POSE_IMAGE_SIZE", "768"))
+        self.add_vision_pose_max_candidates = int(os.getenv("ADD_VISION_POSE_MAX_CANDIDATES", "8"))
+        self.add_vision_pose_render_dir = Path(
+            os.getenv(
+                "ADD_VISION_POSE_RENDER_DIR",
+                str(self.output_dir / "reports" / "pose_candidates"),
+            )
+        )
+
 
 settings = Settings()
