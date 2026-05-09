@@ -13,6 +13,8 @@ from openai import OpenAI
 
 from app.config import get_openai_api_key, settings
 
+MIN_POSE_CANDIDATES_PER_ASSET = 12
+
 
 @dataclass
 class PoseCandidate:
@@ -133,7 +135,8 @@ class VisionPoseSelectionService:
         ]
 
         candidates: List[Dict[str, Any]] = []
-        for candidate_id, rotations, description in specs[: max(1, int(max_candidates))]:
+        requested_count = max(MIN_POSE_CANDIDATES_PER_ASSET, int(max_candidates))
+        for candidate_id, rotations, description in specs[:requested_count]:
             mat = np.eye(4, dtype=float)
             for axis, angle_deg in rotations:
                 mat = self._rotation_matrix_about_axis(axis=axis, angle_deg=angle_deg, origin=origin) @ mat
@@ -370,9 +373,11 @@ class VisionPoseSelectionService:
         attach_to: str,
         asset_metadata: Dict[str, Any],
         run_id: str,
+        force_vision: bool = False,
     ) -> PoseSelectionResult:
         warnings: List[str] = []
-        if not settings.add_vision_pose_selection_enabled:
+        vision_enabled = bool(force_vision or settings.add_vision_pose_selection_enabled)
+        if not vision_enabled:
             return PoseSelectionResult(
                 enabled=False,
                 selected_candidate_id=candidates[0].candidate_id,

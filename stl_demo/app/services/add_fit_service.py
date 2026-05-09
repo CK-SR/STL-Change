@@ -10,7 +10,12 @@ import trimesh
 
 from app.config import settings
 from app.services.add_mount_planner import AddMountPlan, MountFrame
-from app.services.add_pose_selection_service import PoseCandidate, PoseSelectionResult, VisionPoseSelectionService
+from app.services.add_pose_selection_service import (
+    MIN_POSE_CANDIDATES_PER_ASSET,
+    PoseCandidate,
+    PoseSelectionResult,
+    VisionPoseSelectionService,
+)
 from app.services.add_visual_scale_service import AddVisualScaleService, VisualScalePlan
 from app.services.asset_mount_anchor_service import AssetMountAnchorService
 from app.services.geometry_anchor_service import GeometryAnchorService
@@ -896,10 +901,9 @@ class AddFitService:
                 diagnostics=surface_plan.diagnostics,
             )
 
-            max_pose_candidates = (
-                settings.add_vision_pose_max_candidates
-                if settings.add_vision_pose_selection_enabled
-                else 1
+            max_pose_candidates = max(
+                MIN_POSE_CANDIDATES_PER_ASSET,
+                int(settings.add_vision_pose_max_candidates),
             )
             pose_seed_specs = self.pose_selection_service.build_candidate_seed_transforms(
                 normal=frame.normal,
@@ -1023,6 +1027,7 @@ class AddFitService:
                     attach_to=attach_to,
                     asset_metadata=asset_metadata,
                     run_id=f"{Path(output_path).stem}_{surface.region_name}_{len(surface_reports)}",
+                    force_vision=True,
                 )
                 warnings.extend(pose_selection.warnings)
             except Exception as exc:
