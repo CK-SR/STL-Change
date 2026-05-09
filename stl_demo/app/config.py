@@ -91,7 +91,7 @@ class Settings:
         )
         self.add_vision_pose_model_name = os.getenv("ADD_VISION_POSE_MODEL_NAME", self.model_name)
         self.add_vision_pose_image_size = int(os.getenv("ADD_VISION_POSE_IMAGE_SIZE", "768"))
-        self.add_vision_pose_max_candidates = int(os.getenv("ADD_VISION_POSE_MAX_CANDIDATES", "8"))
+        self.add_vision_pose_max_candidates = int(os.getenv("ADD_VISION_POSE_MAX_CANDIDATES", "12"))
         self.add_vision_pose_render_dir = Path(
             os.getenv(
                 "ADD_VISION_POSE_RENDER_DIR",

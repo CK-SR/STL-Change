@@ -4,7 +4,7 @@ import time
 import uuid
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import requests
 
@@ -23,6 +23,7 @@ class AssetAcquisitionResult:
     raw_submit_response: Dict[str, Any] | None = None
     raw_task_response: Dict[str, Any] | None = None
     warnings: list[str] | None = None
+    candidate_assets: list[Dict[str, Any]] | None = None
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -70,19 +71,49 @@ class AssetGenerationService:
                         f.write(chunk)
         return str(target_path)
 
-    def _extract_selected_asset(self, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        selected_asset = data.get("selected_asset")
-        if isinstance(selected_asset, dict) and selected_asset:
-            return selected_asset
+    def _coerce_asset_dict(self, item: Any) -> Optional[Dict[str, Any]]:
+        if not isinstance(item, dict) or not item:
+            return None
 
-        candidates = data.get("candidates") or []
-        if isinstance(candidates, list) and candidates:
-            first = candidates[0]
-            if isinstance(first, dict):
-                asset = first.get("asset")
-                if isinstance(asset, dict) and asset:
-                    return asset
+        nested_asset = item.get("asset")
+        if isinstance(nested_asset, dict) and nested_asset:
+            return nested_asset
+
+        if item.get("download_url"):
+            return item
+
         return None
+
+    def _extract_candidate_assets(self, data: Dict[str, Any], *, max_assets: int) -> List[Dict[str, Any]]:
+        assets: List[Dict[str, Any]] = []
+        seen: set[str] = set()
+
+        def add_asset(raw: Any) -> None:
+            asset = self._coerce_asset_dict(raw)
+            if not asset:
+                return
+            key = str(asset.get("download_url") or asset.get("id") or asset.get("asset_id") or asset)
+            if key in seen:
+                return
+            seen.add(key)
+            assets.append(asset)
+
+        add_asset(data.get("selected_asset"))
+        add_asset(data.get("result_asset"))
+
+        for list_key in ["candidates", "result_assets", "assets"]:
+            items = data.get(list_key) or []
+            if isinstance(items, list):
+                for item in items:
+                    add_asset(item)
+                    if len(assets) >= max_assets:
+                        return assets[:max_assets]
+
+        return assets[:max_assets]
+
+    def _extract_selected_asset(self, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        assets = self._extract_candidate_assets(data, max_assets=1)
+        return assets[0] if assets else None
 
     def _poll_task_until_done(self, task_id: str) -> Dict[str, Any]:
         deadline = time.time() + settings.asset_task_poll_timeout_sec
@@ -104,13 +135,81 @@ class AssetGenerationService:
             f"last_status={last_data.get('status')}"
         )
 
-    def acquire_asset_stl(
+    def _download_assets(
+        self,
+        *,
+        target_part: str,
+        assets: List[Dict[str, Any]],
+        download_dir: Path,
+        warnings: list[str],
+        raw_submit_response: Dict[str, Any] | None = None,
+        raw_task_response: Dict[str, Any] | None = None,
+        task_id: str = "",
+        provider_status: str = "",
+        message: str,
+    ) -> AssetAcquisitionResult:
+        downloaded_assets: list[Dict[str, Any]] = []
+
+        for idx, asset in enumerate(assets[:5], start=1):
+            download_url = str(asset.get("download_url", "")).strip()
+            if not download_url:
+                warnings.append(f"candidate_asset_{idx}_missing_download_url")
+                continue
+
+            local_path = download_dir / f"{Path(target_part).stem}_candidate_{idx}_{uuid.uuid4().hex}.stl"
+            try:
+                saved = self._download_file(download_url, local_path)
+            except Exception as exc:
+                warnings.append(f"download_candidate_asset_{idx}_failed={exc}")
+                continue
+
+            downloaded_assets.append(
+                {
+                    "rank": idx,
+                    "local_stl_path": saved,
+                    "download_url": download_url,
+                    "asset_metadata": asset,
+                }
+            )
+
+        if not downloaded_assets:
+            return AssetAcquisitionResult(
+                success=False,
+                message="no candidate asset could be downloaded",
+                task_id=task_id,
+                provider_status=provider_status,
+                raw_submit_response=raw_submit_response,
+                raw_task_response=raw_task_response,
+                warnings=warnings,
+                candidate_assets=[],
+            )
+
+        first = downloaded_assets[0]
+        return AssetAcquisitionResult(
+            success=True,
+            message=message,
+            local_stl_path=str(first["local_stl_path"]),
+            download_url=str(first["download_url"]),
+            task_id=task_id,
+            provider_status=provider_status,
+            asset_metadata=dict(first["asset_metadata"]),
+            raw_submit_response=raw_submit_response,
+            raw_task_response=raw_task_response,
+            warnings=warnings,
+            candidate_assets=downloaded_assets,
+        )
+
+    def acquire_asset_stl_candidates(
         self,
         *,
         target_part: str,
         asset_request: Dict[str, Any],
         download_dir: Path,
+        max_assets: int = 5,
     ) -> AssetAcquisitionResult:
+        asset_request = dict(asset_request)
+        asset_request["topk"] = int(max_assets)
+
         warnings: list[str] = []
 
         metadata = {
@@ -130,7 +229,7 @@ class AssetGenerationService:
             "placement_scope": asset_request.get("placement_scope"),
             "preferred_strategy": asset_request.get("preferred_strategy"),
             "metadata": metadata,
-            "topk": asset_request.get("topk", settings.asset_api_topk),
+            "topk": asset_request.get("topk", max_assets),
             "auto_approve": asset_request.get("auto_approve", settings.asset_auto_approve),
             "auto_accept_prompt": asset_request.get(
                 "auto_accept_prompt",
@@ -158,46 +257,21 @@ class AssetGenerationService:
         status = str(submit_data.get("status", "")).strip().upper()
 
         if status == "ASSET_SELECTED":
-            asset = self._extract_selected_asset(submit_data)
-            if not asset:
+            assets = self._extract_candidate_assets(submit_data, max_assets=max_assets)
+            if not assets:
                 return AssetAcquisitionResult(
                     success=False,
-                    message="asset generate returned ASSET_SELECTED but no selected asset found",
+                    message="asset generate returned ASSET_SELECTED but no candidate asset found",
                     raw_submit_response=submit_data,
                     warnings=warnings,
                 )
-
-            download_url = str(asset.get("download_url", "")).strip()
-            if not download_url:
-                return AssetAcquisitionResult(
-                    success=False,
-                    message="selected asset has no download_url",
-                    asset_metadata=asset,
-                    raw_submit_response=submit_data,
-                    warnings=warnings,
-                )
-
-            local_path = download_dir / f"{Path(target_part).stem}_{uuid.uuid4().hex}.stl"
-            try:
-                saved = self._download_file(download_url, local_path)
-            except Exception as exc:
-                return AssetAcquisitionResult(
-                    success=False,
-                    message=f"download selected asset failed: {exc}",
-                    download_url=download_url,
-                    asset_metadata=asset,
-                    raw_submit_response=submit_data,
-                    warnings=warnings,
-                )
-
-            return AssetAcquisitionResult(
-                success=True,
-                message="asset selected and downloaded",
-                local_stl_path=saved,
-                download_url=download_url,
-                asset_metadata=asset,
-                raw_submit_response=submit_data,
+            return self._download_assets(
+                target_part=target_part,
+                assets=assets,
+                download_dir=download_dir,
                 warnings=warnings,
+                raw_submit_response=submit_data,
+                message=f"downloaded {min(len(assets), max_assets)} candidate asset(s)",
             )
 
         if status == "GENERATION_SUBMITTED":
@@ -235,11 +309,11 @@ class AssetGenerationService:
                     warnings=warnings,
                 )
 
-            asset = task_data.get("result_asset")
-            if not isinstance(asset, dict) or not asset:
+            assets = self._extract_candidate_assets(task_data, max_assets=max_assets)
+            if not assets:
                 return AssetAcquisitionResult(
                     success=False,
-                    message="task SUCCESS but result_asset missing",
+                    message="task SUCCESS but result asset missing",
                     task_id=task_id,
                     provider_status=provider_status,
                     raw_submit_response=submit_data,
@@ -247,46 +321,16 @@ class AssetGenerationService:
                     warnings=warnings,
                 )
 
-            download_url = str(asset.get("download_url", "")).strip()
-            if not download_url:
-                return AssetAcquisitionResult(
-                    success=False,
-                    message="task SUCCESS but result_asset.download_url missing",
-                    task_id=task_id,
-                    provider_status=provider_status,
-                    asset_metadata=asset,
-                    raw_submit_response=submit_data,
-                    raw_task_response=task_data,
-                    warnings=warnings,
-                )
-
-            local_path = download_dir / f"{Path(target_part).stem}_{uuid.uuid4().hex}.stl"
-            try:
-                saved = self._download_file(download_url, local_path)
-            except Exception as exc:
-                return AssetAcquisitionResult(
-                    success=False,
-                    message=f"download generated asset failed: {exc}",
-                    task_id=task_id,
-                    provider_status=provider_status,
-                    download_url=download_url,
-                    asset_metadata=asset,
-                    raw_submit_response=submit_data,
-                    raw_task_response=task_data,
-                    warnings=warnings,
-                )
-
-            return AssetAcquisitionResult(
-                success=True,
-                message="generated asset downloaded",
-                local_stl_path=saved,
-                download_url=download_url,
-                task_id=task_id,
-                provider_status=provider_status,
-                asset_metadata=asset,
+            return self._download_assets(
+                target_part=target_part,
+                assets=assets,
+                download_dir=download_dir,
+                warnings=warnings,
                 raw_submit_response=submit_data,
                 raw_task_response=task_data,
-                warnings=warnings,
+                task_id=task_id,
+                provider_status=provider_status,
+                message=f"downloaded {min(len(assets), max_assets)} generated candidate asset(s)",
             )
 
         if status in {"CANDIDATE_REVIEW_REQUIRED", "PROMPT_REVIEW_REQUIRED"}:
@@ -305,4 +349,19 @@ class AssetGenerationService:
             message=f"unsupported asset generate status: {status}",
             raw_submit_response=submit_data,
             warnings=warnings,
+        )
+
+    def acquire_asset_stl(
+        self,
+        *,
+        target_part: str,
+        asset_request: Dict[str, Any],
+        download_dir: Path,
+    ) -> AssetAcquisitionResult:
+        """Backward-compatible single-asset acquisition wrapper."""
+        return self.acquire_asset_stl_candidates(
+            target_part=target_part,
+            asset_request=asset_request,
+            download_dir=download_dir,
+            max_assets=1,
         )

@@ -94,7 +94,7 @@ python main.py
 - `ASSET_API_REQUEST_TIMEOUT_SEC`
 - `ASSET_TASK_POLL_INTERVAL_SEC`
 - `ASSET_TASK_POLL_TIMEOUT_SEC`
-- `ASSET_API_TOPK`
+- `ASSET_API_TOPK`（add/top_cover 执行时会请求 top5 候选素材并逐个拟合评分）
 - `ASSET_AUTO_APPROVE`
 - `ASSET_AUTO_ACCEPT_PROMPT`
 - `ASSET_AUTO_ACCEPT_GENERATION`
@@ -104,7 +104,7 @@ python main.py
 - `ADD_VISION_POSE_SELECTION_ENABLED=true|false`：是否在 add/top_cover fit 后渲染多组姿态候选并调用视觉模型评分，默认关闭。
 - `ADD_VISION_POSE_MODEL_NAME`：视觉评分模型名，默认复用 `LLM_MODEL_NAME`。
 - `ADD_VISION_POSE_IMAGE_SIZE`：候选渲染图片尺寸，默认 `768`。
-- `ADD_VISION_POSE_MAX_CANDIDATES`：最多生成的姿态候选数量，默认 `8`。
+- `ADD_VISION_POSE_MAX_CANDIDATES`：最多生成的姿态候选数量，默认 `12`，add/top_cover 流程会保证每个候选素材至少生成 12 个姿态候选。
 - `ADD_VISION_POSE_RENDER_DIR`：候选图片输出目录，默认 `output/reports/pose_candidates`。
 
 ---

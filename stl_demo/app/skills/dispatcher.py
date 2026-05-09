@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 from app.config import settings
 from app.models import ChangeItem, SkillExecutionResult
@@ -210,6 +210,50 @@ def _build_rich_asset_request_content(
     return rich_content or base_content
 
 
+
+def _build_resolved_asset_metadata(
+    *,
+    asset_metadata: dict,
+    asset_request: dict,
+    mount_request: dict,
+    fit_policy: dict,
+) -> dict:
+    resolved_asset_metadata = dict(asset_metadata or {})
+    for key in ["category", "target_type", "mount_region", "placement_scope", "preferred_strategy"]:
+        req_val = asset_request.get(key)
+        if req_val is not None and str(req_val).strip():
+            resolved_asset_metadata.setdefault(key, req_val)
+            fit_policy.setdefault(key, req_val)
+    if mount_request.get("mount_region"):
+        resolved_asset_metadata.setdefault("mount_region", mount_request["mount_region"])
+    if mount_request.get("placement_scope"):
+        resolved_asset_metadata.setdefault("placement_scope", mount_request["placement_scope"])
+    if mount_request.get("preferred_strategy"):
+        resolved_asset_metadata.setdefault("preferred_strategy", mount_request["preferred_strategy"])
+    return resolved_asset_metadata
+
+
+def _extract_selected_pose_score(fit_plan: dict) -> float:
+    best_score = 0.0
+    for surface_report in fit_plan.get("surface_reports", []) or []:
+        if not isinstance(surface_report, dict):
+            continue
+        pose_selection = surface_report.get("pose_selection") or {}
+        if not isinstance(pose_selection, dict):
+            continue
+        selected_id = str(pose_selection.get("selected_candidate_id", "")).strip()
+        for item in pose_selection.get("scores", []) or []:
+            if not isinstance(item, dict):
+                continue
+            if str(item.get("candidate_id", "")).strip() != selected_id:
+                continue
+            try:
+                best_score += float(item.get("score", 0.0))
+            except (TypeError, ValueError):
+                best_score += 0.0
+            break
+    return best_score
+
 def dispatch_change(
     change: ChangeItem,
     part_to_file: Dict[str, Path],
@@ -267,6 +311,38 @@ def dispatch_change(
         asset_request.setdefault("placement_scope", mount_request.get("placement_scope", ""))
         asset_request.setdefault("preferred_strategy", mount_request.get("preferred_strategy", ""))
 
+        fit_service = AddFitService(
+            anchor_service=GeometryAnchorService(),
+            constraint_service=constraint_service,
+        )
+
+        preliminary_surface_plan = fit_service.surface_service.plan_mount_surfaces(
+            attach_to=attach_to,
+            attach_to_path=part_to_file[attach_to],
+            mount_region=str(mount_request.get("mount_region") or asset_request.get("mount_region") or ""),
+            placement_scope=str(mount_request.get("placement_scope") or asset_request.get("placement_scope") or ""),
+            preferred_strategy=str(mount_request.get("preferred_strategy") or asset_request.get("preferred_strategy") or ""),
+            category=str(asset_request.get("category") or fit_policy.get("category") or ""),
+        )
+        if preliminary_surface_plan.mount_strategy != "top_cover":
+            return SkillExecutionResult(
+                success=False,
+                message=(
+                    f"add skipped before asset acquisition: unsupported mount strategy "
+                    f"{preliminary_surface_plan.mount_strategy}; only top_cover is enabled"
+                ),
+                target_part=target,
+                op=op,
+                metadata={
+                    "asset_request_skipped": True,
+                    "skip_reason": "unsupported_mount_strategy",
+                    "surface_plan": preliminary_surface_plan.to_dict(),
+                    "supported_mount_strategies": ["top_cover"],
+                    "mount_request": mount_request,
+                    "asset_request_used": asset_request,
+                },
+            )
+
         asset_request["content"] = _build_rich_asset_request_content(
             change=change,
             attach_to=attach_to,
@@ -274,12 +350,14 @@ def dispatch_change(
             mount_request=mount_request,
             constraint_service=constraint_service,
         )
+        asset_request["topk"] = 5
 
         asset_service = AssetGenerationService()
-        asset_result = asset_service.acquire_asset_stl(
+        asset_result = asset_service.acquire_asset_stl_candidates(
             target_part=target,
             asset_request=asset_request,
             download_dir=settings.asset_download_dir,
+            max_assets=5,
         )
         if not asset_result.success:
             return SkillExecutionResult(
@@ -294,60 +372,81 @@ def dispatch_change(
                 },
             )
 
-        fit_service = AddFitService(
-            anchor_service=GeometryAnchorService(),
-            constraint_service=constraint_service,
-        )
+        candidate_assets = list(asset_result.candidate_assets or [])
+        if not candidate_assets and asset_result.local_stl_path:
+            candidate_assets = [
+                {
+                    "rank": 1,
+                    "local_stl_path": asset_result.local_stl_path,
+                    "download_url": asset_result.download_url,
+                    "asset_metadata": asset_result.asset_metadata or {},
+                }
+            ]
 
-        temp_output = _build_temp_output_path(output_dir, target, "added_fitted")
-        resolved_asset_metadata = dict(asset_result.asset_metadata or {})
-        for key in ["category", "target_type", "mount_region", "placement_scope", "preferred_strategy"]:
-            req_val = asset_request.get(key)
-            if req_val is not None and str(req_val).strip():
-                resolved_asset_metadata.setdefault(key, req_val)
-                fit_policy.setdefault(key, req_val)
-        if mount_request.get("mount_region"):
-            resolved_asset_metadata.setdefault("mount_region", mount_request["mount_region"])
-        if mount_request.get("placement_scope"):
-            resolved_asset_metadata.setdefault("placement_scope", mount_request["placement_scope"])
-        if mount_request.get("preferred_strategy"):
-            resolved_asset_metadata.setdefault("preferred_strategy", mount_request["preferred_strategy"])
+        candidate_attempts: list[dict[str, Any]] = []
+        best_fit_result = None
+        best_candidate_asset: dict[str, Any] | None = None
+        best_score = -1.0
 
-        fit_result = fit_service.fit_imported_asset(
-            imported_stl_path=asset_result.local_stl_path,
-            attach_to=attach_to,
-            attach_to_path=part_to_file[attach_to],
-            output_path=temp_output,
-            asset_metadata=resolved_asset_metadata,
-            fit_policy=fit_policy,
-            mount_request=mount_request,
-            visual_fit=visual_fit,
-            post_transform_overrides=post_transform_overrides,
-        )
+        for idx, candidate_asset in enumerate(candidate_assets[:5], start=1):
+            candidate_fit_policy = dict(fit_policy)
+            resolved_asset_metadata = _build_resolved_asset_metadata(
+                asset_metadata=dict(candidate_asset.get("asset_metadata") or {}),
+                asset_request=asset_request,
+                mount_request=mount_request,
+                fit_policy=candidate_fit_policy,
+            )
+            temp_output = _build_temp_output_path(output_dir, target, f"added_fitted_candidate_{idx}")
+            fit_result = fit_service.fit_imported_asset(
+                imported_stl_path=str(candidate_asset.get("local_stl_path", "")),
+                attach_to=attach_to,
+                attach_to_path=part_to_file[attach_to],
+                output_path=temp_output,
+                asset_metadata=resolved_asset_metadata,
+                fit_policy=candidate_fit_policy,
+                mount_request=mount_request,
+                visual_fit=visual_fit,
+                post_transform_overrides=post_transform_overrides,
+            )
+            pose_score = _extract_selected_pose_score(fit_result.fit_plan) if fit_result.success else 0.0
+            candidate_attempts.append(
+                {
+                    "candidate_asset": candidate_asset,
+                    "fit_result": fit_result.to_dict(),
+                    "selected_pose_score": pose_score,
+                }
+            )
 
-        if not fit_result.success:
+            if fit_result.success and pose_score > best_score:
+                best_score = pose_score
+                best_fit_result = fit_result
+                best_candidate_asset = candidate_asset
+
+        if best_fit_result is None or best_candidate_asset is None:
             warnings = list(asset_result.warnings or [])
-            warnings.extend(fit_result.warnings)
+            for attempt in candidate_attempts:
+                fit_result_data = attempt.get("fit_result") or {}
+                warnings.extend(fit_result_data.get("warnings") or [])
             return SkillExecutionResult(
                 success=False,
-                message=f"add failed during fit: {fit_result.message}",
+                message="add failed during fit: all candidate assets failed visual pose fit",
                 target_part=target,
                 op=op,
                 warnings=warnings,
                 metadata={
                     "asset_acquisition": asset_result.to_dict(),
-                    "fit_result": fit_result.to_dict(),
+                    "candidate_fit_attempts": candidate_attempts,
                     "asset_request_used": asset_request,
                 },
             )
 
         warnings = list(asset_result.warnings or [])
-        warnings.extend(fit_result.warnings)
+        warnings.extend(best_fit_result.warnings)
         return SkillExecutionResult(
             success=True,
-            output_files=[fit_result.output_path],
+            output_files=[best_fit_result.output_path],
             warnings=warnings,
-            message="add success via external asset acquisition + regional local fit",
+            message="add success via top5 asset candidates + vision-ranked pose fit",
             target_part=target,
             op=op,
             metadata={
@@ -355,7 +454,7 @@ def dispatch_change(
                     _make_affected_part_item(
                         part_id=target,
                         input_path="",
-                        temp_output_path=Path(fit_result.output_path),
+                        temp_output_path=Path(best_fit_result.output_path),
                         role="primary_add",
                         linked_from="",
                     )
@@ -363,7 +462,10 @@ def dispatch_change(
                 "attach_to": attach_to,
                 "asset_request_used": asset_request,
                 "asset_acquisition": asset_result.to_dict(),
-                "fit_plan": fit_result.fit_plan,
+                "candidate_fit_attempts": candidate_attempts,
+                "selected_asset_candidate": best_candidate_asset,
+                "selected_pose_score": best_score,
+                "fit_plan": best_fit_result.fit_plan,
                 "mount_request": mount_request,
                 "visual_fit": visual_fit,
             },
