@@ -2,6 +2,11 @@ from pathlib import Path
 import os
 
 
+def get_openai_api_key() -> str:
+    """Read the OpenAI-compatible API key from environment at runtime."""
+    return os.getenv("OPENAI_API_KEY", "").strip()
+
+
 class Settings:
     def __init__(self) -> None:
         self.project_root = Path(__file__).resolve().parents[1]
@@ -56,7 +61,7 @@ class Settings:
             "OPENAI_BASE_URL",
             "https://dashscope.aliyuncs.com/compatible-mode/v1",
         )
-        self.api_key = os.getenv("OPENAI_API_KEY", "")
+        self.api_key = get_openai_api_key()
 
         self.asset_api_base_url = os.getenv("ASSET_API_BASE_URL", "http://192.168.130.111:7100")
         self.asset_api_request_timeout_sec = float(os.getenv("ASSET_API_REQUEST_TIMEOUT_SEC", "600"))
