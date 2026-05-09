@@ -11,7 +11,7 @@ import numpy as np
 import trimesh
 from openai import OpenAI
 
-from app.config import settings
+from app.config import get_openai_api_key, settings
 
 
 @dataclass
@@ -62,7 +62,7 @@ class VisionPoseSelectionService:
         render_dir: str | Path | None = None,
     ) -> None:
         self.base_url = base_url or settings.base_url
-        self.api_key = api_key if api_key is not None else settings.api_key
+        self.api_key = (api_key if api_key is not None else get_openai_api_key()).strip()
         self.model_name = model_name or settings.add_vision_pose_model_name
         self.image_size = int(image_size or settings.add_vision_pose_image_size)
         self.render_dir = Path(render_dir or settings.add_vision_pose_render_dir)

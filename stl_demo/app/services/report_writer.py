@@ -38,6 +38,8 @@ def write_demo_report(
     updated_excel_path: str,
     change_table_path: str,
     final_stl_dir: str,
+    final_render_image: str = "",
+    final_render_report: str = "",
 ) -> None:
     success_items = [r for r in execution_results if r.success]
     fail_items = [r for r in execution_results if not r.success]
@@ -52,6 +54,8 @@ def write_demo_report(
         f"- 输入 Excel: {excel_path}",
         f"- 扫描到的 STL 数量: {len(discovered_stl_files)}",
         f"- 最终 STL 输出目录: {final_stl_dir}",
+        f"- 最终渲染图: {final_render_image or 'N/A'}",
+        f"- 最终渲染报告: {final_render_report or 'N/A'}",
         f"- 修改后 Excel: {updated_excel_path}",
         f"- 变更表 Excel: {change_table_path}",
         "",
@@ -125,7 +129,11 @@ def write_demo_report(
         json.dumps(reasonableness_reports, ensure_ascii=False, indent=2),
         "```",
         "",
-        "## 9. 最终结论",
+        "## 9. 最终渲染",
+        f"- 渲染图: {final_render_image or '未生成'}",
+        f"- 渲染报告: {final_render_report or '未生成'}",
+        "",
+        "## 10. 最终结论",
     ]
 
     if fail_items:
@@ -139,7 +147,7 @@ def write_demo_report(
 
     lines += [
         "",
-        "## 10. 全局 Warnings",
+        "## 11. 全局 Warnings",
     ]
     lines.extend([f"- {w}" for w in warnings] if warnings else ["- 无"])
 

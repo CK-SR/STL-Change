@@ -42,6 +42,7 @@ def _safe_axis_vector_from_params(params: dict) -> Optional[list[float]]:
 
 
 def _build_temp_output_path(output_dir: Path, part_name: str, suffix: str) -> Path:
+    output_dir.mkdir(parents=True, exist_ok=True)
     stem = Path(part_name).stem
     return output_dir / f".__tmp__{stem}_{suffix}.stl"
 

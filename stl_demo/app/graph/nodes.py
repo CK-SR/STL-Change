@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+import shutil
 from pathlib import Path
 
 from app.config import settings
@@ -20,6 +21,8 @@ from app.services.excel_loader import scan_stl_files
 from app.services.part_summary_builder import build_part_summary_from_constraints
 from app.services.stl_bundle_preparer import prepare_full_stl_bundle
 from app.services.report_writer import write_demo_report, write_json
+from app.services.final_render_service import render_final_stl_scene
+from app.services.stl_path_utils import is_temp_stl_path
 from app.services.validator import validate_change_intent
 from app.skills.dispatcher import dispatch_change
 
@@ -128,6 +131,9 @@ def validate_change_intent_node(state: DemoState) -> DemoState:
 
 def prepare_stl_bundle_node(state: DemoState) -> DemoState:
     copied = prepare_full_stl_bundle(settings.stl_dir, settings.final_stl_dir)
+    if settings.temp_stl_dir.exists():
+        shutil.rmtree(settings.temp_stl_dir)
+    settings.temp_stl_dir.mkdir(parents=True, exist_ok=True)
     logger.info("Prepared final STL bundle, copied %d files", len(copied))
     return state
 
@@ -139,6 +145,8 @@ def apply_skills(state: DemoState) -> DemoState:
     )
 
     for p in settings.final_stl_dir.glob("*.stl"):
+        if is_temp_stl_path(p):
+            continue
         part_to_file[p.name] = p
 
     for vr in state.validated_changes:
@@ -150,11 +158,11 @@ def apply_skills(state: DemoState) -> DemoState:
 
         if target not in part_to_file and op != "add":
             state.execution_results.append(
-                dispatch_change(vr.change, part_to_file, settings.final_stl_dir)
+                dispatch_change(vr.change, part_to_file, settings.temp_stl_dir)
             )
             continue
 
-        result = dispatch_change(vr.change, part_to_file, settings.final_stl_dir)
+        result = dispatch_change(vr.change, part_to_file, settings.temp_stl_dir)
 
         if op == "delete":
             if result.success:
@@ -241,19 +249,55 @@ def apply_skills(state: DemoState) -> DemoState:
     return state
 
 
+def _collect_changed_part_keys(state: DemoState) -> set[str]:
+    changed: set[str] = set()
+    for result in state.execution_results:
+        if not result.success:
+            continue
+        if result.target_part:
+            changed.add(str(result.target_part))
+            changed.add(Path(str(result.target_part)).stem)
+            changed.add(Path(str(result.target_part)).name)
+        for output_file in result.output_files or []:
+            output_path = Path(str(output_file))
+            changed.add(output_path.name)
+            changed.add(output_path.stem)
+        metadata = result.metadata or {}
+        for item in metadata.get("affected_parts", []) or []:
+            if not isinstance(item, dict):
+                continue
+            part_id = str(item.get("part_id", "")).strip()
+            if part_id:
+                changed.add(part_id)
+                changed.add(Path(part_id).stem)
+                changed.add(Path(part_id).name)
+    return changed
+
+
 def export_report(state: DemoState) -> DemoState:
     ci_path = settings.reports_dir / "change_intent.json"
     vc_path = settings.reports_dir / "validated_changes.json"
     er_path = settings.reports_dir / "execution_results.json"
     mr_path = settings.reports_dir / "mesh_repair_report.json"
     rr_path = settings.reports_dir / "reasonableness_report.json"
+    fr_path = settings.reports_dir / "final_render.json"
+    img_path = settings.reports_dir / "final_render.png"
     md_path = settings.reports_dir / "demo_report.md"
+
+    final_render = render_final_stl_scene(
+        final_stl_dir=settings.final_stl_dir,
+        output_image_path=img_path,
+        changed_parts=_collect_changed_part_keys(state),
+    )
+    if final_render.warnings:
+        state.warnings.extend(final_render.warnings)
 
     write_json(ci_path, state.change_intent.model_dump())
     write_json(vc_path, [x.model_dump() for x in state.validated_changes])
     write_json(er_path, [x.model_dump() for x in state.execution_results])
     write_json(mr_path, state.mesh_repair_reports)
     write_json(rr_path, state.reasonableness_reports)
+    write_json(fr_path, final_render.to_dict())
 
     write_demo_report(
         report_path=md_path,
@@ -270,6 +314,8 @@ def export_report(state: DemoState) -> DemoState:
         updated_excel_path="N/A",
         change_table_path="N/A",
         final_stl_dir=str(settings.final_stl_dir),
+        final_render_image=final_render.image_path,
+        final_render_report=str(fr_path),
     )
 
     state.report_paths = {
@@ -278,6 +324,8 @@ def export_report(state: DemoState) -> DemoState:
         "execution_results": str(er_path),
         "mesh_repair_report": str(mr_path),
         "reasonableness_report": str(rr_path),
+        "final_render_report": str(fr_path),
+        "final_render_image": final_render.image_path,
         "demo_report": str(md_path),
         "final_stl_dir": str(settings.final_stl_dir),
     }
