@@ -245,7 +245,7 @@ class VisionPoseSelectionService:
         scene.add(self._trimesh_to_pyrender_mesh(candidate_norm, (0.88, 0.35, 0.35, 1.0)))
 
         camera = pyrender.PerspectiveCamera(yfov=np.pi / 3.0)
-        cam_pose = self._orbit_camera_pose(distance=1.8, elev_deg=28, azim_deg=45)
+        cam_pose = self._orbit_camera_pose(distance=1.25, elev_deg=28, azim_deg=45)
         cam_node = scene.add(camera, pose=cam_pose)
 
         renderer = pyrender.OffscreenRenderer(viewport_width=self.image_size, viewport_height=self.image_size)
@@ -292,8 +292,8 @@ class VisionPoseSelectionService:
                 "type": "text",
                 "text": (
                     "你是3D模型装配质检专家。请根据每张图判断红色新增资产相对于灰色父部件的姿态是否合理。"
-                    "装配策略是 add/top_cover，红色资产应位于父部件上方，不能歪倒、侧躺或上下颠倒；"
-                    "应优先选择看起来像顶棚/顶盖/防护罩正常覆盖在上方、支撑方向合理、前后左右姿态自然的候选。"
+                    "红色资产应位于父部件上方，不能歪倒、侧躺或上下颠倒；"
+                    "应优先选择看起来像顶棚在父部件上方、支撑方向合理、前后左右姿态自然的候选。"
                     "请只返回JSON对象，格式为："
                     "{\"scores\":[{\"candidate_id\":\"...\",\"score\":0-100,\"reason\":\"...\"}],"
                     "\"best_candidate_id\":\"...\",\"best_reason\":\"...\"}。"

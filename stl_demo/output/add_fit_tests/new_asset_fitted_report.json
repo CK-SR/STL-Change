@@ -1,0 +1,3022 @@
+{
+  "input": {
+    "constraints_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\data\\metadata\\part_constraints.json",
+    "parts_dir": "D:\\bica\\k-8\\STL-Change\\stl_demo\\data\\stl_parts",
+    "asset_stl": "D:\\bica\\k-8\\STL-Change\\stl_demo\\data\\assets\\1.stl",
+    "attach_to": "BJ0013",
+    "attach_to_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\data\\stl_parts\\BJ0013.stl",
+    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\data\\assets\\new.stl",
+    "asset_metadata": {
+      "category": "roof",
+      "mount_region": "top",
+      "placement_scope": "single",
+      "preferred_strategy": "top_cover",
+      "target_type": "test_asset"
+    },
+    "mount_request": {
+      "mount_region": "top",
+      "placement_scope": "single",
+      "preferred_strategy": "top_cover"
+    },
+    "fit_policy": {
+      "category": "roof",
+      "mount_region": "top",
+      "placement_scope": "single",
+      "preferred_strategy": "top_cover",
+      "coverage_ratio": 0.92,
+      "clearance_mm": 0.0,
+      "allow_stretch": true
+    },
+    "visual_fit": {
+      "target_ratio": 0.92,
+      "preserve_aspect_ratio": true,
+      "allow_axis_stretch": true,
+      "allow_unlimited_upscale": true
+    },
+    "post_transform_overrides": {}
+  },
+  "result": {
+    "success": true,
+    "output_path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\data\\assets\\new.stl",
+    "fit_plan": {
+      "attach_to": "BJ0013",
+      "resolved_request": {
+        "mount_region": "top",
+        "placement_scope": "single",
+        "preferred_strategy": "top_cover",
+        "category": "roof",
+        "target_ratio": 0.92,
+        "preserve_aspect_ratio": true,
+        "allow_axis_stretch": true,
+        "allow_unlimited_upscale": true,
+        "clearance_mm": 0.0
+      },
+      "surface_plan": {
+        "mount_strategy": "top_cover",
+        "placement_scope": "single",
+        "attach_to": "BJ0013",
+        "surfaces": [
+          {
+            "origin": [
+              1166.6755,
+              -799.637,
+              3086.44
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "tangent": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "bitangent": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "region_name": "top_cover",
+            "role": "primary",
+            "tangent_span": 643.2689999999999,
+            "bitangent_span": 673.806,
+            "footprint_bounds": {
+              "t_min": 845.0410000000002,
+              "t_max": 1488.31,
+              "b_min": -1136.54,
+              "b_max": -462.7339999999999
+            },
+            "diagnostics": {
+              "origin_source": "top_faces",
+              "point_count": 3408,
+              "band_mm": 194.76719999999997,
+              "u_max": 3086.44,
+              "raw_parent_spans": {
+                "forward": 5892.88,
+                "lateral": 1264.261,
+                "up": 1082.04
+              }
+            }
+          }
+        ],
+        "diagnostics": {
+          "mount_region": "top",
+          "resolved_mount_strategy": "top_cover",
+          "resolved_placement_scope": "single",
+          "parent_spans": {
+            "forward": 5892.88,
+            "lateral": 1264.261,
+            "up": 1082.04
+          },
+          "forward_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "lateral_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "up_axis": [
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      },
+      "surface_reports": [
+        {
+          "surface": {
+            "origin": [
+              1166.6755,
+              -799.637,
+              3086.44
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "tangent": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "bitangent": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "region_name": "top_cover",
+            "role": "primary",
+            "tangent_span": 643.2689999999999,
+            "bitangent_span": 673.806,
+            "footprint_bounds": {
+              "t_min": 845.0410000000002,
+              "t_max": 1488.31,
+              "b_min": -1136.54,
+              "b_max": -462.7339999999999
+            },
+            "diagnostics": {
+              "origin_source": "top_faces",
+              "point_count": 3408,
+              "band_mm": 194.76719999999997,
+              "u_max": 3086.44,
+              "raw_parent_spans": {
+                "forward": 5892.88,
+                "lateral": 1264.261,
+                "up": 1082.04
+              }
+            }
+          },
+          "coarse_orientation": {
+            "coarse_center_before": [
+              -0.0031470060348510742,
+              0.0008649975061416626,
+              0.41637300480581985
+            ],
+            "coarse_center_after": [
+              -0.00315195331902704,
+              0.0008677938465397328,
+              0.41636196943847026
+            ]
+          },
+          "anchor_before_refine": {
+            "placement_source": "top_patch",
+            "placement_point_count": 4496514,
+            "placement_band_mm": 1.0,
+            "support_point_count": 4496514,
+            "support_band_mm": 1.0,
+            "support_plane_spread_mm": 0.6671554950502216,
+            "placement_center_3d": [
+              -0.00315195331902704,
+              0.0008677938465397328,
+              0.41951012532141735
+            ],
+            "support_level_mean": 0.41951012532141735,
+            "support_level_min": 0.10255296308860468,
+            "inplane_axis": [
+              0.9999999999221659,
+              -1.2476708147222014e-05,
+              -0.0
+            ]
+          },
+          "refine_report": {
+            "rotation_applied": false,
+            "rotation_deg": 0.0007148624868054677,
+            "message": "inplane axis already aligned"
+          },
+          "anchor_after_refine": {
+            "placement_source": "top_patch",
+            "placement_point_count": 4496514,
+            "placement_band_mm": 1.0,
+            "support_point_count": 4496514,
+            "support_band_mm": 1.0,
+            "support_plane_spread_mm": 0.6671554950502216,
+            "placement_center_3d": [
+              -0.00315195331902704,
+              0.0008677938465397328,
+              0.41951012532141735
+            ],
+            "support_level_mean": 0.41951012532141735,
+            "support_level_min": 0.10255296308860468,
+            "inplane_axis": [
+              0.9999999999221659,
+              -1.2476708147222014e-05,
+              -0.0
+            ]
+          },
+          "pose_selection": {
+            "enabled": true,
+            "selected_candidate_id": "pitch_270",
+            "selected_index": 11,
+            "candidates": [
+              {
+                "candidate_id": "pose_base",
+                "transform": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "existing geometry-aligned pose",
+                "geometry_report": {
+                  "candidate_id": "pose_base",
+                  "description": "existing geometry-aligned pose",
+                  "pose_seed_transform": [
+                    [
+                      1.0,
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950502216,
+                    "placement_center_3d": [
+                      -0.00315195331902704,
+                      0.0008677938465397328,
+                      0.41951012532141735
+                    ],
+                    "support_level_mean": 0.41951012532141735,
+                    "support_level_min": 0.10255296308860468,
+                    "inplane_axis": [
+                      0.9999999999221659,
+                      -1.2476708147222014e-05,
+                      -0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 710.6764721120288,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3562751217218638,
+                      "target_after_uniform": 619.9015200000001,
+                      "source_after_uniform": 457.06177903860834,
+                      "reason": "match_bitangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.8327382476040508,
+                      "source_bitangent_span": 0.6431362187639139,
+                      "source_normal_span": 0.6276180126997313
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 710.6764721120288,
+                      "raw_scale_factor_bitangent": 963.8728187186066
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 710.6764721120288,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3562751217218638,
+                      "reason": "match_bitangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 12129,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 11793,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.0940240509915393,
+                    "placement_center_3d": [
+                      -16.811952047814373,
+                      -0.09815313761035327,
+                      220.23518652264366
+                    ],
+                    "support_level_mean": -223.86287053963278,
+                    "support_level_min": -224.83448774093387,
+                    "inplane_axis": [
+                      5.5917351099761494e-05,
+                      0.999999998436625,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1183.4874520478145,
+                      "y": -799.5388468623896,
+                      "z": 3310.3028705396327
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": -16.811952047814373,
+                    "current_b_center_before_translate": -0.09815313761035327,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.01642149328784335,
+                    "support_regions_before": 4,
+                    "support_regions_after_align": 4,
+                    "contact_regions_final": 4,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.9995612806778809,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.44,
+                    "translate_after_settle": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.9015200000001,
+                    "z": 446.0333550994078
+                  }
+                }
+              },
+              {
+                "candidate_id": "yaw_90",
+                "transform": [
+                  [
+                    6.123233995736766e-17,
+                    -1.0,
+                    0.0,
+                    -0.002284159472487307
+                  ],
+                  [
+                    1.0,
+                    6.123233995736766e-17,
+                    0.0,
+                    0.004019747165566773
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "rotate in mounting plane by 90 degrees",
+                "geometry_report": {
+                  "candidate_id": "yaw_90",
+                  "description": "rotate in mounting plane by 90 degrees",
+                  "pose_seed_transform": [
+                    [
+                      6.123233995736766e-17,
+                      -1.0,
+                      0.0,
+                      -0.002284159472487307
+                    ],
+                    [
+                      1.0,
+                      6.123233995736766e-17,
+                      0.0,
+                      0.004019747165566773
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ],
+                      "angle_deg": 90.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.667155495050252,
+                    "placement_center_3d": [
+                      -0.003151953319027012,
+                      0.0008677938465397328,
+                      0.41951012532141735
+                    ],
+                    "support_level_mean": 0.41951012532141735,
+                    "support_level_min": 0.10255296308860468,
+                    "inplane_axis": [
+                      1.2476708147222014e-05,
+                      0.9999999999221659,
+                      0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 744.4134117576282,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.2361275706630472,
+                      "target_after_uniform": 591.8074799999999,
+                      "source_after_uniform": 478.7592268349455,
+                      "reason": "match_tangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.6431362187639139,
+                      "source_bitangent_span": 0.8327382476040509,
+                      "source_normal_span": 0.6276180126997313
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 920.1899422449476,
+                      "raw_scale_factor_bitangent": 744.4134117576282
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 744.4134117576282,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.2361275706630472,
+                      "reason": "match_tangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 11476,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 11552,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.0578974153499576,
+                    "placement_center_3d": [
+                      -0.08303408196172768,
+                      -17.640107699387954,
+                      230.72861415096497
+                    ],
+                    "support_level_mean": -234.5315568618259,
+                    "support_level_min": -235.52765239342267,
+                    "inplane_axis": [
+                      2.1221648215532844e-05,
+                      -0.9999999997748209,
+                      -0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1166.758534081962,
+                      "y": -781.996892300612,
+                      "z": 3320.971556861826
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": -0.08303408196172768,
+                    "current_b_center_before_translate": -17.640107699387954,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.014738408978700289,
+                    "support_regions_before": 4,
+                    "support_regions_after_align": 4,
+                    "contact_regions_final": 4,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.998422177953671,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.4399999999996,
+                    "translate_after_settle": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 4.547473508864641e-13
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.90152,
+                    "z": 467.2072661143493
+                  }
+                }
+              },
+              {
+                "candidate_id": "yaw_180",
+                "transform": [
+                  [
+                    -1.0,
+                    -1.2246467991473532e-16,
+                    0.0,
+                    -0.00630390663805408
+                  ],
+                  [
+                    1.2246467991473532e-16,
+                    -1.0,
+                    0.0,
+                    0.001735587693079466
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "rotate in mounting plane by 180 degrees",
+                "geometry_report": {
+                  "candidate_id": "yaw_180",
+                  "description": "rotate in mounting plane by 180 degrees",
+                  "pose_seed_transform": [
+                    [
+                      -1.0,
+                      -1.2246467991473532e-16,
+                      0.0,
+                      -0.00630390663805408
+                    ],
+                    [
+                      1.2246467991473532e-16,
+                      -1.0,
+                      0.0,
+                      0.001735587693079466
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ],
+                      "angle_deg": 180.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950501821,
+                    "placement_center_3d": [
+                      -0.00315195331902704,
+                      0.0008677938465396773,
+                      0.41951012532141735
+                    ],
+                    "support_level_mean": 0.41951012532141735,
+                    "support_level_min": 0.10255296308860468,
+                    "inplane_axis": [
+                      0.9999999999221659,
+                      -1.247670814741726e-05,
+                      0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 710.6764721120286,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3562751217218643,
+                      "target_after_uniform": 619.9015200000001,
+                      "source_after_uniform": 457.06177903860817,
+                      "reason": "match_bitangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.832738247604051,
+                      "source_bitangent_span": 0.6431362187639139,
+                      "source_normal_span": 0.6276180126997313
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 710.6764721120286,
+                      "raw_scale_factor_bitangent": 963.8728187186066
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 710.6764721120286,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3562751217218643,
+                      "reason": "match_bitangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 12129,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 11793,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.0940240509916255,
+                    "placement_center_3d": [
+                      16.805648141176334,
+                      0.099888725303515,
+                      220.23518652264366
+                    ],
+                    "support_level_mean": -223.8628705396327,
+                    "support_level_min": -224.83448774093375,
+                    "inplane_axis": [
+                      5.591735109986537e-05,
+                      0.999999998436625,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1149.8698518588237,
+                      "y": -799.7368887253035,
+                      "z": 3310.3028705396327
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": 16.805648141176334,
+                    "current_b_center_before_translate": 0.099888725303515,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.01642149328784335,
+                    "support_regions_before": 4,
+                    "support_regions_after_align": 4,
+                    "contact_regions_final": 4,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.9995612806774261,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.44,
+                    "translate_after_settle": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.9015200000001,
+                    "z": 446.03335509940734
+                  }
+                }
+              },
+              {
+                "candidate_id": "yaw_270",
+                "transform": [
+                  [
+                    -1.8369701987210297e-16,
+                    1.0,
+                    0.0,
+                    -0.0040197471655667736
+                  ],
+                  [
+                    -1.0,
+                    -1.8369701987210297e-16,
+                    0.0,
+                    -0.002284159472487307
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "rotate in mounting plane by 270 degrees",
+                "geometry_report": {
+                  "candidate_id": "yaw_270",
+                  "description": "rotate in mounting plane by 270 degrees",
+                  "pose_seed_transform": [
+                    [
+                      -1.8369701987210297e-16,
+                      1.0,
+                      0.0,
+                      -0.0040197471655667736
+                    ],
+                    [
+                      -1.0,
+                      -1.8369701987210297e-16,
+                      0.0,
+                      -0.002284159472487307
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ],
+                      "angle_deg": 270.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950502266,
+                    "placement_center_3d": [
+                      -0.003151953319027012,
+                      0.0008677938465397328,
+                      0.41951012532141735
+                    ],
+                    "support_level_mean": 0.41951012532141735,
+                    "support_level_min": 0.10255296308860468,
+                    "inplane_axis": [
+                      1.247670814741726e-05,
+                      0.9999999999221659,
+                      0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 744.4134117576282,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.2361275706630472,
+                      "target_after_uniform": 591.8074799999999,
+                      "source_after_uniform": 478.7592268349455,
+                      "reason": "match_tangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.6431362187639139,
+                      "source_bitangent_span": 0.8327382476040509,
+                      "source_normal_span": 0.6276180126997313
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 920.1899422449476,
+                      "raw_scale_factor_bitangent": 744.4134117576282
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 744.4134117576282,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.2361275706630472,
+                      "reason": "match_tangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 11476,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 11552,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.0578974153499578,
+                    "placement_center_3d": [
+                      0.07673017532346194,
+                      17.64184328708103,
+                      230.72861415096497
+                    ],
+                    "support_level_mean": -234.5315568618259,
+                    "support_level_min": -235.52765239342267,
+                    "inplane_axis": [
+                      2.122164821542378e-05,
+                      -0.9999999997748209,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1166.5987698246765,
+                      "y": -817.2788432870809,
+                      "z": 3320.971556861826
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": 0.07673017532346194,
+                    "current_b_center_before_translate": 17.64184328708103,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.014738408978700289,
+                    "support_regions_before": 4,
+                    "support_regions_after_align": 4,
+                    "contact_regions_final": 4,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.998422177953671,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.4399999999996,
+                    "translate_after_settle": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 4.547473508864641e-13
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.90152,
+                    "z": 467.2072661143493
+                  }
+                }
+              },
+              {
+                "candidate_id": "roll_180",
+                "transform": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    -1.0,
+                    -1.2246467991473532e-16,
+                    0.001735587693079517
+                  ],
+                  [
+                    0.0,
+                    1.2246467991473532e-16,
+                    -1.0,
+                    0.8390202506428347
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "flip around tangent axis",
+                "geometry_report": {
+                  "candidate_id": "roll_180",
+                  "description": "flip around tangent axis",
+                  "pose_seed_transform": [
+                    [
+                      1.0,
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      -1.0,
+                      -1.2246467991473532e-16,
+                      0.001735587693079517
+                    ],
+                    [
+                      0.0,
+                      1.2246467991473532e-16,
+                      -1.0,
+                      0.8390202506428347
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "angle_deg": 180.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950502245,
+                    "placement_center_3d": [
+                      -0.00315195331902704,
+                      0.0008677938465397328,
+                      0.41951012532141735
+                    ],
+                    "support_level_mean": 0.41951012532141735,
+                    "support_level_min": 0.1088492748544988,
+                    "inplane_axis": [
+                      0.9999999999221659,
+                      1.2476708147222014e-05,
+                      0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 710.6764721120288,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3562751217218638,
+                      "target_after_uniform": 619.9015200000001,
+                      "source_after_uniform": 457.0617790386083,
+                      "reason": "match_bitangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.8327382476040508,
+                      "source_bitangent_span": 0.6431362187639138,
+                      "source_normal_span": 0.6276180126997313
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 710.6764721120288,
+                      "raw_scale_factor_bitangent": 963.8728187186068
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 710.6764721120288,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3562751217218638,
+                      "reason": "match_bitangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 11793,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 12129,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.1194125282436835,
+                    "placement_center_3d": [
+                      -16.820554558607114,
+                      0.2264062786354657,
+                      224.70189079027563
+                    ],
+                    "support_level_mean": -219.39616627200087,
+                    "support_level_min": -220.35984710783077,
+                    "inplane_axis": [
+                      3.7081190145077262e-06,
+                      0.999999999993125,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1183.4960545586073,
+                      "y": -799.8634062786355,
+                      "z": 3305.836166272001
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": -16.820554558607114,
+                    "current_b_center_before_translate": 0.2264062786354657,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.02436641672117823,
+                    "support_regions_before": 4,
+                    "support_regions_after_align": 4,
+                    "contact_regions_final": 4,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.9954783037137531,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.44,
+                    "translate_after_settle": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.90152,
+                    "z": 446.0333550994078
+                  }
+                }
+              },
+              {
+                "candidate_id": "pitch_180",
+                "transform": [
+                  [
+                    -1.0,
+                    0.0,
+                    1.2246467991473532e-16,
+                    -0.006303906638054131
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    -1.2246467991473532e-16,
+                    0.0,
+                    -1.0,
+                    0.8390202506428347
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "flip around bitangent axis",
+                "geometry_report": {
+                  "candidate_id": "pitch_180",
+                  "description": "flip around bitangent axis",
+                  "pose_seed_transform": [
+                    [
+                      -1.0,
+                      0.0,
+                      1.2246467991473532e-16,
+                      -0.006303906638054131
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      -1.2246467991473532e-16,
+                      0.0,
+                      -1.0,
+                      0.8390202506428347
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "angle_deg": 180.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950501808,
+                    "placement_center_3d": [
+                      -0.0031519533190270677,
+                      0.0008677938465397328,
+                      0.41951012532141735
+                    ],
+                    "support_level_mean": 0.41951012532141735,
+                    "support_level_min": 0.1088492748544988,
+                    "inplane_axis": [
+                      0.9999999999221659,
+                      1.2476708147222014e-05,
+                      0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 710.6764721120288,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3562751217218638,
+                      "target_after_uniform": 619.9015200000001,
+                      "source_after_uniform": 457.06177903860834,
+                      "reason": "match_bitangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.8327382476040508,
+                      "source_bitangent_span": 0.6431362187639139,
+                      "source_normal_span": 0.6276180126997312
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 710.6764721120288,
+                      "raw_scale_factor_bitangent": 963.8728187186066
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 710.6764721120288,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3562751217218638,
+                      "reason": "match_bitangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 11793,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 12129,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.1194125282436844,
+                    "placement_center_3d": [
+                      16.814250651969047,
+                      -0.22467069094233239,
+                      224.70189079027563
+                    ],
+                    "support_level_mean": -219.39616627200087,
+                    "support_level_min": -220.35984710783077,
+                    "inplane_axis": [
+                      3.7081190145077262e-06,
+                      0.999999999993125,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1149.861249348031,
+                      "y": -799.4123293090577,
+                      "z": 3305.836166272001
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": 16.814250651969047,
+                    "current_b_center_before_translate": -0.22467069094233239,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.02436641672117823,
+                    "support_regions_before": 4,
+                    "support_regions_after_align": 4,
+                    "contact_regions_final": 4,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.9954783037137531,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.44,
+                    "translate_after_settle": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.9015200000001,
+                    "z": 446.03335509940734
+                  }
+                }
+              },
+              {
+                "candidate_id": "roll_180_yaw_90",
+                "transform": [
+                  [
+                    6.123233995736766e-17,
+                    1.0,
+                    1.2246467991473532e-16,
+                    -0.004019747165566824
+                  ],
+                  [
+                    1.0,
+                    -6.123233995736766e-17,
+                    -7.498798913309288e-33,
+                    0.004019747165566773
+                  ],
+                  [
+                    0.0,
+                    1.2246467991473532e-16,
+                    -1.0,
+                    0.8390202506428347
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "flip around tangent then yaw 90 degrees",
+                "geometry_report": {
+                  "candidate_id": "roll_180_yaw_90",
+                  "description": "flip around tangent then yaw 90 degrees",
+                  "pose_seed_transform": [
+                    [
+                      6.123233995736766e-17,
+                      1.0,
+                      1.2246467991473532e-16,
+                      -0.004019747165566824
+                    ],
+                    [
+                      1.0,
+                      -6.123233995736766e-17,
+                      -7.498798913309288e-33,
+                      0.004019747165566773
+                    ],
+                    [
+                      0.0,
+                      1.2246467991473532e-16,
+                      -1.0,
+                      0.8390202506428347
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "angle_deg": 180.0
+                    },
+                    {
+                      "axis": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ],
+                      "angle_deg": 90.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950502542,
+                    "placement_center_3d": [
+                      -0.003151953319027012,
+                      0.0008677938465397328,
+                      0.41951012532141735
+                    ],
+                    "support_level_mean": 0.41951012532141735,
+                    "support_level_min": 0.1088492748544988,
+                    "inplane_axis": [
+                      1.2476708147222014e-05,
+                      -0.9999999999221659,
+                      0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 744.4134117576282,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.2361275706630475,
+                      "target_after_uniform": 591.8074799999999,
+                      "source_after_uniform": 478.7592268349454,
+                      "reason": "match_tangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.6431362187639138,
+                      "source_bitangent_span": 0.8327382476040509,
+                      "source_normal_span": 0.6276180126997313
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 920.1899422449478,
+                      "raw_scale_factor_bitangent": 744.4134117576282
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 744.4134117576282,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.2361275706630475,
+                      "reason": "match_tangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 11552,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 11476,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.1362532116536281,
+                    "placement_center_3d": [
+                      -0.10159359380620003,
+                      -17.61488359454424,
+                      235.37057711246877
+                    ],
+                    "support_level_mean": -229.88959390032204,
+                    "support_level_min": -230.84059347028375,
+                    "inplane_axis": [
+                      4.068536037213974e-06,
+                      0.9999999999917235,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1166.7770935938063,
+                      "y": -782.0221164054557,
+                      "z": 3316.329593900322
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": -0.10159359380620003,
+                    "current_b_center_before_translate": -17.61488359454424,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.025105439303486184,
+                    "support_regions_before": 4,
+                    "support_regions_after_align": 4,
+                    "contact_regions_final": 4,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.9992286314413832,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.4399999999996,
+                    "translate_after_settle": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 4.547473508864641e-13
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.9015200000001,
+                    "z": 467.2072661143493
+                  }
+                }
+              },
+              {
+                "candidate_id": "pitch_180_yaw_90",
+                "transform": [
+                  [
+                    -6.123233995736766e-17,
+                    -1.0,
+                    7.498798913309288e-33,
+                    -0.0022841594724873075
+                  ],
+                  [
+                    -1.0,
+                    6.123233995736766e-17,
+                    1.2246467991473532e-16,
+                    -0.0022841594724873583
+                  ],
+                  [
+                    -1.2246467991473532e-16,
+                    0.0,
+                    -1.0,
+                    0.8390202506428347
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "flip around bitangent then yaw 90 degrees",
+                "geometry_report": {
+                  "candidate_id": "pitch_180_yaw_90",
+                  "description": "flip around bitangent then yaw 90 degrees",
+                  "pose_seed_transform": [
+                    [
+                      -6.123233995736766e-17,
+                      -1.0,
+                      7.498798913309288e-33,
+                      -0.0022841594724873075
+                    ],
+                    [
+                      -1.0,
+                      6.123233995736766e-17,
+                      1.2246467991473532e-16,
+                      -0.0022841594724873583
+                    ],
+                    [
+                      -1.2246467991473532e-16,
+                      0.0,
+                      -1.0,
+                      0.8390202506428347
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "angle_deg": 180.0
+                    },
+                    {
+                      "axis": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ],
+                      "angle_deg": 90.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950502298,
+                    "placement_center_3d": [
+                      -0.0031519533190270677,
+                      0.0008677938465397328,
+                      0.41951012532141735
+                    ],
+                    "support_level_mean": 0.41951012532141735,
+                    "support_level_min": 0.1088492748544988,
+                    "inplane_axis": [
+                      1.2476708147222014e-05,
+                      -0.9999999999221659,
+                      -0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 744.4134117576283,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.236127570663047,
+                      "target_after_uniform": 591.8074799999999,
+                      "source_after_uniform": 478.75922683494554,
+                      "reason": "match_tangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.6431362187639139,
+                      "source_bitangent_span": 0.8327382476040508,
+                      "source_normal_span": 0.6276180126997312
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 920.1899422449476,
+                      "raw_scale_factor_bitangent": 744.4134117576283
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 744.4134117576283,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.236127570663047,
+                      "reason": "match_tangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 11552,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 11476,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.1362532116535713,
+                    "placement_center_3d": [
+                      0.09528968716804798,
+                      17.616619182237315,
+                      235.3705771124688
+                    ],
+                    "support_level_mean": -229.88959390032207,
+                    "support_level_min": -230.84059347028378,
+                    "inplane_axis": [
+                      4.068536037213975e-06,
+                      0.9999999999917235,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1166.580210312832,
+                      "y": -817.2536191822372,
+                      "z": 3316.329593900322
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": 0.09528968716804798,
+                    "current_b_center_before_translate": 17.616619182237315,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.025105439303486184,
+                    "support_regions_before": 4,
+                    "support_regions_after_align": 4,
+                    "contact_regions_final": 4,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.9992286314413832,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.4399999999996,
+                    "translate_after_settle": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 4.547473508864641e-13
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.9015200000001,
+                    "z": 467.2072661143493
+                  }
+                }
+              },
+              {
+                "candidate_id": "roll_90",
+                "transform": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    6.123233995736766e-17,
+                    -1.0,
+                    0.4203779191679571
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    6.123233995736766e-17,
+                    0.4186423314748776
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "stand candidate by rolling 90 degrees around tangent",
+                "geometry_report": {
+                  "candidate_id": "roll_90",
+                  "description": "stand candidate by rolling 90 degrees around tangent",
+                  "pose_seed_transform": [
+                    [
+                      1.0,
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.123233995736766e-17,
+                      -1.0,
+                      0.4203779191679571
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      6.123233995736766e-17,
+                      0.4186423314748776
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "angle_deg": 90.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950502219,
+                    "placement_center_3d": [
+                      -0.00315195331902704,
+                      0.004015949729486795,
+                      0.4203573743588474
+                    ],
+                    "support_level_mean": 0.4203573743588474,
+                    "support_level_min": 0.09794201593946045,
+                    "inplane_axis": [
+                      0.9999999999999947,
+                      1.032783338188645e-07,
+                      0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 710.6764721120288,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3898097819653927,
+                      "target_after_uniform": 619.9015200000001,
+                      "source_after_uniform": 446.0333550994075,
+                      "reason": "match_bitangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.8327382476040508,
+                      "source_bitangent_span": 0.6276180126997313,
+                      "source_normal_span": 0.6431362187639138
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 710.6764721120288,
+                      "raw_scale_factor_bitangent": 987.7051127539532
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 710.6764721120288,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3898097819653927,
+                      "reason": "match_bitangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4367,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 4400,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.0902383476147224,
+                    "placement_center_3d": [
+                      -289.60678906443763,
+                      0.0209719505378132,
+                      227.4536475000594
+                    ],
+                    "support_level_mean": -227.80287433083083,
+                    "support_level_min": -228.7126521018664,
+                    "inplane_axis": [
+                      4.9809803818012365e-05,
+                      -0.9999999987594919,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1456.2822890644377,
+                      "y": -799.6579719505378,
+                      "z": 3314.242874330831
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": -289.60678906443763,
+                    "current_b_center_before_translate": 0.0209719505378132,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.029965283863938926,
+                    "support_regions_before": 8,
+                    "support_regions_after_align": 8,
+                    "contact_regions_final": 8,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.989936867373217,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.4400000000005,
+                    "translate_after_settle": {
+                      "x": -0.0,
+                      "y": -0.0,
+                      "z": -4.547473508864641e-13
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.9015200000001,
+                    "z": 457.06177903860817
+                  }
+                }
+              },
+              {
+                "candidate_id": "roll_270",
+                "transform": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    -1.8369701987210297e-16,
+                    1.0,
+                    -0.4186423314748776
+                  ],
+                  [
+                    0.0,
+                    -1.0,
+                    -1.8369701987210297e-16,
+                    0.42037791916795714
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "stand candidate by rolling 270 degrees around tangent",
+                "geometry_report": {
+                  "candidate_id": "roll_270",
+                  "description": "stand candidate by rolling 270 degrees around tangent",
+                  "pose_seed_transform": [
+                    [
+                      1.0,
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      -1.8369701987210297e-16,
+                      1.0,
+                      -0.4186423314748776
+                    ],
+                    [
+                      0.0,
+                      -1.0,
+                      -1.8369701987210297e-16,
+                      0.42037791916795714
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "angle_deg": 270.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950502216,
+                    "placement_center_3d": [
+                      -0.00315195331902704,
+                      -0.0022803620364073574,
+                      0.41866287628398724
+                    ],
+                    "support_level_mean": 0.41866287628398724,
+                    "support_level_min": 0.09794201593946045,
+                    "inplane_axis": [
+                      0.9999999999999947,
+                      -1.0327833381886453e-07,
+                      0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 710.6764721120288,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3898097819653927,
+                      "target_after_uniform": 619.9015200000001,
+                      "source_after_uniform": 446.0333550994075,
+                      "reason": "match_bitangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.8327382476040508,
+                      "source_bitangent_span": 0.6276180126997313,
+                      "source_normal_span": 0.6431362187639138
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 710.6764721120288,
+                      "raw_scale_factor_bitangent": 987.7051127539532
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 710.6764721120288,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.3898097819653927,
+                      "reason": "match_bitangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4400,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 4367,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.1008751382152435,
+                    "placement_center_3d": [
+                      -289.60683165790454,
+                      -0.24446625897431318,
+                      228.64189458147368
+                    ],
+                    "support_level_mean": -226.61462724941654,
+                    "support_level_min": -227.510106686099,
+                    "inplane_axis": [
+                      4.4903738008211184e-05,
+                      0.9999999989918272,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1456.2823316579047,
+                      "y": -799.3925337410257,
+                      "z": 3313.0546272494166
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": -289.60683165790454,
+                    "current_b_center_before_translate": -0.24446625897431318,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.07485771632564749,
+                    "support_regions_before": 8,
+                    "support_regions_after_align": 8,
+                    "contact_regions_final": 8,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.9913561962507629,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.44,
+                    "translate_after_settle": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.9015200000001,
+                    "z": 457.06177903860817
+                  }
+                }
+              },
+              {
+                "candidate_id": "pitch_90",
+                "transform": [
+                  [
+                    6.123233995736766e-17,
+                    0.0,
+                    1.0,
+                    -0.42266207864044436
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    -1.0,
+                    0.0,
+                    6.123233995736766e-17,
+                    0.4163581720023903
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "stand candidate by pitching 90 degrees around bitangent",
+                "geometry_report": {
+                  "candidate_id": "pitch_90",
+                  "description": "stand candidate by pitching 90 degrees around bitangent",
+                  "pose_seed_transform": [
+                    [
+                      6.123233995736766e-17,
+                      0.0,
+                      1.0,
+                      -0.42266207864044436
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      -1.0,
+                      0.0,
+                      6.123233995736766e-17,
+                      0.4163581720023903
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "angle_deg": 90.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950502409,
+                    "placement_center_3d": [
+                      -0.006300109201974047,
+                      0.0008677938465397328,
+                      0.17564221295160357
+                    ],
+                    "support_level_mean": 0.17564221295160357,
+                    "support_level_min": 0.0031410015193919505,
+                    "inplane_axis": [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 942.9421527503802,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.022197189835215,
+                      "target_after_uniform": 619.9015200000001,
+                      "source_after_uniform": 606.4402506329844,
+                      "reason": "match_bitangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.6276180126997312,
+                      "source_bitangent_span": 0.6431362187639139,
+                      "source_normal_span": 0.8327382476040508
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 942.9421527503802,
+                      "raw_scale_factor_bitangent": 963.8728187186066
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 942.9421527503802,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.022197189835215,
+                      "reason": "match_bitangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 32031,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 16422,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.1647102366487385,
+                    "placement_center_3d": [
+                      -0.03478523387983046,
+                      0.02152648410529423,
+                      622.1077364996158
+                    ],
+                    "support_level_mean": -161.34173486535494,
+                    "support_level_min": -162.48302144698653,
+                    "inplane_axis": [
+                      3.654655470752572e-05,
+                      0.9999999993321748,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1166.7102852338799,
+                      "y": -799.6585264841052,
+                      "z": 3247.781734865355
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": -0.03478523387983046,
+                    "current_b_center_before_translate": 0.02152648410529423,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.006228049534314474,
+                    "support_regions_before": 10,
+                    "support_regions_after_align": 10,
+                    "contact_regions_final": 10,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.9994601255525595,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.4399999999996,
+                    "translate_after_settle": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 4.547473508864641e-13
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999999,
+                    "y": 619.9015200000001,
+                    "z": 785.223995873343
+                  }
+                }
+              },
+              {
+                "candidate_id": "pitch_270",
+                "transform": [
+                  [
+                    -1.8369701987210297e-16,
+                    0.0,
+                    -1.0,
+                    0.41635817200239034
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    1.0,
+                    0.0,
+                    -1.8369701987210297e-16,
+                    0.42266207864044447
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "description": "stand candidate by pitching 270 degrees around bitangent",
+                "geometry_report": {
+                  "candidate_id": "pitch_270",
+                  "description": "stand candidate by pitching 270 degrees around bitangent",
+                  "pose_seed_transform": [
+                    [
+                      -1.8369701987210297e-16,
+                      0.0,
+                      -1.0,
+                      0.41635817200239034
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      1.0,
+                      0.0,
+                      -1.8369701987210297e-16,
+                      0.42266207864044447
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0,
+                      1.0
+                    ]
+                  ],
+                  "pose_seed_rotations": [
+                    {
+                      "axis": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "angle_deg": 270.0
+                    }
+                  ],
+                  "anchor_before_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 4496514,
+                    "placement_band_mm": 1.0,
+                    "support_point_count": 4496514,
+                    "support_band_mm": 1.0,
+                    "support_plane_spread_mm": 0.6671554950503529,
+                    "placement_center_3d": [
+                      -3.797436080033023e-06,
+                      0.0008677938465397328,
+                      0.6633780376912312
+                    ],
+                    "support_level_mean": 0.6633780376912312,
+                    "support_level_min": 0.003141001519392006,
+                    "inplane_axis": [
+                      0.0,
+                      -1.0,
+                      0.0
+                    ]
+                  },
+                  "scale_plan": {
+                    "scale_mode": "top_cover_projection",
+                    "uniform_scale_factor": 942.94215275038,
+                    "axis_stretch": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.0221971898352151,
+                      "target_after_uniform": 619.9015200000001,
+                      "source_after_uniform": 606.4402506329843,
+                      "reason": "match_bitangent_span"
+                    },
+                    "target_metrics": {
+                      "target_tangent_span": 591.8074799999999,
+                      "target_bitangent_span": 619.9015200000001
+                    },
+                    "source_metrics": {
+                      "source_tangent_span": 0.6276180126997313,
+                      "source_bitangent_span": 0.6431362187639139,
+                      "source_normal_span": 0.8327382476040508
+                    },
+                    "diagnostics": {
+                      "allow_unlimited_upscale": true,
+                      "preserve_aspect_ratio": true,
+                      "allow_axis_stretch": true,
+                      "raw_scale_factor_tangent": 942.94215275038,
+                      "raw_scale_factor_bitangent": 963.8728187186066
+                    }
+                  },
+                  "scale_applied": {
+                    "uniform_scale_applied": 942.94215275038,
+                    "axis_stretch_applied": {
+                      "axis_vector": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "scale_factor": 1.0221971898352151,
+                      "reason": "match_bitangent_span"
+                    }
+                  },
+                  "anchor_after_scale": {
+                    "placement_source": "top_patch",
+                    "placement_point_count": 16422,
+                    "placement_band_mm": 2.0,
+                    "support_point_count": 32031,
+                    "support_band_mm": 2.0,
+                    "support_plane_spread_mm": 1.3741722114171915,
+                    "placement_center_3d": [
+                      -0.13988599671591828,
+                      0.09977370959595078,
+                      162.18075511599767
+                    ],
+                    "support_level_mean": -621.2687162489731,
+                    "support_level_min": -621.9019541757134,
+                    "inplane_axis": [
+                      0.00025397663281504987,
+                      0.9999999677479345,
+                      0.0
+                    ]
+                  },
+                  "placement": {
+                    "translate": {
+                      "x": 1166.815385996716,
+                      "y": -799.7367737095959,
+                      "z": 3707.7087162489734
+                    },
+                    "target_support_level": 3086.44,
+                    "frame_origin": [
+                      1166.6755,
+                      -799.637,
+                      3086.44
+                    ],
+                    "current_t_center_before_translate": -0.13988599671591828,
+                    "current_b_center_before_translate": 0.09977370959595078,
+                    "target_t_center": 1166.6755,
+                    "target_b_center": -799.637
+                  },
+                  "support_settle": {
+                    "settle_gap_mm": 0.0,
+                    "rotation_applied": false,
+                    "rotation_deg": 0.0024081057637665433,
+                    "support_regions_before": 4,
+                    "support_regions_after_align": 4,
+                    "contact_regions_final": 4,
+                    "hover_gap_mm": 0.0,
+                    "support_plane_spread_mm": 1.9969032919652818,
+                    "outside_footprint_ratio": 0.0,
+                    "target_support_level": 3086.44,
+                    "current_support_level_before_translate": 3086.4400000000005,
+                    "translate_after_settle": {
+                      "x": -0.0,
+                      "y": -0.0,
+                      "z": -4.547473508864641e-13
+                    },
+                    "message": "support plane aligned and settled toward mount surface"
+                  },
+                  "surface_validation": {
+                    "valid": true,
+                    "errors": []
+                  },
+                  "final_extents": {
+                    "x": 591.8074799999998,
+                    "y": 619.9015200000001,
+                    "z": 785.2239958733426
+                  }
+                }
+              }
+            ],
+            "scores": [
+              {
+                "candidate_id": "pose_base",
+                "score": 95.0,
+                "reason": "红色资产直立位于父部件上方，姿态自然，符合顶棚安装策略。"
+              },
+              {
+                "candidate_id": "yaw_90",
+                "score": 90.0,
+                "reason": "旋转90度后仍保持直立，方向合理，但略偏离原始对齐姿态。"
+              },
+              {
+                "candidate_id": "yaw_180",
+                "score": 85.0,
+                "reason": "旋转180度后结构倒向后方，虽未倾倒但视觉上不自然。"
+              },
+              {
+                "candidate_id": "yaw_270",
+                "score": 90.0,
+                "reason": "旋转270度后仍直立，方向合理，与yaw_90对称。"
+              },
+              {
+                "candidate_id": "roll_180",
+                "score": 95.0,
+                "reason": "翻转后仍保持直立，与pose_base几乎一致，无异常。"
+              },
+              {
+                "candidate_id": "pitch_180",
+                "score": 85.0,
+                "reason": "前后翻转后结构朝后倾斜，虽未完全倒置但不够自然。"
+              },
+              {
+                "candidate_id": "roll_180_yaw_90",
+                "score": 90.0,
+                "reason": "组合变换后仍直立，方向合理，类似yaw_90。"
+              },
+              {
+                "candidate_id": "pitch_180_yaw_90",
+                "score": 85.0,
+                "reason": "组合变换后结构朝侧后方倾斜，不够自然。"
+              },
+              {
+                "candidate_id": "roll_90",
+                "score": 40.0,
+                "reason": "侧躺状态，不符合‘不能歪倒、侧躺’要求。"
+              },
+              {
+                "candidate_id": "roll_270",
+                "score": 40.0,
+                "reason": "侧躺状态，不符合‘不能歪倒、侧躺’要求。"
+              },
+              {
+                "candidate_id": "pitch_90",
+                "score": 30.0,
+                "reason": "上下颠倒，四脚朝天，严重违反装配规则。"
+              },
+              {
+                "candidate_id": "pitch_270",
+                "score": 98.0,
+                "reason": "完美直立，支撑腿向下接触基座，顶棚面朝上，最符合mount_strategy和asset_metadata定义。",
+                "best_candidate_from_model": true,
+                "best_reason": "该姿态下红色资产完全直立，支撑结构垂直向下稳固连接父部件，顶棚平面水平朝上，完全符合top_cover策略及roof类别的语义预期，是所有候选中最自然、最合理的装配姿态。"
+              }
+            ],
+            "render_paths": [
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\pose_base.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\yaw_90.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\yaw_180.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\yaw_270.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\roll_180.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\pitch_180.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\roll_180_yaw_90.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\pitch_180_yaw_90.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\roll_90.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\roll_270.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\pitch_90.png",
+              "D:\\bica\\k-8\\STL-Change\\stl_demo\\output\\reports\\pose_candidates\\new_top_cover_0\\pitch_270.png"
+            ],
+            "message": "vision pose selection chose pitch_270",
+            "warnings": []
+          },
+          "selected_pose_candidate": {
+            "candidate_id": "pitch_270",
+            "description": "stand candidate by pitching 270 degrees around bitangent",
+            "pose_seed_transform": [
+              [
+                -1.8369701987210297e-16,
+                0.0,
+                -1.0,
+                0.41635817200239034
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                0.0,
+                -1.8369701987210297e-16,
+                0.42266207864044447
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "pose_seed_rotations": [
+              {
+                "axis": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "angle_deg": 270.0
+              }
+            ],
+            "anchor_before_scale": {
+              "placement_source": "top_patch",
+              "placement_point_count": 4496514,
+              "placement_band_mm": 1.0,
+              "support_point_count": 4496514,
+              "support_band_mm": 1.0,
+              "support_plane_spread_mm": 0.6671554950503529,
+              "placement_center_3d": [
+                -3.797436080033023e-06,
+                0.0008677938465397328,
+                0.6633780376912312
+              ],
+              "support_level_mean": 0.6633780376912312,
+              "support_level_min": 0.003141001519392006,
+              "inplane_axis": [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            },
+            "scale_plan": {
+              "scale_mode": "top_cover_projection",
+              "uniform_scale_factor": 942.94215275038,
+              "axis_stretch": {
+                "axis_vector": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "scale_factor": 1.0221971898352151,
+                "target_after_uniform": 619.9015200000001,
+                "source_after_uniform": 606.4402506329843,
+                "reason": "match_bitangent_span"
+              },
+              "target_metrics": {
+                "target_tangent_span": 591.8074799999999,
+                "target_bitangent_span": 619.9015200000001
+              },
+              "source_metrics": {
+                "source_tangent_span": 0.6276180126997313,
+                "source_bitangent_span": 0.6431362187639139,
+                "source_normal_span": 0.8327382476040508
+              },
+              "diagnostics": {
+                "allow_unlimited_upscale": true,
+                "preserve_aspect_ratio": true,
+                "allow_axis_stretch": true,
+                "raw_scale_factor_tangent": 942.94215275038,
+                "raw_scale_factor_bitangent": 963.8728187186066
+              }
+            },
+            "scale_applied": {
+              "uniform_scale_applied": 942.94215275038,
+              "axis_stretch_applied": {
+                "axis_vector": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "scale_factor": 1.0221971898352151,
+                "reason": "match_bitangent_span"
+              }
+            },
+            "anchor_after_scale": {
+              "placement_source": "top_patch",
+              "placement_point_count": 16422,
+              "placement_band_mm": 2.0,
+              "support_point_count": 32031,
+              "support_band_mm": 2.0,
+              "support_plane_spread_mm": 1.3741722114171915,
+              "placement_center_3d": [
+                -0.13988599671591828,
+                0.09977370959595078,
+                162.18075511599767
+              ],
+              "support_level_mean": -621.2687162489731,
+              "support_level_min": -621.9019541757134,
+              "inplane_axis": [
+                0.00025397663281504987,
+                0.9999999677479345,
+                0.0
+              ]
+            },
+            "placement": {
+              "translate": {
+                "x": 1166.815385996716,
+                "y": -799.7367737095959,
+                "z": 3707.7087162489734
+              },
+              "target_support_level": 3086.44,
+              "frame_origin": [
+                1166.6755,
+                -799.637,
+                3086.44
+              ],
+              "current_t_center_before_translate": -0.13988599671591828,
+              "current_b_center_before_translate": 0.09977370959595078,
+              "target_t_center": 1166.6755,
+              "target_b_center": -799.637
+            },
+            "support_settle": {
+              "settle_gap_mm": 0.0,
+              "rotation_applied": false,
+              "rotation_deg": 0.0024081057637665433,
+              "support_regions_before": 4,
+              "support_regions_after_align": 4,
+              "contact_regions_final": 4,
+              "hover_gap_mm": 0.0,
+              "support_plane_spread_mm": 1.9969032919652818,
+              "outside_footprint_ratio": 0.0,
+              "target_support_level": 3086.44,
+              "current_support_level_before_translate": 3086.4400000000005,
+              "translate_after_settle": {
+                "x": -0.0,
+                "y": -0.0,
+                "z": -4.547473508864641e-13
+              },
+              "message": "support plane aligned and settled toward mount surface"
+            },
+            "surface_validation": {
+              "valid": true,
+              "errors": []
+            },
+            "final_extents": {
+              "x": 591.8074799999998,
+              "y": 619.9015200000001,
+              "z": 785.2239958733426
+            }
+          },
+          "invalid_pose_candidates": [],
+          "final_extents": {
+            "x": 591.8074799999998,
+            "y": 619.9015200000001,
+            "z": 785.2239958733426
+          }
+        }
+      ],
+      "asset_metadata": {
+        "category": "roof",
+        "mount_region": "top",
+        "placement_scope": "single",
+        "preferred_strategy": "top_cover",
+        "target_type": "test_asset"
+      },
+      "asset_match_validation": {
+        "compatible": true,
+        "mount_strategy": "top_cover",
+        "asset_category": "roof",
+        "asset_mount_region": "top",
+        "category_family": "top_cover",
+        "region_family": "top_cover",
+        "reasons": []
+      },
+      "overrides_applied": {},
+      "combined_support_settle": {
+        "settle_gap_mm": 0.0,
+        "rotation_applied": false,
+        "rotation_deg": 0.0024081057637665433,
+        "support_regions_before": 4,
+        "support_regions_after_align": 4,
+        "contact_regions_final": 4,
+        "hover_gap_mm": 0.0,
+        "support_plane_spread_mm": 1.9969032919652818,
+        "outside_footprint_ratio": 0.0,
+        "target_support_level": 3086.44,
+        "current_support_level_before_translate": 3086.4400000000005,
+        "translate_after_settle": {
+          "x": -0.0,
+          "y": -0.0,
+          "z": -4.547473508864641e-13
+        },
+        "message": "support plane aligned and settled toward mount surface"
+      },
+      "final_asset_extents": {
+        "x": 591.8074799999998,
+        "y": 619.9015200000001,
+        "z": 785.2239958733426
+      },
+      "instance_count": 1
+    },
+    "message": "add success via structured mount surface + asset anchor + local fit",
+    "warnings": [
+      "large_uniform_scale_applied=710.676; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=744.413; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=710.676; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=744.413; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=710.676; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=710.676; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=744.413; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=744.413; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=710.676; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=710.676; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=942.942; remote asset was likely much smaller than parent",
+      "large_uniform_scale_applied=942.942; remote asset was likely much smaller than parent"
+    ]
+  },
+  "checks": [
+    "fit_result_success",
+    "output_path_exists",
+    "output_mesh_not_empty",
+    "output_mesh_has_faces",
+    "output_mesh_has_vertices",
+    "output_mesh_extents_positive",
+    "mount_strategy_top_cover",
+    "surface_reports_present",
+    "selected_surface_validation_valid",
+    "top_cover_contact_regions_at_least_2",
+    "top_cover_outside_footprint_ratio_lte_0_35"
+  ],
+  "failures": [],
+  "details": {
+    "fit_result_success": "add success via structured mount surface + asset anchor + local fit",
+    "output_path_exists": "D:\\bica\\k-8\\STL-Change\\stl_demo\\data\\assets\\new.stl",
+    "output_mesh_summary": {
+      "path": "D:\\bica\\k-8\\STL-Change\\stl_demo\\data\\assets\\new.stl",
+      "exists": true,
+      "vertices": 747978,
+      "faces": 1498838,
+      "is_empty": false,
+      "is_watertight": false,
+      "volume": 13622806.278334519,
+      "area": 1573200.5070555662,
+      "extents": [
+        591.8074951171875,
+        619.9014892578125,
+        785.22412109375
+      ],
+      "bounds": [
+        [
+          870.91162109375,
+          -1109.6866455078125,
+          3085.806640625
+        ],
+        [
+          1462.7191162109375,
+          -489.78515625,
+          3871.03076171875
+        ]
+      ]
+    },
+    "output_mesh_has_faces": 1498838,
+    "output_mesh_has_vertices": 747978,
+    "output_mesh_extents_positive": [
+      591.8074951171875,
+      619.9014892578125,
+      785.22412109375
+    ],
+    "resolved_mount_strategy": "top_cover",
+    "mount_strategy_top_cover": "top_cover",
+    "surface_reports_present": 1,
+    "selected_candidate_id": "pitch_270",
+    "pose_selection_message": "vision pose selection chose pitch_270",
+    "surface_validation": {
+      "valid": true,
+      "errors": []
+    },
+    "support_settle": {
+      "settle_gap_mm": 0.0,
+      "rotation_applied": false,
+      "rotation_deg": 0.0024081057637665433,
+      "support_regions_before": 4,
+      "support_regions_after_align": 4,
+      "contact_regions_final": 4,
+      "hover_gap_mm": 0.0,
+      "support_plane_spread_mm": 1.9969032919652818,
+      "outside_footprint_ratio": 0.0,
+      "target_support_level": 3086.44,
+      "current_support_level_before_translate": 3086.4400000000005,
+      "translate_after_settle": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -4.547473508864641e-13
+      },
+      "message": "support plane aligned and settled toward mount surface"
+    },
+    "selected_surface_validation_valid": {
+      "valid": true,
+      "errors": []
+    },
+    "top_cover_contact_regions_at_least_2": 4,
+    "top_cover_outside_footprint_ratio_lte_0_35": 0.0
+  }
+}
