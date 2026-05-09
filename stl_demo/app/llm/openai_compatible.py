@@ -1,14 +1,19 @@
 from __future__ import annotations
 
 import json
+
 from typing import Any, Dict, List
 from openai import OpenAI
+from app.config import get_openai_api_key
 from app.llm.base import BaseLLMClient
 
 
 class OpenAICompatibleLLMClient(BaseLLMClient):
-    def __init__(self, base_url: str, api_key: str, model_name: str) -> None:
-        self.client = OpenAI(base_url=base_url, api_key=api_key)
+    def __init__(self, base_url: str, api_key: str | None, model_name: str) -> None:
+        resolved_api_key = (api_key or get_openai_api_key()).strip()
+        if not resolved_api_key:
+            raise ValueError("OPENAI_API_KEY environment variable is required for LLM_MODE=openai")
+        self.client = OpenAI(base_url=base_url, api_key=resolved_api_key)
         self.model_name = model_name
 
     def generate_change_intent(
