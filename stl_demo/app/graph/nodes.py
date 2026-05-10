@@ -128,7 +128,11 @@ def validate_change_intent_node(state: DemoState) -> DemoState:
 
 
 def prepare_stl_bundle_node(state: DemoState) -> DemoState:
-    copied = prepare_full_stl_bundle(settings.stl_dir, settings.final_stl_dir)
+    copied = prepare_full_stl_bundle(
+        settings.stl_dir,
+        settings.final_stl_dir,
+        temp_dir=settings.temp_stl_dir,
+    )
     logger.info("Prepared final STL bundle, copied %d files", len(copied))
     return state
 

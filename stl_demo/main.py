@@ -13,6 +13,7 @@ def main() -> None:
     ensure_dirs(
         settings.output_dir,
         settings.final_stl_dir,
+        settings.temp_stl_dir,
         settings.logs_dir,
         settings.reports_dir,
         settings.excels_dir,

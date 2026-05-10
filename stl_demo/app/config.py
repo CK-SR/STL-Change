@@ -47,6 +47,7 @@ class Settings:
         )
 
         self.final_stl_dir = self.output_dir / "final_stl"
+        self.temp_stl_dir = self.output_dir / "tmp_stl"
         self.logs_dir = self.output_dir / "logs"
         self.reports_dir = self.output_dir / "reports"
         self.excels_dir = self.output_dir / "excels"
