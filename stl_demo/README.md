@@ -65,6 +65,9 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python main.py
+
+# 可选：先检查本机 Python 版本、依赖包和关键项目导入是否满足
+python ../scripts/check_environment.py
 ```
 
 ---
@@ -76,6 +79,7 @@ python main.py
 - `STL_TEXT_PATH`：情报文本路径（默认 `data/intelligence/input.txt`）
 - `STL_PART_CONSTRAINTS_PATH`：部件约束文件（默认 `data/metadata/part_constraints.json`）
 - `STL_OUTPUT_DIR`：输出根目录（默认 `output`）
+- `output/tmp_stl/`：运行期 STL 临时工作区；最终快照仍只写入 `output/final_stl/`
 
 ### 4.1.1 约束构建脚本参数
 - `PART_CONSTRAINTS_BUILDER_SCRIPT`：约束构建脚本路径（默认 `../scripts/build_part_constraints_v3.py`）
@@ -113,7 +117,8 @@ python main.py
 
 运行后将在 `output/` 下生成：
 
-- `final_stl/`：最终 STL 快照集合
+- `final_stl/`：最终 STL 快照集合（不再存放 `__tmp__*.stl` 临时文件）
+- `tmp_stl/`：几何技能生成的临时 STL 工作文件，`prepare_stl_bundle` 每次运行会清空
 - `reports/change_intent.json`：LLM 生成意图
 - `reports/validated_changes.json`：校验结果
 - `reports/execution_results.json`：执行结果
@@ -137,6 +142,9 @@ python main.py
 - `openai>=1.45.0`
 - `Pillow>=10.0.0`
 - `pyrender>=0.1.45`
+- `pandas>=2.0.0`
+- `requests>=2.31.0`
+- `openpyxl>=3.1.0`
 
 ### 6.3 可选外部依赖
 - 若使用 `LLM_MODE=openai`，需可访问兼容 OpenAI 的模型服务并配置 API Key。

@@ -42,8 +42,20 @@ def _safe_axis_vector_from_params(params: dict) -> Optional[list[float]]:
 
 
 def _build_temp_output_path(output_dir: Path, part_name: str, suffix: str) -> Path:
+    """Return a run-local temporary STL path outside the final snapshot directory."""
     stem = Path(part_name).stem
-    return output_dir / f".__tmp__{stem}_{suffix}.stl"
+    temp_dir = settings.temp_stl_dir
+
+    try:
+        is_final_snapshot_dir = output_dir.resolve() == settings.final_stl_dir.resolve()
+    except FileNotFoundError:
+        is_final_snapshot_dir = output_dir == settings.final_stl_dir
+
+    if not is_final_snapshot_dir:
+        temp_dir = output_dir.parent / "tmp_stl"
+
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    return temp_dir / f"__tmp__{stem}_{suffix}.stl"
 
 
 def _make_affected_part_item(
