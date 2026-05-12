@@ -38,9 +38,21 @@ import trimesh
 # =========================
 # 配置区
 # =========================
-CSV_DIR = Path(os.getenv("PART_CONSTRAINTS_CSV_DIR", r"D:\bica\k-8\AAV7A1\csv"))
-STL_ROOT = Path(os.getenv("PART_CONSTRAINTS_STL_ROOT", r"D:\bica\k-8\AAV7A1\model"))
-OUT_DIR = Path(os.getenv("PART_CONSTRAINTS_OUT_DIR", r"D:\bica\k-8\AAV7A1\output"))
+# 默认路径均基于当前仓库计算，避免迁移项目时依赖开发机绝对路径。
+REPO_ROOT = Path(__file__).resolve().parents[1]
+STL_DEMO_DIR = REPO_ROOT / "stl_demo"
+DATA_DIR = STL_DEMO_DIR / "data"
+
+
+def _repo_path_from_env(env_name: str, default: Path) -> Path:
+    raw_value = os.getenv(env_name)
+    path = Path(raw_value) if raw_value else default
+    return path if path.is_absolute() else REPO_ROOT / path
+
+
+CSV_DIR = _repo_path_from_env("PART_CONSTRAINTS_CSV_DIR", DATA_DIR / "metadata" / "csv")
+STL_ROOT = _repo_path_from_env("PART_CONSTRAINTS_STL_ROOT", DATA_DIR / "stl_parts")
+OUT_DIR = _repo_path_from_env("PART_CONSTRAINTS_OUT_DIR", DATA_DIR / "metadata")
 
 TARGET_BASIC_CSV = CSV_DIR / "2.1目标基本信息数据.csv"
 PHYSICAL_CSV = CSV_DIR / "3.1目标物理结构数据.csv"

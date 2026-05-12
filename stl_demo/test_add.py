@@ -1,5 +1,18 @@
 from pathlib import Path
 import json
+import os
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+
+def _project_path_from_env(env_name: str, default: Path) -> Path:
+    raw_value = os.getenv(env_name)
+    path = Path(raw_value) if raw_value else default
+    return path if path.is_absolute() else PROJECT_ROOT / path
+
 
 from app.services.add_fit_service import AddFitService
 from app.services.geometry_anchor_service import GeometryAnchorService
@@ -9,13 +22,19 @@ from app.services.part_constraints_loader import (
     build_part_to_file_map_from_constraints,
 )
 
-# ====== 你需要改这里 ======
-constraints_path = Path("D://bica//k-8//STL-Change//stl_demo//data//metadata//part_constraints.json")
-parts_dir = Path("D://bica//k-8//STL-Change//stl_demo//data//stl_parts")
-asset_stl = Path("D://bica//k-8//STL-Change//stl_demo//data//assets//new_asset.stl")
-attach_to = "BJ0013"   # 改成约束文件中的父部件 part_id
-output_path = Path("D://bica//k-8//STL-Change//stl_demo//data//assets//new_asset_fitted.stl")
-# =========================
+# ====== 可通过环境变量覆盖；默认基于当前 stl_demo 目录，便于项目迁移 ======
+constraints_path = _project_path_from_env(
+    "STL_PART_CONSTRAINTS_PATH",
+    PROJECT_ROOT / "data" / "metadata" / "part_constraints.json",
+)
+parts_dir = _project_path_from_env("STL_PARTS_DIR", PROJECT_ROOT / "data" / "stl_parts")
+asset_stl = _project_path_from_env("ADD_FIT_ASSET_STL", PROJECT_ROOT / "data" / "assets" / "new.stl")
+attach_to = os.getenv("ADD_FIT_ATTACH_TO", "BJ0013")  # 改成约束文件中的父部件 part_id
+output_path = _project_path_from_env(
+    "ADD_FIT_OUTPUT_PATH",
+    PROJECT_ROOT / "output" / "add_fit_tests" / "new_asset_fitted.stl",
+)
+# ============================================================
 
 output_path.parent.mkdir(parents=True, exist_ok=True)
 
