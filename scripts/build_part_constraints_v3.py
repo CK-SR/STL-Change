@@ -64,6 +64,7 @@ MASTER_CSV = OUT_DIR / "parts_master_table_v4.csv"
 MASTER_JSON = OUT_DIR / "parts_master_table_v4.json"
 CONSTRAINTS_JSON = OUT_DIR / "part_constraints.json"
 LLM_CACHE_FILE = OUT_DIR / "llm_cache_v4.json"
+ENRICHED_EXCEL_DIR = _repo_path_from_env("PART_CONSTRAINTS_ENRICHED_EXCEL_DIR", OUT_DIR / "enriched_excels")
 
 ENABLE_LLM = True
 LLM_SCOPE = "real_only"
@@ -264,6 +265,123 @@ def normalize_op_list(values: Any) -> List[str]:
             seen.add(x)
             result.append(x)
     return result
+
+
+
+
+# =========================
+# 推理结果回写 Excel
+# =========================
+INFERENCE_EXPORT_FIELDS = [
+    "最小x",
+    "最小y",
+    "最小z",
+    "最大x",
+    "最大y",
+    "最大z",
+    "长度(mm)",
+    "宽度(mm)",
+    "高度(mm)",
+    "几何中心x(mm)",
+    "几何中心y(mm)",
+    "几何中心z(mm)",
+    "质心x",
+    "质心y",
+    "质心z",
+    "OBB长度",
+    "OBB宽度",
+    "OBB高度",
+    "主方向轴X",
+    "主方向轴Y",
+    "主方向轴Z",
+    "顶点数",
+    "三角面数",
+    "是否封闭模型",
+    "Euler数",
+    "包围盒体积估计",
+]
+
+
+def _safe_excel_sheet_name(name: str) -> str:
+    cleaned = re.sub(r"[\\/*?:\[\]]", "_", name).strip()
+    return (cleaned or "sheet")[:31]
+
+
+def _normalize_part_id_column_for_export(df: pd.DataFrame) -> pd.DataFrame:
+    return df.rename(columns={
+        "部件ID（命名规则：BJ+四位数，范围BJ0001~ BJ9999。）": "部件ID",
+    })
+
+
+def _build_inference_df(final_rows: List[Dict[str, Any]]) -> pd.DataFrame:
+    records: List[Dict[str, Any]] = []
+    for row in final_rows:
+        record = {
+            "目标ID": safe_str(row.get("目标ID")),
+            "部件ID": safe_str(row.get("部件ID")),
+        }
+        for field in INFERENCE_EXPORT_FIELDS:
+            if field in row:
+                record[field] = row.get(field)
+        records.append(record)
+    return pd.DataFrame(records)
+
+
+def enrich_source_table_with_inference(source_df: pd.DataFrame, inference_df: pd.DataFrame) -> pd.DataFrame:
+    """Return a source table copy with only selected inferred geometry fields updated or added."""
+    out = _normalize_part_id_column_for_export(normalize_columns(source_df))
+
+    merge_keys = [key for key in ["目标ID", "部件ID"] if key in out.columns and key in inference_df.columns]
+    if "部件ID" not in merge_keys:
+        return out
+
+    available_fields = [field for field in INFERENCE_EXPORT_FIELDS if field in inference_df.columns]
+    if not available_fields:
+        return out
+
+    inferred_suffix = "__inferred"
+    merged = out.merge(
+        inference_df[merge_keys + available_fields],
+        how="left",
+        on=merge_keys,
+        suffixes=("", inferred_suffix),
+    )
+
+    for field in available_fields:
+        inferred_col = f"{field}{inferred_suffix}" if field in out.columns else field
+        if inferred_col not in merged.columns:
+            continue
+
+        if field in out.columns:
+            merged[field] = merged[inferred_col].where(merged[inferred_col].notna(), merged[field])
+            if inferred_col != field:
+                merged = merged.drop(columns=[inferred_col])
+        else:
+            # The field was not present in the original source table, so keep the merged column as a new field.
+            continue
+
+    return merged
+
+
+def export_enriched_source_excels(
+    source_tables: List[Tuple[str, Path, pd.DataFrame]],
+    final_rows: List[Dict[str, Any]],
+    output_dir: Path,
+) -> List[Path]:
+    """Write xlsx copies of loaded source tables with selected inferred geometry fields."""
+    ensure_dir(output_dir)
+    inference_df = _build_inference_df(final_rows)
+    written: List[Path] = []
+
+    for label, source_path, source_df in source_tables:
+        enriched_df = enrich_source_table_with_inference(source_df, inference_df)
+        output_path = output_dir / f"{source_path.stem}_with_inference.xlsx"
+        sheet_name = _safe_excel_sheet_name(label or source_path.stem)
+        with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
+            enriched_df.to_excel(writer, index=False, sheet_name=sheet_name)
+        written.append(output_path)
+
+    return written
 
 
 # =========================
@@ -1121,6 +1239,14 @@ def main() -> None:
     function_df = normalize_columns(read_csv_auto(FUNCTION_CSV))
     func_part_df = normalize_columns(read_csv_auto(FUNC_PART_MAP_CSV))
 
+    source_tables = [
+        ("2.1目标基本信息数据", TARGET_BASIC_CSV, target_df.copy()),
+        ("3.1目标物理结构数据", PHYSICAL_CSV, physical_df.copy()),
+        ("3.2目标三维模型数据", MODEL_CSV, model_df.copy()),
+        ("4.1目标功能结构数据", FUNCTION_CSV, function_df.copy()),
+        ("4.3目标功能与部件映射数据", FUNC_PART_MAP_CSV, func_part_df.copy()),
+    ]
+
     physical_df = physical_df.rename(columns={
         "部件ID（命名规则：BJ+四位数，范围BJ0001~ BJ9999。）": "部件ID"
     })
@@ -1290,7 +1416,7 @@ def main() -> None:
     attachment_links = infer_attachment_links(final_rows, neighbors_map, llm)
     linked_children_map = build_linked_children_map(attachment_links, row_by_id)
 
-    print("[8/8] 导出 master 与 constraints...")
+    print("[8/9] 导出 master 与 constraints...")
     part_constraints: List[Dict[str, Any]] = []
 
     for item in final_rows:
@@ -1422,10 +1548,16 @@ def main() -> None:
         encoding="utf-8",
     )
 
+    print("[9/9] 导出带推理结果的源表 Excel 副本...")
+    enriched_excel_paths = export_enriched_source_excels(source_tables, final_rows, ENRICHED_EXCEL_DIR)
+
     print("[DONE]")
     print(f"[OK] master csv : {MASTER_CSV}")
     print(f"[OK] master json: {MASTER_JSON}")
     print(f"[OK] constraints: {CONSTRAINTS_JSON}")
+    print(f"[OK] enriched excel dir: {ENRICHED_EXCEL_DIR}")
+    for path in enriched_excel_paths:
+        print(f"[OK] enriched excel: {path}")
     if ENABLE_LLM:
         print(f"[OK] llm cache  : {LLM_CACHE_FILE}")
 

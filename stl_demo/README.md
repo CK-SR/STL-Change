@@ -86,6 +86,7 @@ python ../scripts/check_environment.py
 - `PART_CONSTRAINTS_CSV_DIR`：脚本输入 CSV 目录
 - `PART_CONSTRAINTS_STL_ROOT`：脚本输入 STL 根目录
 - `PART_CONSTRAINTS_OUT_DIR`：脚本输出目录（会产出 `part_constraints.json`）
+- `PART_CONSTRAINTS_ENRICHED_EXCEL_DIR`：约束构建脚本额外导出的源表 Excel 副本目录（默认 `PART_CONSTRAINTS_OUT_DIR/enriched_excels`），只会回写/新增选定的 STL 几何字段。
 
 ### 4.2 LLM 相关
 - `LLM_MODE=mock|openai`
@@ -125,6 +126,7 @@ python ../scripts/check_environment.py
 - `reports/mesh_repair_report.json`：网格修复记录
 - `reports/reasonableness_report.json`：合理性检查记录
 - `reports/demo_report.md`：汇总报告
+- `data/metadata/enriched_excels/*_with_inference.xlsx`（或 `PART_CONSTRAINTS_ENRICHED_EXCEL_DIR` 指定目录）：约束构建阶段加载源表的 Excel 副本，仅回写/新增选定的 STL 几何字段，用于补全缺失/推测的几何信息。
 - `logs/stl_demo.log`：运行日志
 
 ---
