@@ -21,6 +21,7 @@ from app.services.part_summary_builder import build_part_summary_from_constraint
 from app.services.stl_bundle_preparer import prepare_full_stl_bundle
 from app.services.report_writer import write_demo_report, write_json
 from app.services.final_render_service import render_final_stl_scene
+from app.services.source_table_backfill_writer import export_source_table_syncs
 from app.services.validator import validate_change_intent
 from app.skills.dispatcher import dispatch_change
 
@@ -296,6 +297,19 @@ def export_report(state: DemoState) -> DemoState:
     write_json(rr_path, state.reasonableness_reports)
     write_json(fr_path, final_render.to_dict())
 
+    table_sync_info = {"paths": {}, "updates": {}, "warnings": []}
+    try:
+        table_sync = export_source_table_syncs(
+            csv_dir=settings.part_constraints_csv_dir,
+            output_dir=settings.excels_dir / "source_tables",
+            execution_results=state.execution_results,
+        )
+        table_sync_info = table_sync.to_dict()
+        if table_sync.warnings:
+            state.warnings.extend(table_sync.warnings)
+    except Exception as exc:
+        state.warnings.append(f"source_table_sync_failed={exc}")
+
     write_demo_report(
         report_path=md_path,
         intelligence_texts=state.intelligence_texts,
@@ -307,9 +321,9 @@ def export_report(state: DemoState) -> DemoState:
         mesh_repair_reports=state.mesh_repair_reports,
         reasonableness_reports=state.reasonableness_reports,
         warnings=state.warnings,
-        excel_path="N/A (minimal flow without excel)",
-        updated_excel_path="N/A",
-        change_table_path="N/A",
+        excel_path=str(settings.excel_path),
+        updated_excel_path=table_sync_info.get("output_dir", "N/A"),
+        change_table_path=table_sync_info.get("paths", {}).get("report", "N/A"),
         final_stl_dir=str(settings.final_stl_dir),
         final_render_image=final_render.image_path,
         final_render_report=str(fr_path),
@@ -326,4 +340,7 @@ def export_report(state: DemoState) -> DemoState:
         "demo_report": str(md_path),
         "final_stl_dir": str(settings.final_stl_dir),
     }
+    state.report_paths.update({f"source_table_{key}": value for key, value in table_sync_info.get("paths", {}).items()})
+    if table_sync_info.get("updates"):
+        state.report_paths["source_table_sync_updates"] = str(table_sync_info["updates"])
     return state

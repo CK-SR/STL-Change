@@ -125,6 +125,7 @@ python ../scripts/check_environment.py
 - `reports/mesh_repair_report.json`：网格修复记录
 - `reports/reasonableness_report.json`：合理性检查记录
 - `reports/demo_report.md`：汇总报告
+- `excels/source_tables/`：复制并同步 `build_part_constraints_v3.py` 使用的 2.1 / 3.1 / 3.2 / 4.1 / 4.3 源表；只根据最终成功执行的 STL 变更更新现有字段
 - `logs/stl_demo.log`：运行日志
 
 ---
